@@ -1,5 +1,109 @@
-* {
+:root {
+    --main-blue: rgb(0, 102, 204);
+    --sidebar-bg: rgb(1, 63, 131);
+    --card-bg: #ffffff;
+    --text-color: #333;
+}
+
+body {
     margin: 0;
-    padding: 0;
+    font-family: 'KoPub Dotum', sans-serif;
+    background-color: #f4f6f9;
+    color: var(--text-color);
+}
+
+.wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+
+.sidebar {
+    width: 250px;
+    background-color: var(--sidebar-bg);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 0 0 0;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    margin: 7px 0;
+    display: block;
+    padding: 10px 30px;
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     box-sizing: border-box;
+}
+
+.sidebar h2 {
+    font-size: 20px;
+    margin-bottom: 30px;
+    padding-left: 30px;
+    font-weight: bold;
+}
+
+
+
+.sidebar a:hover {
+    text-decoration: underline;
+}
+
+.main {
+    flex-grow: 1;
+    padding: 50px 60px 0 ;
+}
+
+.header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: var(--main-blue);
+}
+
+.card {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    justify-content: center;
+    border-collapse: collapse;
+}
+
+th, td {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 30px;
+    text-align: left;
+}
+
+th {
+    background-color: #f0f2f5;
+}
+
+.btn {
+    background-color: rgb(158, 158, 158);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
+    margin-top: 15px;
+}
+
+.btn:hover {
+    background-color: var(--main-blue);
+}
+
+.btn-container {
+    display: flex;
+    justify-content: flex-end;
 }
