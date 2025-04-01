@@ -7,6 +7,8 @@
 
 body {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     font-family: 'KoPub Dotum', sans-serif;
     background-color: #f4f6f9;
     color: var(--text-color);
