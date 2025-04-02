@@ -5,6 +5,11 @@
     --text-color: #333;
 }
 
+ul,
+li {
+    list-style: none;
+}
+
 body {
     margin: 0;
     padding: 0;

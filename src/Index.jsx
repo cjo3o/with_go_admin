@@ -13,7 +13,13 @@ function Index() {
             <a href="#">회원관리</a>
             <a href="#">게시판관리</a>
             <a href="#">이벤트관리</a>
-            <a href="#">배송/보관</a>
+            <a href="#">예약관리</a>
+            <div>
+              <ul>
+                <li>금일 보관/배송관리</li>
+                <li>예약신청목록</li>
+              </ul>
+            </div>
             <a href="#">배송기사관리</a>
             <a href="#">FAQ관리</a>
             <a href="#">1:1문의관리</a>
