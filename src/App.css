@@ -5,6 +5,7 @@
     font-family: 'KoPub Dotum', sans-serif;
 }
 
+
 :root {
     --main-blue: rgb(0, 102, 204);
     --sidebar-bg: rgb(1, 63, 131);
@@ -17,12 +18,12 @@ li {
     list-style: none;
 }
 
-
 .wrapper {
     display: flex;
-    height: 100vh;
+    height: 100%;
     background-color: #f4f6f9;
 }
+
 
 .sidebar-logo {
     width: 100%;
@@ -37,37 +38,35 @@ li {
 
 
 .sidebar-title {
-    width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 1rem;
     margin-bottom: 20px;
+    padding: 30px;
 }
 
 .menu-title {
     font-size: 20px;
     font-weight: bold;
     color: white;
-    margin: 0;
 }
 
 .menu-icons {
     display: flex;
-    gap: 10px;
-}
-
-.menu-icon {
-    width: 20px;
-    height: 20px;
+    gap: 5px;
+    align-items: center;
 }
 
 .icon-link {
     display: flex;
     align-items: center;
-    text-decoration: none;
-    border: none;
+    padding: 4px;
 }
 
+.menu-icon {
+    width: 17px;
+    height: 17px;
+}
 
 .sidebar {
     width: 250px;
@@ -75,7 +74,11 @@ li {
     color: white;
     display: flex;
     flex-direction: column;
-    padding: 30px 0 0 0;
+    padding: 30px 0 30px 0;
+}
+
+.sidebar > ul > li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .sidebar > ul > li > a {
@@ -84,27 +87,32 @@ li {
     display: inline-block;
     padding: 10px 30px;
     width: 100%;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    box-sizing: border-box;
 }
 
-.sidebar h2 {
-    font-size: 20px;
-    margin-top: 1rem;
-    margin-bottom: 30px;
-    padding-left: 30px;
-    font-weight: bold;
-}
-
-.sidebar a:hover {
+.sidebar > ul > li > a:hover {
     background-color: rgba(255, 255, 255, 0.7);
     color: #000;
     font-weight: bold;
 }
 
+.sub-menu {
+    padding: 0 0 10px 50px;
+}
+
+.sub-menu > ul> li {
+    list-style: circle;
+    padding: 2px 0;
+}
+
+.sub-menu > ul > li > a {
+    font-size: 15px;
+    text-decoration: none;
+    color: white;
+}
+
 .main {
     flex-grow: 1;
-    padding: 50px 60px 0 ;
+    padding: 50px 60px 0;
 }
 
 .header {
@@ -118,7 +126,7 @@ li {
     background-color: var(--card-bg);
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
 }
 
