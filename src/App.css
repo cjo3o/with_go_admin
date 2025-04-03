@@ -18,11 +18,61 @@ li {
 }
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> hem
 .wrapper {
     display: flex;
     height: 100vh;
     background-color: #f4f6f9;
+<<<<<<< HEAD
+=======
+}
+
+.sidebar-logo {
+    width: 100%;
+    margin-bottom: 20px;
+    padding-left: 30px;
+}
+
+.logo-img {
+    width: 100px;
+    height: auto;
+}
+
+
+.sidebar-title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.menu-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
+.menu-icons {
+    display: flex;
+    gap: 10px;
+}
+
+.menu-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.icon-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border: none;
+>>>>>>> hem
 }
 
 
