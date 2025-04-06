@@ -11,7 +11,6 @@
     --sidebar-bg: rgb(1, 63, 131);
     --card-bg: #ffffff;
     --text-color: #333;
-    --height: 100%;
 }
 
 ul,
@@ -19,31 +18,12 @@ li {
     list-style: none;
 }
 
-ul {
-    margin: 5px 0 10px;
-}
-
-.menu-toggle {
-    padding: 10px 30px;
-    cursor: pointer;
-    color: white;
-}
-
-.menu-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.7);
-    color: #000;
-    font-weight: bold;
-}
-
 .wrapper {
     display: flex;
-    height: 100vh;
+    height: 100%;
     background-color: #f4f6f9;
 }
 
-.sidebar {
-    height: 100vh;
-}
 
 .sidebar-logo {
     width: 100%;
