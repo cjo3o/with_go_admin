@@ -7,7 +7,7 @@
 
 
 :root {
-    --main-blue: rgb(0, 102, 204);
+    --main-blue: rgb(255, 255, 255);
     --sidebar-bg: rgb(1, 63, 131);
     --card-bg: #ffffff;
     --text-color: #333;
@@ -21,7 +21,16 @@ li {
 }
 
 li {
-    line-height: 1.6;
+    line-height: 1.8;
+    cursor: pointer;
+}
+
+li>a:hover{
+    border-bottom: 1px solid var(--main-blue);
+}
+
+.no-underline > a:hover {
+    border-bottom: none !important;
 }
 
 .menu-toggle {

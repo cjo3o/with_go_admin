@@ -1,9 +1,0 @@
-diff a/src/App.css b/src/App.css	(rejected hunks)
-@@ -11,6 +11,7 @@
-     --sidebar-bg: rgb(1, 63, 131);
-     --card-bg: #ffffff;
-     --text-color: #333;
-+    --height: 100%;
- }
- 
- ul,
