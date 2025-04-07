@@ -73,8 +73,8 @@ function Sidebar(props) {
                     {openMenu === 'partner' && (
                         <div className="sub-menu">
                             <ul>
-                                <li><Link to="">제휴숙소목록</Link></li>
-                                <li><Link to="">제휴숙소등록</Link></li>
+                                <li><Link to="/partner/list">제휴숙소목록</Link></li>
+                                <li><Link to="/partner/create">제휴숙소등록</Link></li>
                             </ul>
                         </div>
                     )}
@@ -85,8 +85,8 @@ function Sidebar(props) {
                     {openMenu === 'storage' && (
                         <div className="sub-menu">
                             <ul>
-                                <li><Link to="">보관장소목록</Link></li>
-                                <li><Link to="">보관장소등록</Link></li>
+                                <li><Link to="/storage/list">보관장소목록</Link></li>
+                                <li><Link to="/storage/create">보관장소등록</Link></li>
                             </ul>
                         </div>
                     )}
