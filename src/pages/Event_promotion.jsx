@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import supabase from '../lib/SupabaseClient_evpro.js';
-import '../styles/Evpro.css';
+import '../css/Evpro.css';
 
 function EventList() {
     const [events, setEvents] = useState([]);
@@ -9,7 +9,7 @@ function EventList() {
 
     useEffect(() => {
         const fetchEvents = async () => {
-            const { data, error } = await supabase
+            const {data, error} = await supabase
                 .from('withgo_event')
                 .select('*');
 
@@ -24,13 +24,13 @@ function EventList() {
     }, []);
 
     const handleDelete = async (id) => {
-        const { error } = await supabase
+        const confirmDelete = window.confirm('정말 이 이벤트를 삭제하시겠습니까?');
+        if (!confirmDelete) return;
+
+        const {error} = await supabase
             .from('withgo_event')
             .delete()
             .eq('id', id);
-
-        const confirmDelete = window.confirm('정말 이 이벤트를 삭제하시겠습니까?');
-        if (!confirmDelete) return;
 
         if (error) {
             console.error('삭제 실패:', error);
@@ -68,23 +68,35 @@ function EventList() {
                                     상세보기 →
                                 </a>
                             </td>
-                            <td>{event.status || '비활성'}</td>
+                            <td>
+                            <span className={`status-badge ${new Date(event.date) >= new Date() ? 'active' : 'ended'}`}>
+                              {new Date(event.date) >= new Date() ? '이벤트 진행중' : '이벤트 종료'}
+                            </span>
+                            </td>
                             <td>
                                 <div className="btn-group">
-                                    <button className="btn btn-edit" onClick={() => navigate(`/event-edit/${event.id}`)}>수정</button>
-                                    <button className="btn btn-delete" onClick={() => handleDelete(event.id)}>삭제</button>
+                                    <button className="btn btn-edit"
+                                            onClick={() => navigate(`/event-edit/${event.id}`)}>수정
+                                    </button>
+                                    <button className="btn btn-delete" onClick={() => handleDelete(event.id)}>삭제
+                                    </button>
                                 </div>
                             </td>
                         </tr>
                     ))}
                     </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colSpan="5" style={{ textAlign: 'right', paddingTop: '10px' }}>
+                            <button className="btn btn-add" onClick={() => navigate('/event-add')}>
+                                새 이벤트 등록
+                            </button>
+                        </td>
+                    </tr>
+                    </tfoot>
                 </table>
 
-                <div className="add-button-wrapper">
-                    <button className="btn btn-add" onClick={() => navigate('/event-add')}>
-                    새 이벤트 등록
-                    </button>
-                </div>
+
             </div>
 
         </div>
