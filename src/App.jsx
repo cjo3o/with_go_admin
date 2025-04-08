@@ -13,6 +13,7 @@ import StorageCreate from "./pages/StorageCreate.jsx";
 
 
 import EventList from "./pages/Event_promotion.jsx";
+import Admin from "./pages/Admin.jsx";
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
                     <Sidebar></Sidebar>
                     <Routes>
                         <Route path="/" element={<Home/>}></Route>
+                        <Route path="/Admin" element={<Admin/>}></Route>
 
                         <Route path="/partner/list" element={<PartnerList />} />
                         <Route path="/partner/create" element={<PartnerCreate />} />
