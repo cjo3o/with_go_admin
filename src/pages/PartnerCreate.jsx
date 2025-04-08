@@ -1,18 +1,28 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {supabase} from "../lib/supabase.js";
 import '../css/partnerCreate.css';
+
 function PartnerCreate() {
     const [form, setForm] = useState({
         name: '',
         address: '',
         phone: '',
         map_url: '',
-        image_url: '',
     });
+
+    const [imageFile, setImageFile] = useState(null);
+    const fileInputRef = useRef(null);
 
     const handleChange = (e) => {
         const {name, value} = e.target;
         setForm({...form, [name]: value});
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setImageFile(file);
+        }
     };
 
     // 구글맵 지도퍼가기 src 추출
@@ -24,24 +34,54 @@ function PartnerCreate() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { name, address, phone, map_url, image_url } = form;
+        const { name, address, phone, map_url} = form;
 
         // 필수 입력 체크
-        if (!name || !address || !phone || !map_url || !image_url) {
+        if (!name || !address || !phone || !map_url || !imageFile) {
             alert('모두 다 입력해야 합니다.');
             return;
         }
 
         const cleanMapUrl = extractSrc(map_url);
+        let image = '';
 
-        const {error} = await supabase
+        if (imageFile) {
+            const fileExt = imageFile.name.split(".").pop().toLowerCase();
+            const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
+
+            if (!allowedExtensions.includes(fileExt)) {
+                alert("지원되지 않는 파일 형식입니다.\njpg, jpeg, png, gif, bmp 파일만 업로드 가능합니다.");
+                return;
+            }
+
+            const fileName = crypto.randomUUID() + "." + fileExt;
+            const filePath = `partner_img/${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from("images")
+                .upload(filePath, imageFile);
+
+            if (uploadError) {
+                alert('파일 업로드 중 오류가 발생했습니다.');
+                console.error(uploadError);
+                return;
+            }
+
+            const { data: publicUrl } = supabase.storage
+                .from("images")
+                .getPublicUrl(filePath);
+
+            image = publicUrl.publicUrl;
+        }
+
+        const { error } = await supabase
             .from('partner')
             .insert([{
                 name,
                 address,
                 phone,
                 map_url: cleanMapUrl,
-                image_url
+                image
             }]);
 
         if (error) {
@@ -54,10 +94,15 @@ function PartnerCreate() {
                 address: '',
                 phone: '',
                 map_url: '',
-                image_url: '',
             });
+            setImageFile(null);
+
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
         }
     };
+
     return (
         <div className='main'>
             <div className='header'>제휴숙소관리</div>
@@ -104,10 +149,10 @@ function PartnerCreate() {
                     <div className='group'>
                         <label className='img'>숙소 이미지</label>
                         <input
-                            type="text"
-                            name="image_url"
-                            value={form.image_url}
-                            onChange={handleChange}
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            ref={fileInputRef}
                         />
                     </div>
                     <div className='btn-container'>
