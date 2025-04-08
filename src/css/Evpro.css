@@ -103,16 +103,17 @@ th {
 }
 
 .btn-add {
-    width: 115px;
-    height: 30px;
-    background-color: rgb(0, 102, 204);
+    padding: 8px 11px;
+    background-color: rgb(158, 158, 158);
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     box-sizing: border-box;
-    margin-right: 40px;
+}
 
+.btn-add:hover {
+    background-color: rgb(0, 102, 204);
 }
 
 .btn-group {
@@ -126,7 +127,6 @@ th {
     margin-top: 10px;
     display: flex;
     justify-content: flex-end;
-    width: 100%;
     box-sizing: border-box;
 }
 
@@ -146,11 +146,108 @@ tfoot td {
 }
 
 .status-badge.active {
-    background-color: #e0f7fa;
-    color: #00796b;
+    background-color: rgba(65, 88, 166, 0.22);
+    color: rgb(65, 88, 166);
 }
 
 .status-badge.ended {
-    background-color: #fce4ec;
-    color: #c2185b;
+    background-color: rgba(255, 131, 67, 0.25);
+    color: rgb(255, 131, 67);
+}
+
+.form {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+.select-wrapper {
+    position: relative;
+}
+
+.custom-select {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.custom-select select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    padding: 8px 40px 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    height: 38px;
+}
+
+.select-icon {
+    position: absolute;
+    right: 17px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #1e1e1e;
+    font-size: 14px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.form-group input,
+.form-group select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: rgb(0, 102, 204);
+    outline: none;
+}
+
+.form-button-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.btn-add-register {
+    padding: 8px 30px;
+    background-color: rgb(158, 158, 158);
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    margin: 0;
+    align-self: auto;
+}
+
+.btn-add-register:hover {
+    background-color: rgb(0, 102, 204);
 }

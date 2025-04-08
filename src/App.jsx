@@ -13,6 +13,7 @@ import StorageCreate from "./pages/StorageCreate.jsx";
 
 
 import EventList from "./pages/Event_promotion.jsx";
+import EventAdd from "./pages/Event_add.jsx";
 
 
 function App() {
@@ -32,6 +33,8 @@ function App() {
                         <Route path="/storage/create" element={<StorageCreate />} />
 
                         <Route path="/event-promotion" element={<EventList />} />
+                        <Route path="/event-add" element={<EventAdd />} />
+
 
                     </Routes>
                 </BrowserRouter>
