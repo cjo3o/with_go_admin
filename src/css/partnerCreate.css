@@ -1,5 +1,5 @@
 /* 폼 전체 */
-.form {
+.form_Create {
     display: flex;
     flex-direction: column;
     gap: 20px;

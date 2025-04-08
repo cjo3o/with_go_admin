@@ -108,7 +108,7 @@ function PartnerCreate() {
             <div className='header'>제휴숙소관리</div>
             <div className='card'>
                 <h3>제휴숙소등록</h3>
-                <form onSubmit={handleSubmit} className='form'>
+                <form onSubmit={handleSubmit} className='form_Create'>
                     <div className='group'>
                         <label className='name'>숙소명</label>
                         <input
