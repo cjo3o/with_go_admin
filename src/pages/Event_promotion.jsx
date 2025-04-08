@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import supabase from '../SupabaseClient_evpro.js';
+import supabase from '../lib/SupabaseClient_evpro.js';
 import '../styles/Evpro.css';
 
 function EventList() {
