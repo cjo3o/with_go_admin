@@ -29,6 +29,9 @@ function EventList() {
             .delete()
             .eq('id', id);
 
+        const confirmDelete = window.confirm('정말 이 이벤트를 삭제하시겠습니까?');
+        if (!confirmDelete) return;
+
         if (error) {
             console.error('삭제 실패:', error);
             alert('삭제 중 오류 발생');
