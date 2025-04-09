@@ -63,21 +63,33 @@ function Admin() {
           </div>
         </div>
         <div className="Admin_list">
-          <div className="list_up">
+          <div className="list_up card">
             <h3>실시간 예약현황</h3>
             <table>
               <thead>
                 <tr>
-                  <th>신청일</th>
+                  <th style={{width:'135px'}}>신청일</th>
                   <th>구분</th>
                   <th>예약자명</th>
-                  <th>연락처</th>
-                  <th>예약기간</th>
-                  <th>짐갯수</th>
-                  <th>결제금액</th>
-                  <th>신청일자</th>
+                  <th style={{width:'150px'}}>연락처</th>
+                  <th style={{width:'270px'}}>예약기간</th>
+                  <th style={{width:'270px'}}>짐갯수</th>
+                  <th style={{width:'125px'}}>결제금액</th>
+                  <th style={{width:'135px'}}>신청일자</th>
                 </tr>
               </thead>
+              <tbody>
+                <tr>
+                  <td>2025.04.10</td>
+                  <td>배송</td>
+                  <td>아무개</td>
+                  <td>010-1234-1234</td>
+                  <td>2025.04.10</td>
+                  <td>L2개</td>
+                  <td>80,000</td>
+                  <td>2025.04.10</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
