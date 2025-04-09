@@ -14,7 +14,8 @@ import StorageCreate from "./pages/StorageCreate.jsx";
 
 import EventList from "./pages/Event_promotion.jsx";
 import EventAdd from "./pages/Event_add.jsx";
-
+import EventEdit from "./pages/Eventedit.jsx";
+import 'antd/dist/reset.css';
 
 function App() {
     const [count, setCount] = useState(0)
@@ -34,6 +35,7 @@ function App() {
 
                         <Route path="/event-promotion" element={<EventList />} />
                         <Route path="/event-add" element={<EventAdd />} />
+                        <Route path="/event-edit/:id" element={<EventEdit />} />
 
 
                     </Routes>
