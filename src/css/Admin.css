@@ -1,77 +1,95 @@
 .content {
-    flex: 1;
+  flex: 1;
 }
 .Admin_top {
-    padding: 20px 0 20px 30px;
-    color: rgb(0, 102, 204);
-    border-bottom: 1px solid rgb(197, 197, 197);
+  padding: 20px 0 20px 30px;
+  color: rgb(0, 102, 204);
+  border-bottom: 1px solid rgb(197, 197, 197);
 }
 
 .Admin_content {
-    position: relative;
+  position: relative;
 }
 
 .up_left {
-    width: 500px;
-    height: 220px;
-    background-color: #4F50D0;
-    border-radius: 10px;
-    color: white;
-    margin: 30px 30px;
-    position: relative;
-    overflow: hidden;
+  width: 500px;
+  height: 220px;
+  background-color: #4f50d0;
+  border-radius: 10px;
+  color: white;
+  margin: 30px 30px;
+  position: relative;
+  overflow: hidden;
 }
 
 .left1 {
-    width: 150px;
+  width: 150px;
 }
 
 .up_left h3 {
-    font-weight: 600;
-    padding: 30px 0 10px 30px;
+  font-weight: 600;
+  padding: 30px 0 10px 30px;
 }
 
-.up_left p {
-    padding-left: 50px;
-    font-size: 0.9rem;
+.left1 p {
+  padding-left: 50px;
+  font-size: 0.9rem;
 }
 
 .left2 {
-    padding: 20px 0 10px 30px;
-    width: 150px;
+  padding: 20px 0 10px 30px;
+  width: 150px;
 }
 
 .left2-1 {
-    font-size: 4rem;
-    font-weight: 600;
+  font-size: 4rem;
+  font-weight: 600;
 }
 
 .left2-2 {
-    padding-left: 10px;
+  padding-left: 10px;
 }
 
 .left3 {
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 250px;
-    height: 160px;
-    background-color: white;
-    color: black;
-    border-radius: 5px;
-    position: absolute;
-    right: 30px;
-    bottom: 30px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  height: 160px;
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
 }
 
 .left3-1 {
-    width: 125px;
-    height: 160px;
-    border-right: 1px dashed grey;
+  width: 125px;
+  height: 160px;
+  border-right: 1px dashed grey;
+}
+
+.left3-1 img {
+  margin-top: 20px;
+  width: 50px;
+}
+
+.left3-1 h4 {
+    margin-top: 5px;
+}
+
+.left3-1 p {
+  font-size: 0.8rem;
+  color: gray;
+}
+
+.left3-1 span {
+font-size: ;
 }
 
 .left3-2 {
-    width: 125px;
-    height: 160px;
+  width: 125px;
+  height: 160px;
 }

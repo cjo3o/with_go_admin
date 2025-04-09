@@ -1,4 +1,6 @@
 import React from "react";
+import custody from "../assets/Icon/custody.svg";
+import delivery from "../assets/Icon/delivery.svg";
 import "../css/Admin.css";
 import { supabase } from "../lib/supabase.js";
 
@@ -20,7 +22,12 @@ function Admin() {
               <span className="left2-2">건</span>
             </div>
             <div className="left3">
-              <div className="left3-1">배송</div>
+              <div className="left3-1">
+                <img src={delivery} alt="" />
+                <h4>배송</h4>
+                <p>DELIVERY</p>
+                <span>5건</span>
+              </div>
               <div className="left3-2">보관</div>
             </div>
           </div>
