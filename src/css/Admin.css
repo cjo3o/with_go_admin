@@ -143,79 +143,80 @@
 }
 
 .center1 h3 {
-    padding: 45px 0 10px 0;
+  padding: 45px 0 10px 0;
 }
 
 .center1 span {
-    font-size: 1.8rem;
-    font-weight: 600;
+  font-size: 1.8rem;
+  font-weight: 600;
 }
 
 .center2-3 {
-    display: flex;
+  display: flex;
 }
 
 .center2 {
-    background-color: rgb(200, 138, 61);
-    color: white;
-    text-align: center;
-    width: 175px;
-    height: 115px;
-    border-radius: 0 0 0 10px;
-    border-right: 1px dashed grey;
+  background-color: rgb(200, 138, 61);
+  color: white;
+  text-align: center;
+  width: 175px;
+  height: 115px;
+  border-radius: 0 0 0 10px;
+  border-right: 1px dashed grey;
 }
 
 .center2 h3 {
-    padding: 30px 0 5px 0;
-    font-size: 1rem;
+  padding: 30px 0 5px 0;
+  font-size: 1rem;
 }
 
 .center2 span {
-    font-size: 1.4rem;
-    font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 600;
 }
 
 .center3 {
-    background-color: rgb(200, 138, 61);
-    color: white;
-    text-align: center;
-    width: 175px;
-    height: 115px;
-    border-radius: 0 0 10px 0;
+  background-color: rgb(200, 138, 61);
+  color: white;
+  text-align: center;
+  width: 175px;
+  height: 115px;
+  border-radius: 0 0 10px 0;
 }
 
 .center3 h3 {
-    padding: 30px 0 5px 0;
-    font-size: 1rem;
+  padding: 30px 0 5px 0;
+  font-size: 1rem;
 }
 
 .center3 span {
-    font-size: 1.4rem;
-    font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 600;
 }
 
 .top3 {
-    width: 350px;
-    height: 270px;
-    background-color: rgb(118, 131, 149);
-    margin: 30px 15px;
-    border-radius: 10px;
-    color: white;
-    text-align: center;
-  }
+  width: 350px;
+  height: 270px;
+  background-color: rgb(118, 131, 149);
+  margin: 30px 15px;
+  border-radius: 10px;
+  color: white;
+  text-align: center;
+}
 
-  .right1 h3 {
-    margin: 45px 0 20px 0;
-  }
+.right1 h3 {
+  margin: 45px 0 20px 0;
+}
 
-  .right1 p {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-  }
+.right1 p {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
 
-  /* .th1 {
-    margin-bottom: 10px;
-  } */
-
-
+.select {
+  width: 120px;
+  height: 40px;
+  border-radius: 5px;
+  text-align: center;
+}
