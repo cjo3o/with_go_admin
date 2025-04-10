@@ -13,8 +13,14 @@ import StorageCreate from "./pages/StorageCreate.jsx";
 
 
 import EventList from "./pages/Event_promotion.jsx";
+<<<<<<< HEAD
 import Admin from "./pages/Admin.jsx";
 
+=======
+import EventAdd from "./pages/Event_add.jsx";
+import EventEdit from "./pages/Eventedit.jsx";
+import 'antd/dist/reset.css';
+>>>>>>> main
 
 function App() {
     const [count, setCount] = useState(0)
@@ -34,6 +40,9 @@ function App() {
                         <Route path="/storage/create" element={<StorageCreate />} />
 
                         <Route path="/event-promotion" element={<EventList />} />
+                        <Route path="/event-add" element={<EventAdd />} />
+                        <Route path="/event-edit/:id" element={<EventEdit />} />
+
 
                     </Routes>
                 </BrowserRouter>
