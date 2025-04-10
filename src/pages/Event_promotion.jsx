@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox } from 'antd';
-import supabase from '../lib/SupabaseClient_evpro.js';
+import supabase from '../lib/supabase';
 import '../css/Evpro.css';
 import 'antd/dist/reset.css'; // antd 스타일도 꼭 포함해 주세요!
 
@@ -117,11 +117,11 @@ function EventList() {
                         <td colSpan="6">
                             <div className="add-button-wrapper">
                                 {selectedEvents.length > 0 && (
-                                    <button className="btn btn-delete" onClick={handleBulkDelete}>
+                                    <button className="btn btn-delete btn-standard" onClick={handleBulkDelete}>
                                         선택 삭제 ({selectedEvents.length})
                                     </button>
                                 )}
-                                <button className="btn btn-add" onClick={() => navigate('/event-add')}>
+                                <button className="btn btn-add btn-standard" onClick={() => navigate('/event-add')}>
                                     새 이벤트 등록
                                 </button>
                             </div>

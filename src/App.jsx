@@ -17,6 +17,11 @@ import EventAdd from "./pages/Event_add.jsx";
 import EventEdit from "./pages/Eventedit.jsx";
 import 'antd/dist/reset.css';
 
+import NoticeList from "./pages/Notice_promotion.jsx";
+import NoticeAdd from './pages/NoticeAdd.jsx';
+import NoticeEdit from './pages/NoticeEdit.jsx';
+
+
 function App() {
     const [count, setCount] = useState(0)
 
@@ -36,6 +41,10 @@ function App() {
                         <Route path="/event-promotion" element={<EventList />} />
                         <Route path="/event-add" element={<EventAdd />} />
                         <Route path="/event-edit/:id" element={<EventEdit />} />
+
+                        <Route path="/notice-promotion" element={<NoticeList />} />
+                        <Route path="/notice-add" element={<NoticeAdd />} />
+                        <Route path="/notice-edit/:id" element={<NoticeEdit />} />
 
 
                     </Routes>

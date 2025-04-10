@@ -98,7 +98,7 @@ function Sidebar(props) {
                         <div className="sub-menu">
                             <ul>
                                 <li><Link to="/Event-promotion">이벤트/프로모션관리</Link></li>
-                                <li><Link to="">공지사항관리</Link></li>
+                                <li><Link to="/notice-promotion">공지사항관리</Link></li>
                                 <li><Link to="">이용후기관리</Link></li>
                                 <li><Link to="">FAQ관리</Link></li>
                                 <li><Link to="">1:1문의관리</Link></li>
