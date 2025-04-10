@@ -1,38 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import supabase from '../lib/supabase';
-import '../css/Evpro.css';
+import '../css/NoticeForm.css';
 
-
-function EventEdit() {
+function NoticeEdit() {
     const navigate = useNavigate();
-    const { id } = useParams(); // URL에서 이벤트 ID 가져오기
+    const { id } = useParams();
     const [formData, setFormData] = useState({
         title: '',
-        date: '',
-        link_url: '',
-        img_url: '',
-        status: '이벤트 진행중'
+        content: '',
+        img_url: ''
     });
     const [newFile, setNewFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
 
-    // 1. 기존 이벤트 정보 불러오기
     useEffect(() => {
-        if (!id) return;
-
-        const fetchEvent = async () => {
+        const fetchNotice = async () => {
             const { data, error } = await supabase
-                .from('withgo_event')
+                .from('withgo_notifications')
                 .select('*')
                 .eq('id', id)
                 .single();
 
             if (error || !data) {
-                alert('이벤트 데이터를 불러오는 데 실패했습니다');
-                console.error(error || '데이터 없음');
+                alert('공지 불러오기 실패!');
                 return;
             }
 
@@ -40,37 +31,33 @@ function EventEdit() {
             setPreviewUrl(data.img_url);
         };
 
-        fetchEvent();
+        fetchNotice();
     }, [id]);
 
-
-    // 2. 폼 값 변경
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    // 3. 새 이미지 선택 시 처리
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setNewFile(file);
         setPreviewUrl(URL.createObjectURL(file));
     };
 
-    // 4. 저장 (업데이트) 처리
     const handleSubmit = async (e) => {
         e.preventDefault();
         let updatedImageUrl = formData.img_url;
 
         if (newFile) {
             const fileName = `${Date.now()}_${newFile.name}`;
-            const filePath = `event-images/${fileName}`;
+            const filePath = `notice-images/${fileName}`;
             const { error: uploadError } = await supabase.storage
                 .from('images')
                 .upload(filePath, newFile);
 
             if (uploadError) {
-                alert('이미지 업로드에 실패했습니다');
+                alert('이미지 업로드 실패');
                 console.error(uploadError);
                 return;
             }
@@ -84,28 +71,26 @@ function EventEdit() {
         }
 
         const { error } = await supabase
-            .from('withgo_event')
+            .from('withgo_notifications')
             .update({
                 title: formData.title,
-                date: formData.date,
-                link_url: formData.link_url,
-                status: formData.status,
+                content: formData.content,
                 img_url: updatedImageUrl
             })
             .eq('id', id);
 
         if (error) {
-            alert('수정에 실패했습니다');
+            alert('공지 수정에 실패했습니다');
             console.error(error);
         } else {
-            alert('이벤트가 수정되었습니다');
-            navigate('/event-promotion');
+            alert('공지 수정이 완료되었습니다');
+            navigate('/notice-promotion');
         }
     };
 
     return (
         <div className="main">
-            <div className="header">이벤트 수정</div>
+            <div className="header">공지사항 수정</div>
             <div className="card">
                 <form onSubmit={handleSubmit} className="form">
                     <div className="form-group">
@@ -114,17 +99,12 @@ function EventEdit() {
                     </div>
 
                     <div className="form-group">
-                        <label>날짜</label>
-                        <input type="date" name="date" value={formData.date} onChange={handleChange} required />
+                        <label>내용</label>
+                        <textarea name="content" value={formData.content} onChange={handleChange} required />
                     </div>
 
                     <div className="form-group">
-                        <label>유튜브 링크</label>
-                        <input type="text" name="link_url" value={formData.link_url} onChange={handleChange} required />
-                    </div>
-
-                    <div className="form-group">
-                        <label>이미지 변경 (선택)</label>
+                        <label>이미지 변경</label>
                         <input type="file" accept="image/*" onChange={handleFileChange} />
                         {previewUrl && (
                             <div style={{ marginTop: '10px' }}>
@@ -133,24 +113,11 @@ function EventEdit() {
                         )}
                     </div>
 
-                    <div className="form-group">
-                        <label>상태</label>
-                        <select name="status" value={formData.status} onChange={handleChange}>
-                            <option value="이벤트 진행중">이벤트 진행중</option>
-                            <option value="이벤트 종료">이벤트 종료</option>
-                        </select>
-                        <FontAwesomeIcon icon={faArrowDown} className="select-icon" />
-                    </div>
-
                     <div className="form-button-wrapper">
-                        <button
-                            type="button"
-                            className="btn btn-back btn-standard"
-                            onClick={() => navigate(-1)} // 바로 이전 페이지로!
-                        >
+                        <button type="button" className="btn btn-back" onClick={() => navigate(-1)}>
                             뒤로가기
                         </button>
-                        <button type="submit" className="btn btn-edit-save btn-standard">수정 완료</button>
+                        <button type="submit" className="btn btn-edit-save">수정 완료</button>
                     </div>
                 </form>
             </div>
@@ -158,4 +125,4 @@ function EventEdit() {
     );
 }
 
-export default EventEdit;
+export default NoticeEdit;
