@@ -13,14 +13,12 @@ import StorageCreate from "./pages/StorageCreate.jsx";
 
 
 import EventList from "./pages/Event_promotion.jsx";
-<<<<<<< HEAD
 import Admin from "./pages/Admin.jsx";
 
-=======
+
 import EventAdd from "./pages/Event_add.jsx";
 import EventEdit from "./pages/Eventedit.jsx";
 import 'antd/dist/reset.css';
->>>>>>> main
 
 function App() {
     const [count, setCount] = useState(0)
