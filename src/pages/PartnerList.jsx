@@ -1,14 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {supabase} from "../lib/supabase.js";
 import "../css/PartnerList.css"
+import {Checkbox} from "antd";
+import { useNavigate } from 'react-router-dom';
 
 function PartnerList() {
     const [partners, setPartners] = useState([]);
-
+    const [selectedPartners, setSelectedPartners] = useState([]);
 
     // 이미지/지도 클릭 시 열리는 모달
     const [modalContent, setModalContent] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const navigate = useNavigate();
 
     const openModal = (content) => {
         setModalContent(content);
@@ -20,23 +24,58 @@ function PartnerList() {
         setIsModalOpen(false);
     };
 
-    useEffect(() => {
-        async function fetchPartners() {
-            const {data, error} = await supabase
-                .from('partner')
-                .select('*')
-                .order('created_at', {ascending: false});
+    // 데이터 불러오기
+    const fetchPartners = async () => {
+        const { data, error } = await supabase
+            .from('partner')
+            .select('*')
+            .order('created_at', { ascending: false });
 
-            if (error) {
-                console.error('제휴숙소 조회 오류:', error);
-            } else {
-                setPartners(data);
-            }
+        if (error) {
+            console.error('제휴숙소 조회 오류:', error);
+        } else {
+            setPartners(data);
         }
+    };
 
+    useEffect(() => {
         fetchPartners();
     }, []);
 
+    // 체크박스 전체 선택
+    const handleSelectAll = (e) => {
+        if (e.target.checked) {
+            const allIds = partners.map(p => p.partner_id);
+            setSelectedPartners(allIds);
+        } else {
+            setSelectedPartners([]);
+        }
+    };
+
+    // 체크박스 개별 선택
+    const handleCheckboxChange = (id) => {
+        setSelectedPartners(prev =>
+            prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
+        );
+    };
+
+    // 선택 삭제
+    const handleBulkDelete = async () => {
+        if (!window.confirm('선택한 숙소를 삭제하시겠습니까?')) return;
+
+        const { error } = await supabase
+            .from('partner')
+            .delete()
+            .in('partner_id', selectedPartners);
+
+        if (error) {
+            alert('삭제 중 오류 발생');
+        } else {
+            alert('선택한 숙소가 삭제되었습니다');
+            fetchPartners();
+            setSelectedPartners([]);
+        }
+    };
 
     return (
         <>
@@ -44,10 +83,25 @@ function PartnerList() {
                 <div className='header'>제휴숙소관리</div>
 
                 <div className='card'>
+                    <div className='middle'>
                     <h3>제휴숙소목록</h3>
+                    <div className="add-button-wrapper">
+                        {selectedPartners.length > 0 && (
+                            <button className="btn btn-delete" onClick={handleBulkDelete}>
+                                선택 삭제 ({selectedPartners.length})
+                            </button>
+                        )}
+                    </div>
+                    </div>
                         <table>
                             <thead>
                             <tr>
+                                <th className='P_Checkbox'>
+                                    <Checkbox
+                                        onChange={handleSelectAll}
+                                        checked={selectedPartners.length === partners.length && partners.length > 0}
+                                    />
+                                </th>
                                 <th className='id'>ID</th>
                                 <th className='name'>숙소명</th>
                                 <th className='address'>주소</th>
@@ -55,11 +109,18 @@ function PartnerList() {
                                 <th className='map'>지도</th>
                                 <th className='img'>숙소 이미지</th>
                                 <th className='date'>등록일</th>
+                                <th className='edit'>수정</th>
                             </tr>
                             </thead>
                             <tbody>
                             {partners.map((partner) => (
                                 <tr key={partner.partner_id}>
+                                    <td>
+                                        <Checkbox
+                                            checked={selectedPartners.includes(partner.partner_id)}
+                                            onChange={() => handleCheckboxChange(partner.partner_id)}
+                                        />
+                                    </td>
                                     <td className='id'>{partner.partner_id}</td>
                                     <td className='name'>{partner.name}</td>
                                     <td className='address'>{partner.address}</td>
@@ -107,6 +168,14 @@ function PartnerList() {
                                         )}
                                     </td>
                                     <td>{new Date(partner.created_at).toLocaleString('ko-KR')}</td>
+                                    <td>
+                                        <button
+                                            className="btn btn-edit"
+                                            onClick={() => navigate(`/partner/edit/${partner.partner_id}`)}
+                                        >
+                                            수정
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                             </tbody>

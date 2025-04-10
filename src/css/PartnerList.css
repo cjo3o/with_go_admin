@@ -22,6 +22,12 @@ table {
     overflow-x: auto;
     min-width: 800px;
 }
+.middle{
+    display: flex;
+}
+.P_Checkbox{
+    width: auto;
+}
 
 th.id, td.id {
     width: 5%;
