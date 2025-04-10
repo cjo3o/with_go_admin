@@ -112,7 +112,7 @@ function Sidebar(props) {
                     {openMenu === 'role' && (
                         <div className="sub-menu">
                             <ul>
-                                <li><Link to="">직원목록</Link></li>
+                                <li><Link to="/employee-list">직원목록</Link></li>
                             </ul>
                         </div>
                     )}

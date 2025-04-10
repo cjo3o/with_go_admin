@@ -10,9 +10,9 @@ import PartnerList from "./pages/PartnerList.jsx";
 import PartnerCreate from "./pages/PartnerCreate.jsx";
 import StorageList from "./pages/StorageList.jsx";
 import StorageCreate from "./pages/StorageCreate.jsx";
-
-
 import EventList from "./pages/Event_promotion.jsx";
+import employeeList from "./pages/EmployeeList.jsx";
+import EmployeeList from "./pages/EmployeeList.jsx";
 
 
 function App() {
@@ -30,8 +30,8 @@ function App() {
                         <Route path="/partner/create" element={<PartnerCreate />} />
                         <Route path="/storage/list" element={<StorageList />} />
                         <Route path="/storage/create" element={<StorageCreate />} />
-
                         <Route path="/event-promotion" element={<EventList />} />
+                        <Route path="/employee-list" element={<EmployeeList />} />
 
                     </Routes>
                 </BrowserRouter>
