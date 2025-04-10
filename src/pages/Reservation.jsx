@@ -2,9 +2,11 @@ import React, {useEffect} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
+import Select from "../Component/Select.jsx";
+import luggage2 from "../images/re_luggage2.jpg"
+import luggage1 from "../images/re_luggage1.jpg"
 
 import('../css/Reservation.css')
-
 
 function Reservation() {
 
@@ -68,22 +70,38 @@ function Reservation() {
                     <h1>17 건</h1>
                 </div>
                 <div className="content_second_one">
-                    <img src="" alt="배송캐리어" style={{marginLeft: "30px"}} />
+                    <img src={luggage2} alt="배송캐리어" style={{marginLeft: "30px"}}/>
                     <div>
                         <h3>배송예약</h3>
                         <h1>20건</h1>
                     </div>
-                    <img src="" alt="보관캐리어"/>
+                    <img src={luggage1} alt="보관캐리어"/>
                     <div>
                         <h3>보관예약</h3>
                         <h1>42건</h1>
                     </div>
                     <div className="border-right"></div>
+                    <div className="border-left">
+                        <div className="complete">
+                            <h3>처리완료</h3>
+                            <h1>12건</h1>
+                        </div>
+                        <div className="cancel">
+                            <h3>취소</h3>
+                            <h1>6건</h1>
+                        </div>
+                        <div className="not-yet">
+                            <h3 style={{border:"3px solid red"}}>미배정</h3>
+                            <h1>2건</h1>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div className="content">
                 <div className="content_third">
-
+                    <Select></Select>
+                    <input type="text"/>
+                    <button>검색</button>
                 </div>
             </div>
         </div>

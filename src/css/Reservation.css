@@ -59,7 +59,7 @@ button{
 }
 
 .content_second{
-    min-width: 25%;
+    min-width: 22%;
     /*position: absolute;*/
     height: 150px;
     background-color: #595AD5;
@@ -79,14 +79,21 @@ button{
 }
 
 .content_second_one{
-    min-width: 74%;
+    min-width: 75%;
     height: 150px;
     display: flex;
     place-items: center;
-    gap: 40px;
+    justify-content: space-around;
     border-radius: 8px;
     background-color: #e4e4e4;
+}
 
+.content_second_one > img {
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    border-radius: 50%;
+    object-fit: contain; /* ✅ contain → cover 로 바꿔주기 */
 }
 
 .content_second_one h3{color: #6e6e6e;}
@@ -94,14 +101,64 @@ button{
 
 .border-right{
     height: 150px;
-    margin-left: 25px;
+    margin-left: 40px;
     border-right: 2px dashed #787878;
+}
+
+.border-left{
+    width: 45%;
+    display: flex;
+    justify-content: space-around;
+    text-align: center
+}
+
+.border-left h3{
+    width: 120px;
+    height: 40px;
+    line-height: 35px;
+    font-size: 20px;
+    border: 3px solid #344d68;
+    border-radius: 50px;
+    padding: 0 10px;
 }
 
 .content_third{
     width: 100%;
     height: 60px;
     margin-top: 20px;
+    display: flex;
+    /*justify-content: center;*/
+    place-items: center;
     border-radius: 8px;
     background-color: #e4e4e4;
+}
+
+.content_third input[type=text]{
+    width: 15%;
+    height: 32px;
+    border: 0.5px solid #787878;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.content_third button{
+    margin-left: 10px;
+    width: 3rem;
+    height: 32px;
+    font-size: 18px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    background-color: #787878;
+}
+
+.content_third button:hover{
+    background-color: rgba(120, 120, 120, 0.6);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1)
+}
+
+.select{
+    width: 100px;
+    margin: 13px 10px;
+    height: 32px;
 }
