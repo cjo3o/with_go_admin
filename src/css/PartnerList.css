@@ -22,16 +22,41 @@ table {
     overflow-x: auto;
     min-width: 800px;
 }
-.middle{
+.middle {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
 }
+
+.add-button-wrapper {
+    /* 필요 시 버튼 사이 간격 */
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    min-height: 40px;
+}
+
 .P_Checkbox{
     width: auto;
 }
 
-th.id, td.id {
-    width: 5%;
-    text-align: center;
+
+th.name, td.name {
+    padding: 12px 30px;
+}
+
+th.address, td.address {
+    padding: 12px 20px;
+}
+
+th.phone, td.phone {
+    padding: 12px 20px;
+}
+
+th.map, td.map {
+    cursor: pointer;
+    padding: 12px 30px;
 }
 
 .map-wrapper {
@@ -49,19 +74,28 @@ th.id, td.id {
 }
 
 /* 이미지 셀 이미지 사이즈 제한 */
-th.img, td.img {
-    width: 120px;
-    text-align: center;
+th.img, td.img{
     cursor: pointer;
+    padding: 12px 1vw;
 }
 
 td.img img:hover {
     transform: scale(1.05);
 }
 
+th.date, td.date {
+    width: 12%;
+    text-align: center;
+    padding: 12px 30px;
+}
+
 /* 마우스 호버 효과 */
 tbody tr:hover {
     background-color: #f9f9f9;
+}
+
+.add-button-wrapper {
+    margin: 0;
 }
 
 .modal-overlay {
