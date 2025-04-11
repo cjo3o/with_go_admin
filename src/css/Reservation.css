@@ -79,6 +79,7 @@ button{
 }
 
 .content_second_one{
+    width: 1200px;
     min-width: 75%;
     height: 150px;
     display: flex;
@@ -145,7 +146,7 @@ button{
     margin-left: 10px;
     width: 3rem;
     height: 32px;
-    font-size: 18px;
+    font-size: 16px;
     color: white;
     border: none;
     border-radius: 5px;
@@ -158,7 +159,39 @@ button{
 }
 
 .select{
-    width: 100px;
     margin: 13px 10px;
     height: 32px;
+}
+
+.content_middle{
+    width: 95%;
+    margin: 0 auto;
+}
+
+.content_middle_one{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    place-items: center;
+}
+
+.content_middle button{
+    width: 120px;
+    height: 40px;
+    font-size: 18px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    background-color: #787878;
+}
+
+.content_middle button:hover{
+    background-color: rgba(120, 120, 120, 0.6);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1)
+}
+
+.select_1{
+    /*float: right;*/
+
+    border-radius: 5px;
 }

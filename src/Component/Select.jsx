@@ -10,7 +10,7 @@ const App = () => (
     <Select
         className="select"
         defaultValue="Name"
-        style={{ width: 200 }}
+        style={{ width: 125 }}
         onChange={handleChange}
         options={[
             {

@@ -3,8 +3,9 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
 import Select from "../Component/Select.jsx";
-import luggage2 from "../images/re_luggage2.jpg"
-import luggage1 from "../images/re_luggage1.jpg"
+import luggage2 from "../images/luggage_02.png"
+import luggage1 from "../images/luggage_01.png"
+import Select_1 from "../Component/Select_1.jsx";
 
 import('../css/Reservation.css')
 
@@ -99,11 +100,19 @@ function Reservation() {
             </div>
             <div className="content">
                 <div className="content_third">
-                    <Select></Select>
+                    <Select/>
                     <input type="text"/>
                     <button>검색</button>
                 </div>
             </div>
+                <div className="content_middle">
+                    <div className="content_middle_one">
+                        <button>다중관리</button>
+                        <Select_1/>
+                    </div>
+                    <div>
+                    </div>
+                </div>
         </div>
     );
 }
