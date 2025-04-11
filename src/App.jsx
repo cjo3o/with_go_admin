@@ -20,7 +20,7 @@ import 'antd/dist/reset.css';
 import NoticeList from "./pages/Notice_promotion.jsx";
 import NoticeAdd from './pages/NoticeAdd.jsx';
 import NoticeEdit from './pages/NoticeEdit.jsx';
-
+import ReviewList from './pages/Review_promotion'
 
 function App() {
     const [count, setCount] = useState(0)
@@ -45,6 +45,7 @@ function App() {
                         <Route path="/notice-promotion" element={<NoticeList />} />
                         <Route path="/notice-add" element={<NoticeAdd />} />
                         <Route path="/notice-edit/:id" element={<NoticeEdit />} />
+                        <Route path="/admin/review" element={<ReviewList />} />
 
 
                     </Routes>
