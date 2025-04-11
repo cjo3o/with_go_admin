@@ -1,6 +1,6 @@
-// ✅ 최신 요구사항 완전 반영된 Review_promotion.jsx 전체 코드
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Checkbox } from 'antd';
 import supabase from '../lib/supabase';
 import '../css/Review.css';
@@ -28,14 +28,16 @@ function ReviewList() {
         if (!error) setReviews(data);
     };
 
+    const formatDate = (dateStr) => new Date(dateStr).toISOString().split('T')[0];
+
     const handleSelect = (checked, id) => {
-        setSelectedIds(prev =>
-            checked ? [...prev, id] : prev.filter(item => item !== id)
+        setSelectedIds((prev) =>
+            checked ? [...prev, id] : prev.filter((item) => item !== id)
         );
     };
 
     const handleSelectAll = (checked) => {
-        if (checked) setSelectedIds(currentItems.map(r => r.review_num));
+        if (checked) setSelectedIds(currentItems.map((r) => r.review_num));
         else setSelectedIds([]);
     };
 
@@ -47,7 +49,7 @@ function ReviewList() {
             .in('review_num', selectedIds);
 
         if (!error) {
-            setReviews(reviews.filter(r => !selectedIds.includes(r.review_num)));
+            setReviews(reviews.filter((r) => !selectedIds.includes(r.review_num)));
             setSelectedIds([]);
             alert('삭제 완료되었습니다.');
         }
@@ -77,8 +79,12 @@ function ReviewList() {
                     <thead>
                     <tr>
                         <th className="col-select">
-                            <Checkbox onChange={(e) => handleSelectAll(e.target.checked)}
-                                      checked={selectedIds.length === currentItems.length && currentItems.length > 0}
+                            <Checkbox
+                                onChange={(e) => handleSelectAll(e.target.checked)}
+                                checked={
+                                    selectedIds.length === currentItems.length &&
+                                    currentItems.length > 0
+                                }
                             />
                         </th>
                         <th className="col-title">제목</th>
@@ -90,26 +96,37 @@ function ReviewList() {
                     </tr>
                     </thead>
                     <tbody>
-                    {currentItems.map(r => (
+                    {currentItems.map((r) => (
                         <tr key={r.review_num} className={r.is_best ? 'review-best' : ''}>
                             <td className="col-select">
-                                <Checkbox onChange={(e) => handleSelect(e.target.checked, r.review_num)}
-                                          checked={selectedIds.includes(r.review_num)}
+                                <Checkbox
+                                    onChange={(e) => handleSelect(e.target.checked, r.review_num)}
+                                    checked={selectedIds.includes(r.review_num)}
                                 />
                             </td>
                             <td className="col-title">{r.title || '(제목 없음)'}</td>
-                            <td className="col-content single-line" style={{ textAlign: 'left' }}>{r.review_txt || '(내용 없음)'}</td>
+                            <td className="col-content single-line" style={{ textAlign: 'left' }}>
+                                {r.review_txt || '(내용 없음)'}
+                            </td>
                             <td className="col-writer">{r.name || '익명'}</td>
                             <td className="col-date">
-                                {r.created_at ? new Date(r.created_at).toLocaleDateString('ko-KR', { year: 'numeric', month: 'short', day: 'numeric' }) : '날짜 없음'}
+                                {r.created_at ? formatDate(r.created_at) : '날짜 없음'}
                             </td>
                             <td className="col-status">
-                                <button className="btn btn-best" onClick={() => toggleBest(r.review_num, r.is_best)}>
-                                    {r.is_best ? '해제' : '지정'}
+                                <button
+                                    className={`btn btn-best ${r.is_best ? 'pink' : 'blue'}`}
+                                    onClick={() => toggleBest(r.review_num, r.is_best)}
+                                >
+                                    {r.is_best ? '해제' : '등록'}
                                 </button>
                             </td>
                             <td className="col-actions">
-                                <button className="btn btn-edit" onClick={() => alert('수정 기능 준비 중')}>수정</button>
+                                <button
+                                    className="btn btn-edit"
+                                    onClick={() => alert('수정 기능 준비 중')}
+                                >
+                                    수정
+                                </button>
                             </td>
                         </tr>
                     ))}
@@ -119,7 +136,10 @@ function ReviewList() {
                         <td colSpan="7">
                             <div className="add-button-wrapper">
                                 {selectedIds.length > 0 && (
-                                    <button className="btn btn-delete" onClick={handleDeleteSelected}>
+                                    <button
+                                        className="btn btn-delete"
+                                        onClick={handleDeleteSelected}
+                                    >
                                         선택 삭제 ({selectedIds.length})
                                     </button>
                                 )}
@@ -130,6 +150,24 @@ function ReviewList() {
                 </table>
 
                 <div className="pagination">
+
+                    <button
+                        onClick={() => handlePageChange(1)}
+                        className="btn"
+                        disabled={currentPage === 1}
+                    >
+                        <i className="fa-solid fa-angles-left"></i>
+                    </button>
+
+
+                    <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        className="btn"
+                        disabled={currentPage === 1}
+                    >
+                        <i className="fa-solid fa-chevron-left"></i>
+                    </button>
+
                     {[...Array(totalPages)].map((_, i) => (
                         <button
                             key={i + 1}
@@ -139,7 +177,26 @@ function ReviewList() {
                             {i + 1}
                         </button>
                     ))}
+
+
+                    <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        className="btn"
+                        disabled={currentPage === totalPages}
+                    >
+                        <i className="fa-solid fa-chevron-right"></i>
+                    </button>
+
+
+                    <button
+                        onClick={() => handlePageChange(totalPages)}
+                        className="btn"
+                        disabled={currentPage === totalPages}
+                    >
+                        <i className="fa-solid fa-angles-right"></i>
+                    </button>
                 </div>
+
             </div>
         </div>
     );

@@ -1,7 +1,7 @@
 .main {
     flex-grow: 1;
     width: 100%;
-    padding: 50px 60px 0;
+    padding: 70px 60px 0;
     box-sizing: border-box;
 }
 
@@ -29,13 +29,12 @@
 
 .card {
     background-color: #ffffff;
-    padding: 30px;
+    padding: 40px;
     border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
     position: relative;
 }
-
 
 table {
     width: 100%;
@@ -46,7 +45,7 @@ table {
 th, td {
     text-align: center;
     vertical-align: middle;
-    padding: 12px 16px;
+    padding: 16px 16px;
     border-bottom: 1px solid #ddd;
     white-space: nowrap;
     overflow: hidden;
@@ -65,19 +64,19 @@ th {
 }
 
 .col-title {
-    width: 25%;
+    width: 18%;
     text-align: left;
     padding-left: 30px;
 }
 
 .col-content {
-    width: 25%;
+    width: 28%;
     text-align: left;
     padding-left: 16px;
 }
 
 .col-writer {
-    width: 15%;
+    width: 17%;
 }
 
 .col-date {
@@ -85,13 +84,12 @@ th {
 }
 
 .col-status {
-    width: 10%;
+    width: 13%;
 }
 
 .col-actions {
     width: 10%;
 }
-
 
 .btn {
     padding: 8px 16px;
@@ -123,11 +121,45 @@ th {
     background-color: rgb(247, 55, 79);
 }
 
-.btn-best {
-    background-color: rgb(255, 193, 7);
-    color: black;
+/* 등록(추가) 버튼: 테두리만 */
+.btn-add {
+    background-color: transparent;
+    color: rgb(0, 102, 204);
+    border: 2px solid rgb(0, 102, 204);
 }
 
+.btn-add:hover {
+    background-color: rgb(0, 102, 204);
+    color: white;
+}
+
+/* 베스트 버튼 상태별 스타일 */
+.btn-best {
+    background-color: transparent;
+    border: 2px solid;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.btn-best.blue {
+    color: rgb(0, 102, 204);
+    border-color: rgb(0, 102, 204);
+}
+
+.btn-best.blue:hover {
+    background-color: rgb(0, 102, 204);
+    color: white;
+}
+
+.btn-best.pink {
+    color: rgb(255, 64, 125);
+    border-color: rgb(255, 64, 125);
+}
+
+.btn-best.pink:hover {
+    background-color: rgb(255, 64, 125);
+    color: white;
+}
 
 .add-button-wrapper {
     display: flex;
@@ -137,24 +169,22 @@ th {
     margin-top: 10px;
 }
 
-
 .review-best {
     background-color: #fff7d6;
     font-weight: bold;
     color: #ff9900;
 }
 
-
 .pagination {
     display: flex;
     justify-content: center;
-    gap: 8px;
-    margin-top: 30px;
+    gap: 3px;
+    margin-top: 40px;
 }
 
 .pagination button {
-    padding: 6px 12px;
-    border-radius: 6px;
+    padding: 6px 11px;
+    border-radius: 3px;
     background-color: #e5e7eb;
     color: #111;
     border: none;
@@ -167,11 +197,18 @@ th {
     font-weight: bold;
 }
 
+.pagination i {
+    font-size: 14px;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 
 input[type='checkbox'] {
     margin-left: 4px;
 }
-
 
 .single-line {
     white-space: nowrap;

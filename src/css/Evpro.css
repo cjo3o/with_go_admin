@@ -291,3 +291,30 @@ tfoot td {
     width: 100%;
     box-sizing: border-box;
 }
+
+.event-table th:first-child,
+.event-table td:first-child {
+    width: 5%;
+}
+
+.event-table .col-title {
+    width: 30%;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.event-table .col-date {
+    width: 20%;
+}
+
+.event-table .col-link {
+    width: 25%;
+}
+
+.event-table .col-status {
+    width: 10%;
+}
+
+.event-table .col-actions {
+    width: 10%;
+}

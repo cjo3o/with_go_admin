@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Checkbox } from 'antd';
 import supabase from '../lib/supabase';
 import '../css/Evpro.css';
-import 'antd/dist/reset.css'; // antd 스타일도 꼭 포함해 주세요!
+import 'antd/dist/reset.css';
 
 function EventList() {
     const [events, setEvents] = useState([]);
@@ -21,6 +21,8 @@ function EventList() {
         };
         fetchEvents();
     }, []);
+
+    const formatDate = (dateStr) => new Date(dateStr).toISOString().split('T')[0];
 
     const handleCheckboxChange = (id) => {
         setSelectedEvents((prev) =>
@@ -60,7 +62,7 @@ function EventList() {
             <div className="card">
                 <h3>이벤트 목록</h3>
 
-                <table>
+                <table className="event-table">
                     <thead>
                     <tr>
                         <th>
@@ -86,20 +88,20 @@ function EventList() {
                                 />
                             </td>
                             <td className="col-title">{event.title}</td>
-                            <td>{event.date}</td>
+                            <td>{formatDate(event.date)}</td>
                             <td>
                                 <a href={event.link_url} target="_blank" rel="noopener noreferrer">
                                     상세보기 →
                                 </a>
                             </td>
                             <td>
-                  <span
-                      className={`status-badge ${
-                          event.status === '이벤트 진행중' ? 'active' : 'ended'
-                      }`}
-                  >
-                    {event.status}
-                  </span>
+                                    <span
+                                        className={`status-badge ${
+                                            event.status === '이벤트 진행중' ? 'active' : 'ended'
+                                        }`}
+                                    >
+                                        {event.status}
+                                    </span>
                             </td>
                             <td>
                                 <button
@@ -117,11 +119,17 @@ function EventList() {
                         <td colSpan="6">
                             <div className="add-button-wrapper">
                                 {selectedEvents.length > 0 && (
-                                    <button className="btn btn-delete btn-standard" onClick={handleBulkDelete}>
+                                    <button
+                                        className="btn btn-delete btn-standard"
+                                        onClick={handleBulkDelete}
+                                    >
                                         선택 삭제 ({selectedEvents.length})
                                     </button>
                                 )}
-                                <button className="btn btn-add btn-standard" onClick={() => navigate('/event-add')}>
+                                <button
+                                    className="btn btn-add btn-standard"
+                                    onClick={() => navigate('/event-add')}
+                                >
                                     새 이벤트 등록
                                 </button>
                             </div>
