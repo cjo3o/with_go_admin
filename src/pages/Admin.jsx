@@ -45,12 +45,42 @@ function Admin() {
       const AllData = [...deliveryType, ...storageType];
 
       AllData.sort((a, b) =>
-        (b.reservation_time || b.reserve_time)?.localeCompare(a.reservation_time || a.reserve_time)
+        (b.reservation_time || b.reserve_time)?.localeCompare(
+          a.reservation_time || a.reserve_time
+        )
       );
       settwoData(AllData);
     };
     supaData();
   }, []);
+
+  const eChange = async (e, item) => {
+    const status = e.target.value;
+    const tableName = item.type === "배송" ? "delivery" : "storage";
+
+    const keyColumn = item.type === "배송" ? "re_num" : "reservation_number";
+
+    const { error } = await supabase
+      .from(tableName)
+      .update({ situation: status })
+      .eq(keyColumn, item[keyColumn]);
+
+    if (error) {
+      console.error("Supabase 오류 메시지:", error.message);
+      console.error("상세 정보:", error.details);
+      alert("업데이트 중 오류 발생: " + error.message);
+    }
+    if (error) {
+      console.error(`${tableName} 업데이트 실패`, error);
+      alert("업데이트 중 오류가 발생했습니다.");
+    } else {
+      settwoData((prevData) =>
+        prevData.map((i) =>
+          i[keyColumn] === item[keyColumn] ? { ...i, situation: status } : i
+        )
+      );
+    }
+  };
 
   return (
     <>
@@ -117,13 +147,13 @@ function Admin() {
                 <tr>
                   <th style={{ width: "130px" }}>신청일</th>
                   <th style={{ width: "95px" }}>구분</th>
-                  <th style={{ width: "125px" }}>예약자명</th>
-                  <th style={{ width: "180px" }}>연락처</th>
-                  <th style={{ width: "270px" }}>예약기간</th>
-                  <th style={{ width: "275px" }}>짐갯수</th>
-                  <th style={{ width: "130px" }}>결제금액</th>
-                  <th style={{ width: "135px" }}>완료일</th>
-                  <th style={{ width: "135px" }}>진행상태</th>
+                  <th style={{ width: "130px" }}>예약자명</th>
+                  <th style={{ width: "175px" }}>연락처</th>
+                  <th style={{ width: "272px" }}>예약기간</th>
+                  <th style={{ width: "303px" }}>짐갯수</th>
+                  <th style={{ width: "129px" }}>결제금액</th>
+                  <th style={{ width: "196px" }}>완료일</th>
+                  <th style={{ width: "115px" }}>진행상태</th>
                 </tr>
               </thead>
               <tbody>
@@ -149,25 +179,41 @@ function Admin() {
                   return (
                     <tr key={index}>
                       <td>
-                        {(item.reservation_time || item.reserve_time)
-                          ? (item.reservation_time || item.reserve_time).slice(0,10).replaceAll("-", ".")
+                        {item.reservation_time || item.reserve_time
+                          ? (item.reservation_time || item.reserve_time)
+                              .slice(0, 10)
+                              .replaceAll("-", ".")
                           : "-"}
                       </td>
                       <td>{item.type}</td>
-                      <td>{item.name}</td>  
+                      <td>{item.name}</td>
                       <td>{item.phone}</td>
                       <td>
                         {item.storage_start_date && item.storage_end_date
-                          ? `${item.storage_start_date.replaceAll("-", ".")} ~ ${item.storage_end_date.replaceAll("-", ".")}`
+                          ? `${item.storage_start_date.replaceAll(
+                              "-",
+                              "."
+                            )} ~ ${item.storage_end_date.replaceAll("-", ".")}`
                           : item.delivery_date.replaceAll("-", ".") || "-"}
                       </td>
                       <td>{luggageInfo}</td>
                       <td>{`${item.price.toLocaleString()}원`}</td>
-                      <td>2025.04.10</td>
                       <td>
-                        <select className="select"  name="" id="">
-                          <option value="">보관/배송중</option>
-                          <option value="">완료</option>
+                        {item.success_time
+                          ? item.success_time
+                              .slice(0, 16)
+                              .replace("T", " ")
+                              .replaceAll("-", ".")
+                          : "-"}
+                      </td>
+                      <td>
+                        <select
+                          className="select"
+                          value={item.situation || "보관/배송중"}
+                          onChange={(e) => eChange(e, item)}
+                        >
+                          <option value="보관/배송중">보관/배송중</option>
+                          <option value="완료">완료</option>
                         </select>
                       </td>
                     </tr>
