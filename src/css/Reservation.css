@@ -170,12 +170,11 @@ button{
 
 .content_middle_one{
     margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    place-items: center;
+    /*display: flex;*/
+    /*place-items: center;*/
 }
 
-.content_middle button{
+.content_middle .button-more{
     width: 120px;
     height: 40px;
     font-size: 18px;
@@ -191,7 +190,7 @@ button{
 }
 
 .select_1{
-    /*float: right;*/
-
+    float: right;
+    right: 200px;
     border-radius: 5px;
 }

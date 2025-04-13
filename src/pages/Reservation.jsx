@@ -6,6 +6,7 @@ import Select from "../Component/Select.jsx";
 import luggage2 from "../images/luggage_02.png"
 import luggage1 from "../images/luggage_01.png"
 import Select_1 from "../Component/Select_1.jsx";
+import FloatingBtn from "../Component/ExcelDownload.jsx";
 
 import('../css/Reservation.css')
 
@@ -107,8 +108,9 @@ function Reservation() {
             </div>
                 <div className="content_middle">
                     <div className="content_middle_one">
-                        <button>다중관리</button>
+                        <button className="button-more">다중관리</button>
                         <Select_1/>
+                        <FloatingBtn/>
                     </div>
                     <div>
                     </div>
