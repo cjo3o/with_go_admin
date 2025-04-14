@@ -47,10 +47,14 @@ li>a:hover{
 
 .wrapper {
     display: flex;
-    height: 100%;
+    min-height: 100vh;
     background-color: #f4f6f9;
 }
 
+.sidebar {
+    height: auto;
+    min-height: 100vh;
+}
 
 .sidebar-logo {
     width: 100%;
@@ -99,8 +103,9 @@ li>a:hover{
     width: 250px;
     background-color: var(--sidebar-bg);
     color: white;
+    display: flex;
+    flex-direction: column;
     padding: 30px 0 30px 0;
-    height: 100vh;
 }
 
 .sidebar > ul {
@@ -147,7 +152,6 @@ li>a:hover{
 .main {
     flex-grow: 1;
     padding: 50px 60px 0;
-    height: 2000px;
 }
 
 .header {

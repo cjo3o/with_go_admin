@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {supabase} from "../lib/supabase.js";
+import supabase from '../lib/supabase';
 import '../css/partnerCreate.css';
 function PartnerCreate() {
     const [form, setForm] = useState({
