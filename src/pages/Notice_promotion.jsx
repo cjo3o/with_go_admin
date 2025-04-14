@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox } from 'antd';
 import supabase from '../lib/supabase';
-import '../css/Evpro.css';
 import '../css/NoticePromotion.css';
 
 function NoticeList() {
@@ -25,6 +24,8 @@ function NoticeList() {
         };
         fetchNotices();
     }, []);
+
+    const formatDate = (dateStr) => new Date(dateStr).toISOString().split('T')[0];
 
     const truncate = (text, length = 40) => {
         const noLineBreaks = text.replace(/[\r\n]+/g, ' ');
@@ -97,10 +98,13 @@ function NoticeList() {
                                 />
                             </td>
                             <td className="col-title">{notice.title}</td>
-                            <td>{new Date(notice.created_at).toLocaleDateString()}</td>
+                            <td>{formatDate(notice.created_at)}</td>
                             <td className="col-content">{truncate(notice.content)}</td>
                             <td className="col-actions">
-                                <button className="btn btn-edit btn-standard" onClick={() => navigate(`/notice-edit/${notice.id}`)}>
+                                <button
+                                    className="btn btn-edit btn-standard"
+                                    onClick={() => navigate(`/notice-edit/${notice.id}`)}
+                                >
                                     수정
                                 </button>
                             </td>
@@ -112,7 +116,10 @@ function NoticeList() {
                         <td colSpan="5">
                             <div className="add-button-wrapper">
                                 {selectedIds.length > 0 && (
-                                    <button className="btn btn-delete btn-standard" onClick={handleDeleteSelected}>
+                                    <button
+                                        className="btn btn-delete btn-standard"
+                                        onClick={handleDeleteSelected}
+                                    >
                                         선택 삭제 ({selectedIds.length})
                                     </button>
                                 )}
