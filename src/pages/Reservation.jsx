@@ -7,6 +7,7 @@ import luggage2 from "../images/luggage_02.png"
 import luggage1 from "../images/luggage_01.png"
 import Select_1 from "../Component/Select_1.jsx";
 import FloatingBtn from "../Component/ExcelDownload.jsx";
+import ExcelTable from "../Component/ExcelTable.jsx";
 
 import('../css/Reservation.css')
 
@@ -44,8 +45,7 @@ function Reservation() {
         getDate();
     }, [date])
 
-    return (
-        <div className="main">
+    return (<div className="main">
             <div className="submain">
                 <div className="header">
                     <h3>예약관리</h3>
@@ -93,7 +93,7 @@ function Reservation() {
                             <h1>6건</h1>
                         </div>
                         <div className="not-yet">
-                            <h3 style={{border:"3px solid red"}}>미배정</h3>
+                            <h3 style={{border: "3px solid red"}}>미배정</h3>
                             <h1>2건</h1>
                         </div>
                     </div>
@@ -106,17 +106,19 @@ function Reservation() {
                     <button>검색</button>
                 </div>
             </div>
-                <div className="content_middle">
-                    <div className="content_middle_one">
-                        <button className="button-more">다중관리</button>
-                        <Select_1/>
-                        <FloatingBtn/>
-                    </div>
-                    <div>
-                    </div>
+            <div className="content_middle">
+                <div className="content_middle_one">
+                    {/*<button className="button-more">다중관리</button>*/}
+                    {/*<div className="downmenu">*/}
+                    {/*</div>*/}
+                    <Select_1/>
+                    <FloatingBtn/>
                 </div>
-        </div>
-    );
+                <div className="content_middle_two">
+                    <ExcelTable/>
+                </div>
+            </div>
+        </div>);
 }
 
 export default Reservation;

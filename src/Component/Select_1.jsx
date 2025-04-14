@@ -9,10 +9,12 @@ const handleChange = value => {
 const App = () => (
     <Space
         wrap
-        className="select_1">
+        className="select_1"
+        style={{ borderRadius: 5 }}
+    >
         <Select
             defaultValue="최근등록순"
-            style={{ width: 130, height: 40 }}
+            style={{ width: 130, height: 40}}
             onChange={handleChange}
             options={[
                 { value: '최근등록순', label: '최근등록순' },
