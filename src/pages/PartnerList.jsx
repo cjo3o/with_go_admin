@@ -110,12 +110,12 @@ function PartnerList() {
                         <div className="middle-actions" style={{ display: 'flex'}}>
                             <div className="add-button-wrapper">
                                 {selectedPartners.length > 0 && (
-                                    <button className="btn btn-delete" onClick={handleBulkDelete}>
+                                    <button style={{marginTop:0}} className="btn btn-delete" onClick={handleBulkDelete}>
                                         삭제 ({selectedPartners.length})
                                     </button>
                                 )}
                             </div>
-                            <div style={{marginBottom: '20px'}}>
+                            <div style={{marginBottom: '16px'}}>
                                 <Lookup onSearch={handleSearch}/>
                             </div>
                         </div>

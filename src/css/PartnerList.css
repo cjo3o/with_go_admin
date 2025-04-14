@@ -5,6 +5,14 @@ table {
     table-layout: fixed;
 }
 
+.btn > .btn-delete {
+    margin-top: 0;
+}
+
+.btn > .btn-standard {
+    margin-top: 10px;
+}
+
 .main {
     flex-grow: 1;
     padding: 50px 60px 0;
@@ -35,6 +43,11 @@ table {
     gap: 8px;
     justify-content: flex-end;
     min-height: 40px;
+}
+
+.add-button-wrapper {
+    margin-top: 0;
+    margin-bottom: 15px;
 }
 
 .P_Checkbox{
@@ -92,10 +105,6 @@ th.date, td.date {
 /* 마우스 호버 효과 */
 tbody tr:hover {
     background-color: #f9f9f9;
-}
-
-.add-button-wrapper {
-    margin: 0;
 }
 
 .modal-overlay {
