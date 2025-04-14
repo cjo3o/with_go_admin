@@ -5,13 +5,6 @@ table {
     table-layout: fixed;
 }
 
-.btn > .btn-delete {
-    margin-top: 0;
-}
-
-.btn > .btn-standard {
-    margin-top: 10px;
-}
 
 .main {
     flex-grow: 1;
@@ -45,9 +38,8 @@ table {
     min-height: 40px;
 }
 
-.add-button-wrapper {
-    margin-top: 0;
-    margin-bottom: 15px;
+.PartnerList_Search {
+    align-content: center;
 }
 
 .P_Checkbox{

@@ -39,11 +39,14 @@ const Lookup = ({ onSearch }) => (
         popupClassName="certain-category-search-dropdown"
         popupMatchSelectWidth={500}
         style={{ width: 250 }}
-        options={options}
-        size="large"
-        onSearch={onSearch}
+        options={[]} // 자동완성 옵션은 안 쓰니까 비워둬도 됨
     >
-        <Input.Search size="large" placeholder="검색어를 입력하세요" />
+        <Input.Search
+            size="large"
+            placeholder="검색어를 입력하세요"
+            onSearch={onSearch}
+            allowClear
+        />
     </AutoComplete>
 );
 export default Lookup;

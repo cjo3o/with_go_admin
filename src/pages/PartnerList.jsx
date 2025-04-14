@@ -107,15 +107,15 @@ function PartnerList() {
                 <div className='card'>
                     <div className='middle'>
                         <h3>제휴숙소목록</h3>
-                        <div className="middle-actions" style={{ display: 'flex'}}>
-                            <div className="add-button-wrapper">
+                        <div className="middle-actions" style={{display: 'flex', alignContent: 'center'}}>
+                            <div style={{marginTop: 0}} className="add-button-wrapper">
                                 {selectedPartners.length > 0 && (
-                                    <button style={{marginTop:0}} className="btn btn-delete" onClick={handleBulkDelete}>
+                                    <button className="btn btn-delete" onClick={handleBulkDelete}>
                                         삭제 ({selectedPartners.length})
                                     </button>
                                 )}
                             </div>
-                            <div style={{marginBottom: '16px'}}>
+                            <div className='PartnerList_Search'>
                                 <Lookup onSearch={handleSearch}/>
                             </div>
                         </div>
