@@ -226,8 +226,8 @@
   text-align: center;
 }
 
-
-th, td {
+th,
+td {
   padding: 10px;
 }
 
@@ -243,8 +243,33 @@ tr {
 
 .status-log-list tr {
   cursor: auto;
-  }
+}
 
 .status-log-list p {
-margin-bottom: 0;
+  margin-bottom: 0;
+}
+
+.list_up {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin_search {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search_sel {
+  text-align: center;
+  width: 100px;
+  height: 40px;
+  margin-right: 5px;
+  margin-top: 10px;
+  background: #ffffff;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-radius: 6px;
 }
