@@ -3,6 +3,7 @@ import custody from "../assets/Icon/custody.svg";
 import delivery from "../assets/Icon/delivery.svg";
 import "../css/Admin.css";
 import { supabase } from "../lib/supabase.js";
+import Lookup from "../../src/layouts/Lookup.jsx";
 
 function Admin() {
   const selectOptions = {
@@ -13,6 +14,7 @@ function Admin() {
   const [deliveryt, setdelivery] = useState([]);
   const [storage, setstorage] = useState([]);
   const [twoData, settwoData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
   const [statusLogs, setStatusLogs] = useState({});
   const [completeCount, setCompleteCount] = useState(0);
   const [cancelCount, setCancelCount] = useState(0);
@@ -28,6 +30,11 @@ function Admin() {
   const todayStr = today.toISOString().slice(0, 10);
 
   const [openRow, setOpenRow] = useState(null); // 열려있는 행 관리
+
+  // 검색어 처리 함수
+  const handleSearch = (value) => {
+    setSearchTerm(value); // 검색어 상태 업데이트
+  };
 
   const toggleRow = async (index, item) => {
     const newOpenRow = openRow === index ? null : index;
@@ -148,6 +155,17 @@ function Admin() {
     };
     supaData();
   }, []);
+
+  // 검색어로 두 데이터 필터링
+  const filteredData = twoData.filter((item) => {
+    const searchLower = searchTerm.toLowerCase();
+    const nameMatch = item.name.toLowerCase().includes(searchLower);
+    const phoneMatch = item.phone.toLowerCase().includes(searchLower);
+    const dateMatch = (item.reservation_time || item.reserve_time)
+      ?.slice(0, 10)
+      .includes(searchLower);
+    return nameMatch || phoneMatch || dateMatch;
+  });
 
   const eChange = async (e, item) => {
     const status = e.target.value;
@@ -301,8 +319,25 @@ function Admin() {
           </div>
         </div>
         <div className="Admin_list">
-          <div className="list_up card">
-            <h3>실시간 예약현황</h3>
+          <div className="list card">
+            <div className="list_up">
+              <h3>실시간 예약현황</h3>
+              <div className="admin_search">
+                <div className="" style={{marginRight: "30px"}}>
+                  <button className="">전체</button>
+                  <button>배송</button>
+                  <button>보관</button>
+                </div>
+                <select className="search_sel">
+                  <option>예약자명</option>
+                  <option>연락처</option>
+                </select>
+                <Lookup
+                  onSearch={handleSearch}
+                  placeholder="검색어를 입력하세요" // 검색어 입력 필드 제공
+                />
+              </div>
+            </div>
             <table>
               <colgroup>
                 <col style={{ width: "3%" }} />
