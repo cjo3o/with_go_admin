@@ -205,7 +205,7 @@
 }
 
 .right1 h3 {
-  margin: 45px 0 20px 0;
+  margin: 60px 0 20px 0;
 }
 
 .right1 p {
@@ -214,9 +214,37 @@
   margin-bottom: 20px;
 }
 
+.right1 span {
+  display: block;
+  padding-bottom: 10px;
+}
+
 .select {
   width: 105px;
   height: 40px;
   border-radius: 5px;
   text-align: center;
+}
+
+
+th, td {
+  padding: 10px;
+}
+
+tr {
+  cursor: pointer;
+}
+
+.status-details {
+  /* background: #f9f9f9; */
+  padding: 10px;
+  /* border-top: 1px solid #ddd; */
+}
+
+.status-log-list tr {
+  cursor: auto;
+  }
+
+.status-log-list p {
+margin-bottom: 0;
 }
