@@ -115,6 +115,12 @@ function PartnerList() {
                                     </button>
                                 )}
                             </div>
+                            <div className="add-button-wrapper">
+                                <button className="btn btn-add btn-standard"
+                                        onClick={() => navigate('/partner/create')}>
+                                    새 제휴숙소 등록
+                                </button>
+                            </div>
                             <div className='PartnerList_Search'>
                                 <Lookup onSearch={handleSearch}/>
                             </div>
@@ -218,12 +224,7 @@ function PartnerList() {
                         ))}
                         </tbody>
                     </table>
-                    <div className="add-button-wrapper">
-                        <button className="btn btn-add btn-standard"
-                                onClick={() => navigate('/partner/create')}>
-                            새 제휴숙소 등록
-                        </button>
-                    </div>
+
                 </div>
             </div>
 
