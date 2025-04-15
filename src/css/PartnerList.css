@@ -23,6 +23,13 @@ table {
     overflow-x: auto;
     min-width: 800px;
 }
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 1행 4열 */
+    gap: 20px;
+}
+
 .middle {
     display: flex;
     justify-content: space-between;
