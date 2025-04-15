@@ -127,7 +127,7 @@ function EventList() {
                                     </button>
                                 )}
                                 <button
-                                    className="btn btn-add btn-standard"
+                                    className="btn btn-add-event btn-standard"
                                     onClick={() => navigate('/event-add')}
                                 >
                                     새 이벤트 등록

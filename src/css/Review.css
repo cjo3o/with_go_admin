@@ -1,8 +1,8 @@
-.main {
-    flex-grow: 1;
-    width: 100%;
-    padding: 70px 60px 0;
-    box-sizing: border-box;
+
+body {
+    font-size: 16px !important;
+    margin: 0;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .wrapper {
@@ -13,8 +13,17 @@
 
 .sidebar {
     width: 280px;
-    background-color: var(--sidebar-bg);
+    background-color: var(--sidebar-bg, #013f83);
     color: white;
+}
+
+
+.main {
+    flex-grow: 1;
+    width: 100%;
+    padding: 70px 60px 0;
+    box-sizing: border-box;
+    font-size: 16px;
 }
 
 .header {
@@ -36,6 +45,7 @@
     position: relative;
 }
 
+
 table {
     width: 100%;
     table-layout: fixed;
@@ -45,12 +55,13 @@ table {
 th, td {
     text-align: center;
     vertical-align: middle;
-    padding: 16px 16px;
+    padding: 16px;
     border-bottom: 1px solid #ddd;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-word;
+    font-size: 15px;
 }
 
 th {
@@ -58,48 +69,23 @@ th {
     font-weight: bold;
 }
 
-.col-select {
-    width: 5%;
-    text-align: center;
-}
 
-.col-title {
-    width: 18%;
-    text-align: left;
-    padding-left: 30px;
-}
+.col-select { width: 5%; }
+.col-title { width: 18%; text-align: left; padding-left: 30px; }
+.col-content { width: 28%; text-align: left; padding-left: 16px; }
+.col-writer { width: 12%; }
+.col-date { width: 13%; }
+.col-type { width: 9%; }
+.col-status { width: 9%; }
+.col-actions { width: 6%; }
 
-.col-content {
-    width: 28%;
-    text-align: left;
-    padding-left: 16px;
-}
-
-.col-writer {
-    width: 17%;
-}
-
-.col-date {
-    width: 15%;
-}
-
-.col-status {
-    width: 13%;
-}
-
-.col-actions {
-    width: 10%;
-}
 
 .btn {
     padding: 8px 16px;
     font-size: 14px;
-    font-weight: normal;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    box-sizing: border-box;
-    white-space: nowrap;
     margin: 0 4px;
 }
 
@@ -107,7 +93,6 @@ th {
     background-color: rgb(79, 23, 135);
     color: white;
 }
-
 .btn-edit:hover {
     background-color: rgb(24, 1, 97);
 }
@@ -116,24 +101,20 @@ th {
     background-color: rgb(158, 158, 158);
     color: white;
 }
-
 .btn-delete:hover {
     background-color: rgb(247, 55, 79);
 }
 
-/* 등록(추가) 버튼: 테두리만 */
 .btn-add {
     background-color: transparent;
     color: rgb(0, 102, 204);
     border: 2px solid rgb(0, 102, 204);
 }
-
 .btn-add:hover {
     background-color: rgb(0, 102, 204);
     color: white;
 }
 
-/* 베스트 버튼 상태별 스타일 */
 .btn-best {
     background-color: transparent;
     border: 2px solid;
@@ -145,7 +126,6 @@ th {
     color: rgb(0, 102, 204);
     border-color: rgb(0, 102, 204);
 }
-
 .btn-best.blue:hover {
     background-color: rgb(0, 102, 204);
     color: white;
@@ -155,19 +135,11 @@ th {
     color: rgb(255, 64, 125);
     border-color: rgb(255, 64, 125);
 }
-
 .btn-best.pink:hover {
     background-color: rgb(255, 64, 125);
     color: white;
 }
 
-.add-button-wrapper {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    padding-right: 20px;
-    margin-top: 10px;
-}
 
 .review-best {
     background-color: #fff7d6;
@@ -181,7 +153,6 @@ th {
     gap: 3px;
     margin-top: 40px;
 }
-
 .pagination button {
     padding: 6px 11px;
     border-radius: 3px;
@@ -190,21 +161,19 @@ th {
     border: none;
     cursor: pointer;
 }
-
 .pagination button.active {
     background-color: rgb(0, 102, 204);
     color: white;
     font-weight: bold;
 }
-
 .pagination i {
     font-size: 14px;
 }
-
 .pagination button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
+
 
 input[type='checkbox'] {
     margin-left: 4px;
@@ -214,4 +183,17 @@ input[type='checkbox'] {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+
+.ant-tabs-nav::before {
+    border-bottom: none !important;
+}
+.ant-tabs-tab-btn {
+    font-size: 16px !important;
+    font-weight: 500 !important;
+}
+.ant-tabs-nav {
+    display: flex !important;
+    justify-content: flex-end !important;
 }

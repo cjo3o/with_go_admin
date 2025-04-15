@@ -137,13 +137,14 @@ th {
     background-color: rgb(247, 55, 79);
 }
 
-.btn-add {
-    background-color: rgb(0, 102, 204);
+.btn-add-event {
+    background-color: rgb(158, 158, 158);
     color: white;
+    border: none;
 }
 
-.btn-add:hover {
-    background-color: rgb(1, 63, 131);
+.btn-add-event:hover {
+    background-color: rgb(0, 102, 204);
 }
 
 .btn-add-register {

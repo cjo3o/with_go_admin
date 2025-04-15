@@ -136,3 +136,14 @@ a {
 a:hover {
     color: rgb(0, 102, 204);
 }
+
+.btn-add-notice {
+    background-color: rgb(158, 158, 158);
+    color: white;
+    transition: background-color 0.2s ease-in-out;
+    align-self: auto;
+}
+
+.btn-add-notice:hover {
+    background-color: rgb(0, 102, 204);
+}
