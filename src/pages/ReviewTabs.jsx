@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Radio } from 'antd';
 import ReviewTable from './ReviewTable';
-import Sidebar from '../layouts/Sidebar';
 import '../css/Review.css';
-import '../css/ReviewWrapper.css';
+
 
 const ReviewTabs = () => {
     const [filterType, setFilterType] = useState('');

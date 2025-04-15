@@ -2,51 +2,28 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox } from 'antd';
 import supabase from '../lib/supabase';
-import '../css/Review.css';
-import '../css/ReviewWrapper.css';
 
 function ReviewTable({ filterType }) {
     const [reviews, setReviews] = useState([]);
     const [selectedIds, setSelectedIds] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalCount, setTotalCount] = useState(0);
     const itemsPerPage = 7;
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchTotalCount();
-    }, [filterType]);
-
-    useEffect(() => {
         fetchReviews();
-    }, [currentPage, filterType]);
-
-    const fetchTotalCount = async () => {
-        const { count } = await supabase
-            .from('review')
-            .select('*', { count: 'exact', head: true })
-            .match(filterType ? { type: filterType } : {});
-        if (count !== null) setTotalCount(count);
-    };
+    }, []);
 
     const fetchReviews = async () => {
-        const start = (currentPage - 1) * itemsPerPage;
-        const end = start + itemsPerPage - 1;
-
-        const query = supabase
+        const { data, error } = await supabase
             .from('review')
             .select('*')
             .not('review_num', 'is', null)
             .not('title', 'is', null)
             .not('created_at', 'is', null)
-            .order('created_at', { ascending: false })
-            .range(start, end);
+            .order('created_at', { ascending: false });
 
-        if (filterType) query.eq('type', filterType);
-
-        const { data, error } = await query;
-
-        if (!error && data) setReviews(data);
+        if (!error) setReviews(data);
     };
 
     const formatDate = (dateStr) => new Date(dateStr).toISOString().split('T')[0];
@@ -58,7 +35,7 @@ function ReviewTable({ filterType }) {
     };
 
     const handleSelectAll = (checked) => {
-        if (checked) setSelectedIds(reviews.map((r) => r.review_num));
+        if (checked) setSelectedIds(currentItems.map((r) => r.review_num));
         else setSelectedIds([]);
     };
 
@@ -84,12 +61,34 @@ function ReviewTable({ filterType }) {
         if (!error) fetchReviews();
     };
 
-    const totalPages = Math.ceil(totalCount / itemsPerPage);
+    const filteredReviews = filterType
+        ? reviews.filter((r) => r.type === filterType)
+        : reviews;
 
-    const handlePageChange = (pageNum) => setCurrentPage(pageNum);
+    const totalPages = Math.ceil(filteredReviews.length / itemsPerPage);
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredReviews.slice(indexOfFirstItem, indexOfLastItem);
+
+    const groupSize = 7;
+    const currentGroup = Math.floor((currentPage - 1) / groupSize);
+    const startPage = currentGroup * groupSize + 1;
+    const endPage = Math.min(startPage + groupSize - 1, totalPages);
+
+    const goToFirstGroup = () => setCurrentPage(1);
+    const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+    const goToNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    const goToNextGroup = () => {
+        const nextGroupPage = Math.min(endPage + 1, totalPages);
+        if (nextGroupPage > currentPage) setCurrentPage(nextGroupPage);
+    };
+    const goToPrevGroup = () => {
+        const prevGroupPage = Math.max(startPage - groupSize, 1);
+        if (prevGroupPage < currentPage) setCurrentPage(prevGroupPage);
+    };
 
     return (
-        <>
+        <div>
             <table>
                 <thead>
                 <tr>
@@ -97,8 +96,8 @@ function ReviewTable({ filterType }) {
                         <Checkbox
                             onChange={(e) => handleSelectAll(e.target.checked)}
                             checked={
-                                selectedIds.length === reviews.length &&
-                                reviews.length > 0
+                                selectedIds.length === currentItems.length &&
+                                currentItems.length > 0
                             }
                         />
                     </th>
@@ -112,13 +111,11 @@ function ReviewTable({ filterType }) {
                 </tr>
                 </thead>
                 <tbody>
-                {reviews.map((r) => (
+                {currentItems.map((r) => (
                     <tr key={r.review_num} className={r.is_best ? 'review-best' : ''}>
                         <td className="col-select">
                             <Checkbox
-                                onChange={(e) =>
-                                    handleSelect(e.target.checked, r.review_num)
-                                }
+                                onChange={(e) => handleSelect(e.target.checked, r.review_num)}
                                 checked={selectedIds.includes(r.review_num)}
                             />
                         </td>
@@ -128,7 +125,9 @@ function ReviewTable({ filterType }) {
                         </td>
                         <td className="col-writer">{r.name || '익명'}</td>
                         <td className="col-type">{r.type || '없음'}</td>
-                        <td className="col-date">{r.created_at ? formatDate(r.created_at) : '날짜 없음'}</td>
+                        <td className="col-date">
+                            {r.created_at ? formatDate(r.created_at) : '날짜 없음'}
+                        </td>
                         <td className="col-status">
                             <button
                                 className={`btn btn-best ${r.is_best ? 'pink' : 'blue'}`}
@@ -166,44 +165,39 @@ function ReviewTable({ filterType }) {
                 </tfoot>
             </table>
 
-            <div className="pagination">
-                <button onClick={() => handlePageChange(1)} className="btn" disabled={currentPage === 1}>
-                    <i className="fa-solid fa-angles-left"></i>
-                </button>
-                <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    className="btn"
-                    disabled={currentPage === 1}
-                >
-                    <i className="fa-solid fa-chevron-left"></i>
-                </button>
-
-                {[...Array(totalPages)].map((_, i) => (
-                    <button
-                        key={i + 1}
-                        onClick={() => handlePageChange(i + 1)}
-                        className={`btn ${currentPage === i + 1 ? 'active' : ''}`}
-                    >
-                        {i + 1}
+            {totalPages > 1 && (
+                <div className="pagination">
+                    <button className="group-btn" onClick={goToFirstGroup}>
+                        <i className="fa-solid fa-angles-left"></i>
                     </button>
-                ))}
+                    <button className="arrow-btn" onClick={goToPrevPage}>
+                        <i className="fa-solid fa-chevron-left"></i>
+                    </button>
 
-                <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    className="btn"
-                    disabled={currentPage === totalPages}
-                >
-                    <i className="fa-solid fa-chevron-right"></i>
-                </button>
-                <button
-                    onClick={() => handlePageChange(totalPages)}
-                    className="btn"
-                    disabled={currentPage === totalPages}
-                >
-                    <i className="fa-solid fa-angles-right"></i>
-                </button>
-            </div>
-        </>
+                    <div className="page-btns">
+                        {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
+                            const pageNum = startPage + i;
+                            return (
+                                <button
+                                    key={pageNum}
+                                    className={`page-btn ${pageNum === currentPage ? 'active' : ''}`}
+                                    onClick={() => setCurrentPage(pageNum)}
+                                >
+                                    {pageNum}
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    <button className="arrow-btn" onClick={goToNextPage}>
+                        <i className="fa-solid fa-chevron-right"></i>
+                    </button>
+                    <button className="group-btn" onClick={goToNextGroup}>
+                        <i className="fa-solid fa-angles-right"></i>
+                    </button>
+                </div>
+            )}
+        </div>
     );
 }
 

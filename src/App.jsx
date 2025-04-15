@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import './App.css';
 import 'antd/dist/reset.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import Home from "./pages/Home.jsx";
 import Sidebar from "./layouts/Sidebar.jsx";

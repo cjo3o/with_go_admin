@@ -13,14 +13,14 @@ body {
 
 .sidebar {
     width: 280px;
+    flex-shrink: 0;
     background-color: var(--sidebar-bg, #013f83);
     color: white;
 }
 
-
 .main {
     flex-grow: 1;
-    width: 100%;
+    min-width: 0;
     padding: 70px 60px 0;
     box-sizing: border-box;
     font-size: 16px;
@@ -45,7 +45,6 @@ body {
     position: relative;
 }
 
-
 table {
     width: 100%;
     table-layout: fixed;
@@ -69,15 +68,18 @@ th {
     font-weight: bold;
 }
 
-
 .col-select { width: 5%; }
 .col-title { width: 18%; text-align: left; padding-left: 30px; }
 .col-content { width: 28%; text-align: left; padding-left: 16px; }
-.col-writer { width: 12%; }
+.col-writer { width: 10%; }
 .col-date { width: 13%; }
-.col-type { width: 9%; }
-.col-status { width: 9%; }
-.col-actions { width: 6%; }
+.col-type { width: 7%; }
+.col-status { width: 12%; }
+.col-actions {
+    width: 6%;
+    text-align: center;
+    vertical-align: middle;
+}
 
 
 .btn {
@@ -92,6 +94,8 @@ th {
 .btn-edit {
     background-color: rgb(79, 23, 135);
     color: white;
+    display: inline-block;
+    margin: 0 auto;
 }
 .btn-edit:hover {
     background-color: rgb(24, 1, 97);
@@ -117,11 +121,10 @@ th {
 
 .btn-best {
     background-color: transparent;
-    border: 2px solid;
+    border: 1px solid;
     border-radius: 20px;
     font-weight: bold;
 }
-
 .btn-best.blue {
     color: rgb(0, 102, 204);
     border-color: rgb(0, 102, 204);
@@ -130,13 +133,12 @@ th {
     background-color: rgb(0, 102, 204);
     color: white;
 }
-
 .btn-best.pink {
-    color: rgb(255, 64, 125);
-    border-color: rgb(255, 64, 125);
+    color: white;
+    background-color: #ff9900;;
 }
 .btn-best.pink:hover {
-    background-color: rgb(255, 64, 125);
+    background-color: #fab34a;;
     color: white;
 }
 
@@ -147,18 +149,19 @@ th {
     color: #ff9900;
 }
 
+
 .pagination {
     display: flex;
     justify-content: center;
     gap: 3px;
-    margin-top: 40px;
+    margin-top: 10px;
 }
 .pagination button {
     padding: 6px 11px;
     border-radius: 3px;
-    background-color: #e5e7eb;
-    color: #111;
-    border: none;
+    background-color: #fffefe;
+    color: #5e5e5e;
+    border: 1px solid #f4f4f4;
     cursor: pointer;
 }
 .pagination button.active {
@@ -178,22 +181,77 @@ th {
 input[type='checkbox'] {
     margin-left: 4px;
 }
-
 .single-line {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+.review-radio-group .ant-radio-button-wrapper {
+    padding: 4px 16px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 0;
+}
+.review-radio-group .ant-radio-button-wrapper-checked {
+    background-color: rgb(0, 102, 204);
+    color: white;
+    border-color: rgb(0, 102, 204);
+    font-weight: bold;
+}
+.review-radio-group .ant-radio-button-wrapper:not(:first-child)::before {
+    display: none;
+}
 
-.ant-tabs-nav::before {
-    border-bottom: none !important;
+
+.page-btn, .group-btn, .arrow-btn {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    min-width: 32px;
+    min-height: 32px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.ant-tabs-tab-btn {
-    font-size: 16px !important;
-    font-weight: 500 !important;
+
+.page-btn.active {
+    background-color: #0066cc;
+    color: #fff;
+    font-weight: bold;
+    border-color: #0066cc;
 }
-.ant-tabs-nav {
-    display: flex !important;
-    justify-content: flex-end !important;
+
+.page-btn:hover,
+.group-btn:hover,
+.arrow-btn:hover {
+    background-color: #0056b3;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.page-btn:disabled,
+.group-btn:disabled,
+.arrow-btn:disabled {
+    background-color: #f0f0f0;
+    color: #aaa;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.arrow-btn i,
+.group-btn i {
+    font-size: 16px;
+}
+
+.page-btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
 }
