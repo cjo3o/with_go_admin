@@ -10,10 +10,20 @@ function PartnerList() {
     const [selectedPartners, setSelectedPartners] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredPartners, setFilteredPartners] = useState([]);
-
     const [currentPage, setCurrentPage] = useState(1);
+
     const itemsPerPage = 4;
     const totalPages = Math.ceil(filteredPartners.length / itemsPerPage);
+
+    const groupSize = 10;
+    const currentGroup = Math.floor((currentPage - 1) / groupSize);
+    const startPage = currentGroup * groupSize + 1;
+    const endPage = Math.min(startPage + groupSize - 1, totalPages);
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredPartners.slice(indexOfFirstItem, indexOfLastItem);
+
 
     const navigate = useNavigate();
 
@@ -105,15 +115,13 @@ function PartnerList() {
         }
     };
 
-    const handlePageChange = (page) => {
-        if (page >= 1 && page <= totalPages) {
-            setCurrentPage(page);
-        }
+    const goToFirstGroup = () => setCurrentPage(1);
+    const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+    const goToNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    const goToNextGroup = () => {
+        const nextGroupPage = Math.min(endPage + 1, totalPages);
+        if (nextGroupPage > currentPage) setCurrentPage(nextGroupPage);
     };
-
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredPartners.slice(indexOfFirstItem, indexOfLastItem);
 
     return (
         <>
@@ -122,55 +130,76 @@ function PartnerList() {
 
                 <div className='card'>
                     <div className='middle'>
-                        <h3>제휴숙소목록</h3>
-                        <Checkbox
-                            onChange={handleSelectAll}
-                            checked={
-                                currentItems.length > 0 &&
-                                currentItems.every(p => selectedPartners.includes(p.partner_id))
-                            }
-                        ></Checkbox>
-                        <div className="middle-actions" style={{display: 'flex', alignContent: 'center'}}>
-                            <div style={{marginTop: 0}} className="add-button-wrapper">
-                                {selectedPartners.length > 0 && (
-                                    <button className="btn btn-delete" onClick={handleBulkDelete}>
-                                        삭제 ({selectedPartners.length})
+                        <div className='middle-left'>
+                            <h3 style={{marginBottom: 0}}>제휴숙소목록</h3>
+                            <Checkbox
+                                onChange={handleSelectAll}
+                                checked={
+                                    currentItems.length > 0 &&
+                                    currentItems.every(p => selectedPartners.includes(p.partner_id))
+                                }
+                            ></Checkbox>
+                        </div>
+                        <div className='middle-right'>
+                            <div className="middle-actions" style={{display: 'flex', alignContent: 'center'}}>
+                                <div style={{marginTop: '10px'}} className="add-button-wrapper">
+                                    {selectedPartners.length > 0 && (
+                                        <button className="btn btn-delete" onClick={handleBulkDelete}>
+                                            삭제 ({selectedPartners.length})
+                                        </button>
+                                    )}
+                                </div>
+                                <div className="add-button-wrapper">
+                                    <button className="btn btn-add btn-standard"
+                                            onClick={() => navigate('/partner/create')}>
+                                        새 제휴숙소 등록
                                     </button>
-                                )}
-                            </div>
-                            <div className="add-button-wrapper">
-                                <button className="btn btn-add btn-standard"
-                                        onClick={() => navigate('/partner/create')}>
-                                    새 제휴숙소 등록
-                                </button>
-                            </div>
-                            <div className='PartnerList_Search'>
-                                <Lookup onSearch={handleSearch}/>
+                                </div>
+                                <div className='PartnerList_Search'>
+                                    <Lookup onSearch={handleSearch}/>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div className="card-container">
                         {currentItems.map((partner) => (
-                            <div className="card" key={partner.partner_id}>
+                            <div className="partner-card" key={partner.partner_id}>
                                 <div className="card-top">
-                                    <Checkbox
-                                        checked={selectedPartners.includes(partner.partner_id)}
-                                        onChange={() => handleCheckboxChange(partner.partner_id)}
-                                    />
-                                    <span>ID : {partner.partner_id}</span>
-                                    <button
-                                        className="btn btn-edit"
-                                        onClick={() => navigate(`/partner/create/${partner.partner_id}`)}
-                                    >
-                                        수정
-                                    </button>
+                                    <div className='card-top-left'>
+                                        <Checkbox
+                                            checked={selectedPartners.includes(partner.partner_id)}
+                                            onChange={() => handleCheckboxChange(partner.partner_id)}
+                                        />
+                                        <span>ID : {partner.partner_id}</span>
+                                    </div>
+                                    <div className="card-top-right">
+                                        <button
+                                            className="btn btn-edit"
+                                            onClick={() => navigate(`/partner/create/${partner.partner_id}`)}
+                                        >
+                                            수정
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="card-content">
-                                    <p><strong>숙소명</strong> {partner.name}</p>
-                                    <p><strong>주소</strong> {partner.address}</p>
-                                    <p><strong>연락처</strong> {partner.phone}</p>
+                                        <p className='card-content-text'>
+                                            <div className='strong'><strong>숙소명</strong></div>
+                                            <div className='content-txt'>{partner.name}</div>
+                                        </p>
+
+
+                                        <p className='card-content-text'>
+                                            <div className='strong'><strong>주소 </strong></div>
+                                            <div className='content-txt'>{partner.address}</div>
+                                        </p>
+
+
+                                        <p className='card-content-text'>
+                                            <div className='strong'><strong>연락처</strong></div>
+                                            <div className='content-txt'>{partner.phone}</div>
+                                        </p>
 
                                     <div className="card-image">
                                         {partner.image ? (
@@ -182,7 +211,7 @@ function PartnerList() {
                                                         <img
                                                             src={partner.image}
                                                             alt="확대 이미지"
-                                                            style={{ width: '100%', height: 'auto' }}
+                                                            style={{width: '100%', height: 'auto'}}
                                                         />
                                                     )
                                                 }
@@ -191,7 +220,7 @@ function PartnerList() {
                                             <img
                                                 src="/placeholder.jpg"
                                                 alt="이미지 없음"
-                                                style={{ width: '100%', opacity: 0.3 }}
+                                                style={{width: '100%', opacity: 0.3}}
                                             />
                                         )}
                                     </div>
@@ -204,7 +233,7 @@ function PartnerList() {
                                                         src={partner.map_url.match(/src="([^"]+)"/)?.[1] || partner.map_url}
                                                         width="600"
                                                         height="400"
-                                                        style={{ border: 'none' }}
+                                                        style={{border: 'none'}}
                                                         allowFullScreen=""
                                                         loading="lazy"
                                                         referrerPolicy="no-referrer-when-downgrade"
@@ -215,7 +244,7 @@ function PartnerList() {
                                                     src={partner.map_url.match(/src="([^"]+)"/)?.[1] || partner.map_url}
                                                     width="100%"
                                                     height="100"
-                                                    style={{ border: 'none', pointerEvents: 'none' }}
+                                                    style={{border: 'none', pointerEvents: 'none'}}
                                                     allowFullScreen=""
                                                     loading="lazy"
                                                     referrerPolicy="no-referrer-when-downgrade"
@@ -230,31 +259,39 @@ function PartnerList() {
                             </div>
                         ))}
                     </div>
+                    {/* 페이지네이션 */}
+                        <div className="pagination">
+                            <button className="group-btn" onClick={goToFirstGroup}>
+                                <i className="fa-solid fa-angles-left"></i>
+                            </button>
+                            <button className="arrow-btn" onClick={goToPrevPage}>
+                                <i className="fa-solid fa-chevron-left"></i>
+                            </button>
+
+                            <div className="page-btns">
+                                {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
+                                    const pageNum = startPage + i;
+                                    return (
+                                        <button
+                                            key={pageNum}
+                                            className={`page-btn ${pageNum === currentPage ? 'active' : ''}`}
+                                            onClick={() => setCurrentPage(pageNum)}
+                                        >
+                                            {pageNum}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            <button className="arrow-btn" onClick={goToNextPage}>
+                                <i className="fa-solid fa-chevron-right"></i>
+                            </button>
+                            <button className="group-btn" onClick={goToNextGroup}>
+                                <i className="fa-solid fa-angles-right"></i>
+                            </button>
+                        </div>
                 </div>
-                {/* 페이지네이션 */}
-                <div className="pagination">
-                    <button onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
-                        &laquo;
-                    </button>
-                    <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-                        &lt;
-                    </button>
-                    {[...Array(totalPages)].map((_, i) => (
-                        <button
-                            key={i + 1}
-                            onClick={() => handlePageChange(i + 1)}
-                            className={currentPage === i + 1 ? 'active' : ''}
-                        >
-                            {i + 1}
-                        </button>
-                    ))}
-                    <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
-                        &gt;
-                    </button>
-                    <button onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
-                        &raquo;
-                    </button>
-                </div>
+
             </div>
             {isModalOpen && (
                 <div className="modal-overlay" onClick={closeModal}>
