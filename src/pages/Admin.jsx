@@ -5,6 +5,13 @@ import "../css/Admin.css";
 import { supabase } from "../lib/supabase.js";
 import Lookup from "../../src/layouts/Lookup.jsx";
 import { Radio } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faAnglesLeft,
+  faChevronLeft,
+  faChevronRight,
+  faAnglesRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 function Admin() {
   const selectOptions = {
@@ -178,15 +185,6 @@ function Admin() {
     supaData();
   }, []);
 
-  const filteredData = twoData.filter((item) => {
-    const phoneClean = item.phone.replace(/-/g, "");
-    const isTypeMatch = filterType === "" || item.type === filterType;
-    const searchLower = searchTerm.toLowerCase();
-    const nameMatch = item.name.toLowerCase().includes(searchLower);
-    const phoneMatch = phoneClean.includes(searchLower);
-    return isTypeMatch && (nameMatch || phoneMatch);
-  });
-
   const eChange = async (e, item) => {
     const status = e.target.value;
     const tableName = item.type === "배송" ? "delivery" : "storage";
@@ -273,6 +271,33 @@ function Admin() {
       )
     );
   };
+
+  // 🎯 오늘 + 검색 + 필터까지 다 적용한 상태에서 페이징 기준
+  const filteredData = twoData.filter((item) => {
+    const dateStr = (item.reservation_time || item.reserve_time)?.slice(0, 10);
+    const isToday = dateStr === todayStr;
+
+    const phoneClean = item.phone.replace(/-/g, "");
+    const isTypeMatch = filterType === "" || item.type === filterType;
+    const searchLower = searchTerm.toLowerCase();
+    const nameMatch = item.name.toLowerCase().includes(searchLower);
+    const phoneMatch = phoneClean.includes(searchLower);
+
+    return isToday && isTypeMatch && (nameMatch || phoneMatch);
+  });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const goToFirstGroup = () => setCurrentPage(1);
+  const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const goToNextPage = () =>
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <>
@@ -389,7 +414,7 @@ function Admin() {
                 </tr>
               </thead>
               <tbody>
-                {filteredData
+                {currentItems
                   .filter((item) => {
                     const dateStr = (
                       item.reservation_time || item.reserve_time
@@ -520,27 +545,38 @@ function Admin() {
                   })}
               </tbody>
             </table>
-            <div class="pagination">
-              {/* 이전 그룹 화살표 */}
-              <button id="leftBtn" class="group-btn">
-                <i className="fa-solid fa-angles-left"></i>
+            <div className="pagination">
+              <button
+                className="arrow-btn"
+                onClick={goToFirstGroup}
+                disabled={currentPage === 1}
+              >
+                <FontAwesomeIcon icon={faAnglesLeft} />
               </button>
-              {/* 이전 페이지 화살표 */}
-              <button id="prevBtn" class="arrow-btn">
-                <i className="fa-solid fa-chevron-left"></i>
-              </button>
-
-              {/* 페이지 번호 버튼들이 표시될 영역 */}
-              <div id="pageBtns" className="page-btns"></div>
-
-              {/* 다음 페이지 화살표 */}
-              <button id="nextBtn" class="arrow-btn">
-                <i className="fa-solid fa-chevron-right"></i>
+              <button
+                className="arrow-btn"
+                onClick={goToPrevPage}
+                disabled={currentPage === 1}
+              >
+                <FontAwesomeIcon icon={faChevronLeft} />
               </button>
 
-              {/* 다음 그룹 화살표 */}
-              <button id="rightBtn" class="group-btn">
-                <i className="fa-solid fa-angles-right"></i>
+              {pageNumbers.map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`page-btn ${currentPage === page ? "active" : ""}`}
+                >
+                  {page}
+                </button>
+              ))}
+
+              <button
+                className="arrow-btn"
+                onClick={goToNextPage}
+                disabled={currentPage === totalPages}
+              >
+                <FontAwesomeIcon icon={faChevronRight} />
               </button>
             </div>
           </div>
