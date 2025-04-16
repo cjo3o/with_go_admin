@@ -19,8 +19,15 @@ import 'antd/dist/reset.css';
 import NoticeList from "./pages/Notice_promotion.jsx";
 import NoticeAdd from './pages/NoticeAdd.jsx';
 import NoticeEdit from './pages/NoticeEdit.jsx';
-import ReviewList from './pages/Review_promotion'
 
+import ReviewTabs from "./pages/ReviewTabs.jsx";
+import ReviewEdit from "./pages/ReviewEdit.jsx";
+
+import FAQList from "./pages/FAQList.jsx";
+import FAQEdit from "./pages/FAQEdit.jsx";
+
+
+FAQList
 function App() {
     const [count, setCount] = useState(0)
 
