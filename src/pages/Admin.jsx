@@ -4,6 +4,7 @@ import delivery from "../assets/Icon/delivery.svg";
 import "../css/Admin.css";
 import { supabase } from "../lib/supabase.js";
 import Lookup from "../../src/layouts/Lookup.jsx";
+import { Radio } from "antd";
 
 function Admin() {
   const selectOptions = {
@@ -14,13 +15,14 @@ function Admin() {
   const [deliveryt, setdelivery] = useState([]);
   const [storage, setstorage] = useState([]);
   const [twoData, settwoData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
+  const [searchTerm, setSearchTerm] = useState("");
   const [statusLogs, setStatusLogs] = useState({});
   const [completeCount, setCompleteCount] = useState(0);
   const [cancelCount, setCancelCount] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [canceledPrice, setCanceledPrice] = useState(0);
   const actualPayment = totalPrice - canceledPrice;
+  const [filterType, setFilterType] = useState("");
 
   const [todayCount, setTodayCount] = useState(0);
   const [todayDeliveryCount, setTodayDeliveryCount] = useState(0);
@@ -29,11 +31,10 @@ function Admin() {
   const today = new Date();
   const todayStr = today.toISOString().slice(0, 10);
 
-  const [openRow, setOpenRow] = useState(null); // 열려있는 행 관리
+  const [openRow, setOpenRow] = useState(null);
 
-  // 검색어 처리 함수
   const handleSearch = (value) => {
-    setSearchTerm(value); // 검색어 상태 업데이트
+    setSearchTerm(value);
   };
 
   const toggleRow = async (index, item) => {
@@ -55,25 +56,38 @@ function Admin() {
         console.error("로그 가져오기 실패", error);
         return;
       }
-      // 최초 접수 시 로그를 추가할 때, 최초 접수 상태 로그를 삽입
       if (data.length === 0) {
+        const reserveTime = item.reserve_time || item.reservation_time;
+
         const { error: logError } = await supabase.from("status_logs").insert([
           {
             table_name: tableName,
             key_value: keyValue,
-            prev_status: "접수", // 최초 접수 상태
-            new_status: "접수", // 최초 접수 상태
-            updated_at: new Date().toISOString(),
-            received_at: new Date().toISOString(), // 최초 접수 시간 기록
+            prev_status: "접수",
+            new_status: "접수",
+            updated_at: reserveTime,
+            received_at: reserveTime,
           },
         ]);
-
-        if (logError) {
-          console.error("최초 접수 로그 저장 실패", logError);
+        if (newError) {
+          console.error("로그 가져오기 실패", newError);
+          return;
         }
-      }
 
-      setStatusLogs((prev) => ({ ...prev, [index]: data }));
+        const { data: newData, error: newError } = await supabase
+          .from("status_logs")
+          .select("*")
+          .eq("key_value", keyValue)
+          .order("updated_at", { ascending: false });
+
+        if (newError) {
+          console.error("로그 가져오기 실패", newError);
+          return;
+        }
+        setStatusLogs((prev) => ({ ...prev, [index]: newData }));
+      } else {
+        setStatusLogs((prev) => ({ ...prev, [index]: data }));
+      }
     }
   };
 
@@ -128,19 +142,27 @@ function Admin() {
       ).length;
 
       const completeCount = AllData.filter(
-        (item) => item.situation === "완료"
-      ).length;
-      const cancelCount = AllData.filter(
-        (item) => item.situation === "취소"
+        (item) =>
+          (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
+            todayStr && item.situation === "완료"
       ).length;
 
-      const totalPrice = AllData.reduce(
-        (sum, item) => sum + (item.price || 0),
-        0
-      );
+      const cancelCount = AllData.filter(
+        (item) =>
+          (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
+            todayStr && item.situation === "취소"
+      ).length;
+
+      const totalPrice = AllData.filter(
+        (item) =>
+          (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
+          todayStr
+      ).reduce((sum, item) => sum + (item.price || 0), 0);
 
       const canceledPrice = AllData.filter(
-        (item) => item.situation === "취소"
+        (item) =>
+          (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
+            todayStr && item.situation === "취소"
       ).reduce((sum, item) => sum + (item.price || 0), 0);
 
       setTotalPrice(totalPrice);
@@ -150,21 +172,19 @@ function Admin() {
       setCancelCount(cancelCount);
 
       setTodayCount(todayDeliveryCount + todayStorageCount);
-      setTodayDeliveryCount(todayDeliveryCount); // 배송 건수
-      setTodayStorageCount(todayStorageCount); // 보관 건수
+      setTodayDeliveryCount(todayDeliveryCount);
+      setTodayStorageCount(todayStorageCount);
     };
     supaData();
   }, []);
 
-  // 검색어로 두 데이터 필터링
   const filteredData = twoData.filter((item) => {
+    const phoneClean = item.phone.replace(/-/g, "");
+    const isTypeMatch = filterType === "" || item.type === filterType;
     const searchLower = searchTerm.toLowerCase();
     const nameMatch = item.name.toLowerCase().includes(searchLower);
-    const phoneMatch = item.phone.toLowerCase().includes(searchLower);
-    const dateMatch = (item.reservation_time || item.reserve_time)
-      ?.slice(0, 10)
-      .includes(searchLower);
-    return nameMatch || phoneMatch || dateMatch;
+    const phoneMatch = phoneClean.includes(searchLower);
+    return isTypeMatch && (nameMatch || phoneMatch);
   });
 
   const eChange = async (e, item) => {
@@ -180,11 +200,10 @@ function Admin() {
       status_updated_at: new Date().toISOString(),
     };
 
-    // 상태가 '완료'일 때 success_time 기록
     if (status === "완료") {
       updates.success_time = new Date().toISOString();
     } else {
-      updates.success_time = null; // 완료 아니면 비우기
+      updates.success_time = null;
     }
 
     const { error } = await supabase
@@ -198,7 +217,6 @@ function Admin() {
       return;
     }
 
-    // 최초 접수 상태 기록 추가 (eChange 함수 내부에서도 추가 가능)
     const { data: existingLogs, error: logError } = await supabase
       .from("status_logs")
       .select("*")
@@ -206,16 +224,18 @@ function Admin() {
       .order("updated_at", { ascending: false });
 
     if (existingLogs.length === 0) {
+      const reserveTime = item.reserve_time || item.reservation_time;
+
       const { error: logInsertError } = await supabase
         .from("status_logs")
         .insert([
           {
             table_name: tableName,
             key_value: keyValue,
-            prev_status: "접수", // 최초 접수 상태
-            new_status: "접수", // 최초 접수 상태
-            updated_at: new Date().toISOString(),
-            received_at: new Date().toISOString(), // 최초 접수 시간 기록
+            prev_status: "접수",
+            new_status: "접수",
+            updated_at: reserveTime,
+            received_at: reserveTime,
           },
         ]);
 
@@ -224,7 +244,6 @@ function Admin() {
       }
     }
 
-    // 상태 업데이트 로그 추가
     const { error: logStatusError } = await supabase
       .from("status_logs")
       .insert([
@@ -241,7 +260,6 @@ function Admin() {
       console.error("상태 변경 로그 저장 실패", logStatusError);
     }
 
-    // 프론트 상태값 업데이트
     settwoData((prevData) =>
       prevData.map((i) =>
         i[keyColumn] === keyValue
@@ -323,18 +341,25 @@ function Admin() {
             <div className="list_up">
               <h3>실시간 예약현황</h3>
               <div className="admin_search">
-                <div className="" style={{marginRight: "30px"}}>
-                  <button className="">전체</button>
-                  <button>배송</button>
-                  <button>보관</button>
-                </div>
-                <select className="search_sel">
-                  <option>예약자명</option>
-                  <option>연락처</option>
-                </select>
+                <Radio.Group
+                  value={filterType}
+                  buttonStyle="solid"
+                  onChange={(e) => setFilterType(e.target.value)}
+                  style={{ marginRight: "16px" }}
+                >
+                  <Radio.Button value="" className="custom-radio-button">
+                    전체
+                  </Radio.Button>
+                  <Radio.Button value="보관" className="custom-radio-button">
+                    보관
+                  </Radio.Button>
+                  <Radio.Button value="배송" className="custom-radio-button">
+                    배송
+                  </Radio.Button>
+                </Radio.Group>
                 <Lookup
                   onSearch={handleSearch}
-                  placeholder="검색어를 입력하세요" // 검색어 입력 필드 제공
+                  placeholder="검색어를 입력하세요"
                 />
               </div>
             </div>
@@ -351,7 +376,7 @@ function Admin() {
                 <col style={{ width: "6%" }} />
               </colgroup>
               <thead>
-                <tr>
+                <tr style={{ cursor: "auto" }}>
                   <th>신청일</th>
                   <th>구분</th>
                   <th>예약자명</th>
@@ -364,12 +389,15 @@ function Admin() {
                 </tr>
               </thead>
               <tbody>
-                {twoData
+                {filteredData
                   .filter((item) => {
                     const dateStr = (
                       item.reservation_time || item.reserve_time
                     )?.slice(0, 10);
-                    return dateStr === todayStr;
+                    const isToday = dateStr === todayStr;
+                    const isTypeMatch =
+                      filterType === "" || item.type === filterType;
+                    return isToday && isTypeMatch;
                   })
                   .map((item, index) => {
                     const sizes = [
@@ -492,6 +520,29 @@ function Admin() {
                   })}
               </tbody>
             </table>
+            <div class="pagination">
+              {/* 이전 그룹 화살표 */}
+              <button id="leftBtn" class="group-btn">
+                <i className="fa-solid fa-angles-left"></i>
+              </button>
+              {/* 이전 페이지 화살표 */}
+              <button id="prevBtn" class="arrow-btn">
+                <i className="fa-solid fa-chevron-left"></i>
+              </button>
+
+              {/* 페이지 번호 버튼들이 표시될 영역 */}
+              <div id="pageBtns" className="page-btns"></div>
+
+              {/* 다음 페이지 화살표 */}
+              <button id="nextBtn" class="arrow-btn">
+                <i className="fa-solid fa-chevron-right"></i>
+              </button>
+
+              {/* 다음 그룹 화살표 */}
+              <button id="rightBtn" class="group-btn">
+                <i className="fa-solid fa-angles-right"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
