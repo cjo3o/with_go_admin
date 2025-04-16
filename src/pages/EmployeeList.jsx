@@ -13,13 +13,21 @@ function EmployeeList(props) {
     const [openMemo, setOpenMemo] = useState(false);
     const [memoValue, setMemoValue] = useState('');
     const [openEdit, setOpenEdit] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [messageApi, contextHolder] = message.useMessage();
     const success = () => {
-        messageApi.open({
-            type: 'success',
-            content: '저장성공',
-        });
+        if (openMemo || openEdit) {
+            messageApi.open({
+                type: 'success',
+                content: '저장성공',
+            });
+        } else {
+            messageApi.open({
+                type: 'success',
+                content: '삭제성공',
+            });
+        }
     };
 
     const showMemo = (employee) => {
@@ -29,9 +37,14 @@ function EmployeeList(props) {
     };
 
     const showEdit = (employee) => {
-        setSelectedEmployee(employee)
+        setSelectedEmployee(employee);
         setOpenEdit(true);
     };
+
+    const showDelete = (employee) => {
+        setSelectedEmployee(employee);
+        setOpenDelete(true);
+    }
 
     const handleOk = async () => {
         setLoading(true);
@@ -59,17 +72,27 @@ function EmployeeList(props) {
             const {data} = await supabase.from('employees').select().order('no', {ascending: true});
             setRowdata(data);
         }
+        if (openDelete && selectedEmployee) {
+            await supabase.from('employees')
+                .delete()
+                .eq('no', selectedEmployee.no);
+
+            const {data} = await supabase.from('employees').select().order('no', {ascending: true});
+            setRowdata(data);
+        }
         success();
         setTimeout(() => {
             setLoading(false);
             setOpenMemo(false);
             setOpenEdit(false);
-        }, 2000);
+            setOpenDelete(false);
+        }, 1000);
     };
 
     const handleCancel = () => {
         setOpenMemo(false);
         setOpenEdit(false);
+        setOpenDelete(false);
     };
 
     useEffect(() => {
@@ -116,14 +139,7 @@ function EmployeeList(props) {
                                 <td>{item.position}</td>
                                 <td>{item.role}</td>
                                 <td>{item.created_at.split('T').shift()}</td>
-                                <td><Select defaultValue={item.status}
-                                            style={{'width': '90px'}}
-                                            options={[
-                                                {value: '인증중', label: <span>인증중</span>},
-                                                {value: '사용중', label: <span>사용중</span>},
-                                                {value: '차단', label: <span>차단</span>}
-                                            ]}/>
-                                </td>
+                                <td>{item.status}</td>
                                 <td><Button color="default" variant="filled" onClick={() => showMemo(item)}>
                                     메모
                                 </Button></td>
@@ -131,7 +147,8 @@ function EmployeeList(props) {
                                     <div style={{display: "flex", gap: "10px", justifyContent: "center"}}>
                                         <Button icon={<EditOutlined/>} shape="square" size="medium"
                                                 onClick={() => showEdit(item)}/>
-                                        <Button icon={<DeleteOutlined/>} shape="square" size="medium"/>
+                                        <Button icon={<DeleteOutlined/>} shape="square" size="medium"
+                                                onClick={() => showDelete(item)}/>
                                     </div>
                                 </td>
 
@@ -220,6 +237,21 @@ function EmployeeList(props) {
                             </div>
                         </div>
                     </div>
+                </Modal>
+                <Modal
+                    title="삭제 후에는 복원하실 수 없습니다!"
+                    open={openDelete}
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                    footer={[
+                        <Button key="back" onClick={handleCancel}>
+                            닫기
+                        </Button>,
+                        <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
+                            확인
+                        </Button>
+                    ]}>
+                    <span>삭제를 원하시면 확인을 눌러주세요</span>
                 </Modal>
             </div>
         </>
