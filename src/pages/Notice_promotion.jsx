@@ -124,7 +124,7 @@ function NoticeList() {
                                     </button>
                                 )}
                                 <button
-                                    className="btn btn-add btn-standard"
+                                    className="btn btn-add-notice btn-standard"
                                     onClick={() => navigate('/notice-add')}
                                 >
                                     새 공지 등록
