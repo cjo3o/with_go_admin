@@ -26,6 +26,7 @@ import ReviewEdit from './pages/ReviewEdit.jsx';
 
 import FAQList from './pages/FAQList.jsx';
 import FAQEdit from './pages/FAQEdit';
+import FAQAdd from "./pages/FAQAdd.jsx";
 
 function App() {
     const [count, setCount] = useState(0);
@@ -55,6 +56,7 @@ function App() {
 
                     <Route path="/faq/list" element={<FAQList />} />
                     <Route path="/faq-edit/:id" element={<FAQEdit />} />
+                    <Route path="/faq-add" element={<FAQAdd />} />
                 </Routes>
             </BrowserRouter>
         </div>
