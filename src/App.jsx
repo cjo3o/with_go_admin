@@ -14,6 +14,8 @@ import StorageList from "./pages/StorageList.jsx";
 import StorageCreate from "./pages/StorageCreate.jsx";
 
 import EventList from "./pages/Event_promotion.jsx";
+import employeeList from "./pages/EmployeeList.jsx";
+import EmployeeList from "./pages/EmployeeList.jsx";
 import EventAdd from "./pages/Event_add.jsx";
 import EventEdit from "./pages/Eventedit.jsx";
 
@@ -42,6 +44,7 @@ function App() {
                     <Route path="/event-promotion" element={<EventList />} />
                     <Route path="/event-add" element={<EventAdd />} />
                     <Route path="/event-edit/:id" element={<EventEdit />} />
+                    <Route path="/employee-list" element={<EmployeeList />} />
 
                     <Route path="/notice-promotion" element={<NoticeList />} />
                     <Route path="/notice-add" element={<NoticeAdd />} />
