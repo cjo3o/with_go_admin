@@ -133,8 +133,7 @@ function EventEdit() {
                         )}
                     </div>
 
-                    <div className="form-group">
-                        <label>상태</label>
+                    <div className="custom-select">
                         <select name="status" value={formData.status} onChange={handleChange}>
                             <option value="이벤트 진행중">이벤트 진행중</option>
                             <option value="이벤트 종료">이벤트 종료</option>

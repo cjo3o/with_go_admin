@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Checkbox } from 'antd';
+import { Checkbox, Switch } from 'antd';
 import supabase from '../lib/supabase';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faChevronUp, faChevronDown,
+    faAnglesLeft, faAnglesRight,
+    faChevronLeft, faChevronRight
+} from '@fortawesome/free-solid-svg-icons';
 
-function ReviewTable({ filterType }) {
+function ReviewTable({ filterType, statusFilter, searchKeyword }) {
     const [reviews, setReviews] = useState([]);
     const [selectedIds, setSelectedIds] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 7;
     const navigate = useNavigate();
+    const [sortField, setSortField] = useState('created_at');
+    const [sortOrder, setSortOrder] = useState('desc');
 
     useEffect(() => {
         fetchReviews();
-    }, []);
+    }, [sortField, sortOrder]);
 
     const fetchReviews = async () => {
         const { data, error } = await supabase
@@ -21,7 +29,7 @@ function ReviewTable({ filterType }) {
             .not('review_num', 'is', null)
             .not('title', 'is', null)
             .not('created_at', 'is', null)
-            .order('created_at', { ascending: false });
+            .order(sortField, { ascending: sortOrder === 'asc' });
 
         if (!error) setReviews(data);
     };
@@ -61,9 +69,35 @@ function ReviewTable({ filterType }) {
         if (!error) fetchReviews();
     };
 
-    const filteredReviews = filterType
-        ? reviews.filter((r) => r.type === filterType)
-        : reviews;
+    const toggleStatus = async (id, checked) => {
+        const newStatus = checked ? '공개' : '숨김';
+        const { error } = await supabase
+            .from('review')
+            .update({ status: newStatus })
+            .eq('review_num', id);
+        if (!error) fetchReviews();
+    };
+
+    const handleSort = (field) => {
+        if (sortField === field) {
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortField(field);
+            setSortOrder('asc');
+        }
+    };
+
+    const filteredReviews = reviews
+        .filter((r) => (filterType ? r.type === filterType : true))
+        .filter((r) => (statusFilter ? r.status === statusFilter : true))
+        .filter((r) => {
+            if (!searchKeyword) return true;
+            const lower = searchKeyword.toLowerCase();
+            return (
+                (r.title && r.title.toLowerCase().includes(lower)) ||
+                (r.review_txt && r.review_txt.toLowerCase().includes(lower))
+            );
+        });
 
     const totalPages = Math.ceil(filteredReviews.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -78,14 +112,8 @@ function ReviewTable({ filterType }) {
     const goToFirstGroup = () => setCurrentPage(1);
     const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
     const goToNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-    const goToNextGroup = () => {
-        const nextGroupPage = Math.min(endPage + 1, totalPages);
-        if (nextGroupPage > currentPage) setCurrentPage(nextGroupPage);
-    };
-    const goToPrevGroup = () => {
-        const prevGroupPage = Math.max(startPage - groupSize, 1);
-        if (prevGroupPage < currentPage) setCurrentPage(prevGroupPage);
-    };
+    const goToNextGroup = () => setCurrentPage(endPage + 1);
+    const goToPrevGroup = () => setCurrentPage(startPage - groupSize);
 
     return (
         <div>
@@ -95,17 +123,30 @@ function ReviewTable({ filterType }) {
                     <th className="col-select">
                         <Checkbox
                             onChange={(e) => handleSelectAll(e.target.checked)}
-                            checked={
-                                selectedIds.length === currentItems.length &&
-                                currentItems.length > 0
-                            }
+                            checked={selectedIds.length === currentItems.length && currentItems.length > 0}
                         />
                     </th>
-                    <th className="col-title">제목</th>
+                    <th className="col-title" onClick={() => handleSort('title')} style={{ cursor: 'pointer' }}>
+                        제목{' '}
+                        {sortField === 'title' && (
+                            <FontAwesomeIcon icon={sortOrder === 'asc' ? faChevronUp : faChevronDown} />
+                        )}
+                    </th>
                     <th className="col-content">내용</th>
-                    <th className="col-writer">작성자</th>
+                    <th className="col-writer" onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>
+                        작성자{' '}
+                        {sortField === 'name' && (
+                            <FontAwesomeIcon icon={sortOrder === 'asc' ? faChevronUp : faChevronDown} />
+                        )}
+                    </th>
                     <th className="col-type">구분</th>
-                    <th className="col-date">등록일</th>
+                    <th className="col-date" onClick={() => handleSort('created_at')} style={{ cursor: 'pointer' }}>
+                        등록일{' '}
+                        {sortField === 'created_at' && (
+                            <FontAwesomeIcon icon={sortOrder === 'asc' ? faChevronUp : faChevronDown} />
+                        )}
+                    </th>
+                    <th className="col-visible">공개</th>
                     <th className="col-status">베스트리뷰등록</th>
                     <th className="col-actions">관리</th>
                 </tr>
@@ -125,8 +166,13 @@ function ReviewTable({ filterType }) {
                         </td>
                         <td className="col-writer">{r.name || '익명'}</td>
                         <td className="col-type">{r.type || '없음'}</td>
-                        <td className="col-date">
-                            {r.created_at ? formatDate(r.created_at) : '날짜 없음'}
+                        <td className="col-date">{r.created_at ? formatDate(r.created_at) : '날짜 없음'}</td>
+                        <td className="col-visible">
+                            <Switch
+                                checked={r.status === '공개'}
+                                onChange={(checked) => toggleStatus(r.review_num, checked)}
+                                size="small"
+                            />
                         </td>
                         <td className="col-status">
                             <button
@@ -149,11 +195,11 @@ function ReviewTable({ filterType }) {
                 </tbody>
                 <tfoot>
                 <tr>
-                    <td colSpan="8">
+                    <td colSpan="9">
                         <div className="add-button-wrapper">
                             {selectedIds.length > 0 && (
                                 <button
-                                    className="btn btn-delete"
+                                    className="btn btn-delete btn-standard"
                                     onClick={handleDeleteSelected}
                                 >
                                     선택 삭제 ({selectedIds.length})
@@ -165,38 +211,36 @@ function ReviewTable({ filterType }) {
                 </tfoot>
             </table>
 
-            {totalPages > 1 && (
-                <div className="pagination">
-                    <button className="group-btn" onClick={goToFirstGroup}>
-                        <i className="fa-solid fa-angles-left"></i>
-                    </button>
-                    <button className="arrow-btn" onClick={goToPrevPage}>
-                        <i className="fa-solid fa-chevron-left"></i>
-                    </button>
+            <div className="pagination">
+                <button className="group-btn" onClick={goToFirstGroup} disabled={currentGroup === 0}>
+                    <FontAwesomeIcon icon={faAnglesLeft} />
+                </button>
+                <button className="arrow-btn" onClick={goToPrevPage} disabled={currentPage === 1}>
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                </button>
 
-                    <div className="page-btns">
-                        {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
-                            const pageNum = startPage + i;
-                            return (
-                                <button
-                                    key={pageNum}
-                                    className={`page-btn ${pageNum === currentPage ? 'active' : ''}`}
-                                    onClick={() => setCurrentPage(pageNum)}
-                                >
-                                    {pageNum}
-                                </button>
-                            );
-                        })}
-                    </div>
-
-                    <button className="arrow-btn" onClick={goToNextPage}>
-                        <i className="fa-solid fa-chevron-right"></i>
-                    </button>
-                    <button className="group-btn" onClick={goToNextGroup}>
-                        <i className="fa-solid fa-angles-right"></i>
-                    </button>
+                <div className="page-btns">
+                    {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
+                        const pageNum = startPage + i;
+                        return (
+                            <button
+                                key={pageNum}
+                                className={`page-btn ${pageNum === currentPage ? 'active' : ''}`}
+                                onClick={() => setCurrentPage(pageNum)}
+                            >
+                                {pageNum}
+                            </button>
+                        );
+                    })}
                 </div>
-            )}
+
+                <button className="arrow-btn" onClick={goToNextPage} disabled={currentPage === totalPages}>
+                    <FontAwesomeIcon icon={faChevronRight} />
+                </button>
+                <button className="group-btn" onClick={goToNextGroup} disabled={endPage === totalPages}>
+                    <FontAwesomeIcon icon={faAnglesRight} />
+                </button>
+            </div>
         </div>
     );
 }

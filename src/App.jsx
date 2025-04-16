@@ -24,6 +24,9 @@ import NoticeEdit from './pages/NoticeEdit.jsx';
 import ReviewTabs from './pages/ReviewTabs.jsx';
 import ReviewEdit from './pages/ReviewEdit.jsx';
 
+import FAQList from './pages/FAQList.jsx';
+import FAQEdit from './pages/FAQEdit';
+
 function App() {
     const [count, setCount] = useState(0);
 
@@ -49,6 +52,9 @@ function App() {
 
                     <Route path="/review" element={<ReviewTabs />} />
                     <Route path="/review-edit/:id" element={<ReviewEdit />} />
+
+                    <Route path="/faq/list" element={<FAQList />} />
+                    <Route path="/faq-edit/:id" element={<FAQEdit />} />
                 </Routes>
             </BrowserRouter>
         </div>
