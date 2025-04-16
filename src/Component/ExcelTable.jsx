@@ -255,11 +255,18 @@ const App = () => {
                 components={{
                     body: {cell: EditableCell},
                 }}
+                // style={{backgroundColor: '#838383'}}
                 bordered
                 dataSource={data}
                 columns={mergedColumns}
                 rowClassName="editable-row"
                 pagination={{onChange: cancel}}
+                // rowClassNme={(record, index) => {
+                //     if(index %2 === 0) {
+                //         return 'even-row';
+                //     }
+                //     return '';
+                // }}
             />
         </Form>
     );

@@ -37,9 +37,9 @@ function Sidebar(props) {
                     {openMenu === 'reservation' && (
                         <div className="sub-menu">
                             <ul>
-                                <li><Link to="">배송/보관관리</Link></li>
+                                <li><Link to="/reservation">배송/보관관리</Link></li>
                                 <li><Link to="">예약신청목록</Link></li>
-                                <li><Link to="">신규예약등록</Link></li>
+                                <li><Link to="/newreservationadd">신규예약등록</Link></li>
                             </ul>
                         </div>
                     )}

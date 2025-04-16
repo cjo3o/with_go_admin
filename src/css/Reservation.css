@@ -202,3 +202,16 @@ button{
     text-align: center;
 }
 
+/*.editable-row{*/
+
+/*}*/
+
+/*.even-row{*/
+/*    background-color: #838383;*/
+/*}*/
+.editable-row .ant-form-item-explain {
+    position: absolute;
+    top: 100%;
+    font-size: 12px;
+    background-color: #595AD5;
+}
