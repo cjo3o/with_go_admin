@@ -11,23 +11,12 @@ import PartnerCreate from "./pages/PartnerCreate.jsx";
 import StorageList from "./pages/StorageList.jsx";
 import StorageCreate from "./pages/StorageCreate.jsx";
 
+
 import EventList from "./pages/Event_promotion.jsx";
 import EventAdd from "./pages/Event_add.jsx";
 import EventEdit from "./pages/Eventedit.jsx";
 import 'antd/dist/reset.css';
 
-import NoticeList from "./pages/Notice_promotion.jsx";
-import NoticeAdd from './pages/NoticeAdd.jsx';
-import NoticeEdit from './pages/NoticeEdit.jsx';
-
-import ReviewTabs from "./pages/ReviewTabs.jsx";
-import ReviewEdit from "./pages/ReviewEdit.jsx";
-
-import FAQList from "./pages/FAQList.jsx";
-import FAQEdit from "./pages/FAQEdit.jsx";
-
-
-FAQList
 function App() {
     const [count, setCount] = useState(0)
 
@@ -41,18 +30,12 @@ function App() {
 
                         <Route path="/partner/list" element={<PartnerList />} />
                         <Route path="/partner/create" element={<PartnerCreate />} />
-                        <Route path="/partner/create/:partner_id" element={<PartnerCreate />} />
                         <Route path="/storage/list" element={<StorageList />} />
                         <Route path="/storage/create" element={<StorageCreate />} />
 
                         <Route path="/event-promotion" element={<EventList />} />
                         <Route path="/event-add" element={<EventAdd />} />
                         <Route path="/event-edit/:id" element={<EventEdit />} />
-
-                        <Route path="/notice-promotion" element={<NoticeList />} />
-                        <Route path="/notice-add" element={<NoticeAdd />} />
-                        <Route path="/notice-edit/:id" element={<NoticeEdit />} />
-                        <Route path="/admin/review" element={<ReviewList />} />
 
 
                     </Routes>

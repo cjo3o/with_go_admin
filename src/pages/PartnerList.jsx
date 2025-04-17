@@ -141,7 +141,7 @@ function PartnerList() {
                             ></Checkbox>
                         </div>
                         <div className='middle-right'>
-                            <div className="middle-actions" style={{display: 'flex', alignContent: 'center'}}>
+                            s<div className="middle-actions" style={{display: 'flex', alignContent: 'center'}}>
                                 <div style={{marginTop: '10px'}} className="add-button-wrapper">
                                     {selectedPartners.length > 0 && (
                                         <button className="btn btn-delete" onClick={handleBulkDelete}>
@@ -191,7 +191,7 @@ function PartnerList() {
 
 
                                         <p className='card-content-text'>
-                                            <div className='strong'><strong>주소 </strong></div>
+                                            <div className='strong'><strong>주 소</strong></div>
                                             <div className='content-txt'>{partner.address}</div>
                                         </p>
 
