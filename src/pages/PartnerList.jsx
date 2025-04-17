@@ -4,6 +4,8 @@ import "../css/PartnerList.css"
 import {Checkbox} from "antd";
 import {useNavigate} from 'react-router-dom';
 import Lookup from "../layouts/Lookup.jsx";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faAnglesLeft, faAnglesRight, faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
 
 function PartnerList() {
     const [partners, setPartners] = useState([]);
@@ -15,7 +17,7 @@ function PartnerList() {
     const itemsPerPage = 4;
     const totalPages = Math.ceil(filteredPartners.length / itemsPerPage);
 
-    const groupSize = 10;
+    const groupSize = 7;
     const currentGroup = Math.floor((currentPage - 1) / groupSize);
     const startPage = currentGroup * groupSize + 1;
     const endPage = Math.min(startPage + groupSize - 1, totalPages);
@@ -141,19 +143,13 @@ function PartnerList() {
                             ></Checkbox>
                         </div>
                         <div className='middle-right'>
-                            s<div className="middle-actions" style={{display: 'flex', alignContent: 'center'}}>
-                                <div style={{marginTop: '10px'}} className="add-button-wrapper">
+                            <div className="middle-actions" style={{display: 'flex', alignContent: 'center', gap: '10px'}}>
+                                <div className={`add-button-wrapper delBtnMargin`}>
                                     {selectedPartners.length > 0 && (
-                                        <button className="btn btn-delete" onClick={handleBulkDelete}>
+                                        <button className="btn btn-delete" onClick={handleBulkDelete} style={{margin: '0'}}>
                                             삭제 ({selectedPartners.length})
                                         </button>
                                     )}
-                                </div>
-                                <div className="add-button-wrapper">
-                                    <button className="btn btn-add btn-standard"
-                                            onClick={() => navigate('/partner/create')}>
-                                        새 제휴숙소 등록
-                                    </button>
                                 </div>
                                 <div className='PartnerList_Search'>
                                     <Lookup onSearch={handleSearch}/>
@@ -184,22 +180,22 @@ function PartnerList() {
                                 </div>
 
                                 <div className="card-content">
-                                        <p className='card-content-text'>
-                                            <div className='strong'><strong>숙소명</strong></div>
-                                            <div className='content-txt'>{partner.name}</div>
-                                        </p>
+                                        <div className='card-content-text'>
+                                            <p className='strong'><strong>숙소명</strong></p>
+                                            <p className='content-txt'>{partner.name}</p>
+                                        </div>
 
 
-                                        <p className='card-content-text'>
-                                            <div className='strong'><strong>주 소</strong></div>
-                                            <div className='content-txt'>{partner.address}</div>
-                                        </p>
+                                        <div className='card-content-text'>
+                                            <p className='strong'><strong>주 소</strong></p>
+                                            <p className='content-txt partner-add'>{partner.address}</p>
+                                        </div>
 
 
-                                        <p className='card-content-text'>
-                                            <div className='strong'><strong>연락처</strong></div>
-                                            <div className='content-txt'>{partner.phone}</div>
-                                        </p>
+                                        <div className='card-content-text'>
+                                            <p className='strong'><strong>연락처</strong></p>
+                                            <p className='content-txt'>{partner.phone}</p>
+                                        </div>
 
                                     <div className="card-image">
                                         {partner.image ? (
@@ -243,7 +239,7 @@ function PartnerList() {
                                                 <iframe
                                                     src={partner.map_url.match(/src="([^"]+)"/)?.[1] || partner.map_url}
                                                     width="100%"
-                                                    height="100"
+                                                    height="150"
                                                     style={{border: 'none', pointerEvents: 'none'}}
                                                     allowFullScreen=""
                                                     loading="lazy"
@@ -260,36 +256,42 @@ function PartnerList() {
                         ))}
                     </div>
                     {/* 페이지네이션 */}
-                        <div className="pagination">
-                            <button className="group-btn" onClick={goToFirstGroup}>
-                                <i className="fa-solid fa-angles-left"></i>
-                            </button>
-                            <button className="arrow-btn" onClick={goToPrevPage}>
-                                <i className="fa-solid fa-chevron-left"></i>
-                            </button>
+                    <div className="pagination" style={{marginTop: '30px'}}>
+                        <button className="group-btn" onClick={goToFirstGroup} disabled={currentGroup === 0}>
+                            <FontAwesomeIcon icon={faAnglesLeft} />
+                        </button>
+                        <button className="arrow-btn" onClick={goToPrevPage} disabled={currentPage === 1}>
+                            <FontAwesomeIcon icon={faChevronLeft} />
+                        </button>
 
-                            <div className="page-btns">
-                                {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
-                                    const pageNum = startPage + i;
-                                    return (
-                                        <button
-                                            key={pageNum}
-                                            className={`page-btn ${pageNum === currentPage ? 'active' : ''}`}
-                                            onClick={() => setCurrentPage(pageNum)}
-                                        >
-                                            {pageNum}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-
-                            <button className="arrow-btn" onClick={goToNextPage}>
-                                <i className="fa-solid fa-chevron-right"></i>
-                            </button>
-                            <button className="group-btn" onClick={goToNextGroup}>
-                                <i className="fa-solid fa-angles-right"></i>
-                            </button>
+                        <div className="page-btns">
+                            {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
+                                const pageNum = startPage + i;
+                                return (
+                                    <button
+                                        key={pageNum}
+                                        className={`page-btn ${pageNum === currentPage ? 'active' : ''}`}
+                                        onClick={() => setCurrentPage(pageNum)}
+                                    >
+                                        {pageNum}
+                                    </button>
+                                );
+                            })}
                         </div>
+
+                        <button className="arrow-btn" onClick={goToNextPage} disabled={currentPage === totalPages}>
+                            <FontAwesomeIcon icon={faChevronRight} />
+                        </button>
+                        <button className="group-btn" onClick={goToNextGroup} disabled={endPage === totalPages}>
+                            <FontAwesomeIcon icon={faAnglesRight} />
+                        </button>
+                    </div>
+                    <div className={`add-button-wrapper delBtnMargin`}>
+                        <button className="btn btn-add btn-standard" style={{marginRight: '30px'}}
+                                onClick={() => navigate('/partner/create')}>
+                            새 제휴숙소 등록
+                        </button>
+                    </div>
                 </div>
 
             </div>
