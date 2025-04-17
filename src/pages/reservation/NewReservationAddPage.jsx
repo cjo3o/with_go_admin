@@ -72,12 +72,67 @@ function NewReservationAddPage() {
     };
     const Check = () => <Checkbox onChange={onChange}>왕복</Checkbox>;
 
-    const { RangePicker } = DatePicker;
+    const {RangePicker} = DatePicker;
     const DatePick = () => (
-        <Space direction="vertical" size={12}>
-            <RangePicker renderExtraFooter={() => 'extra footer'} showTime />
+        <Space direction="vertical" size={12} style={{marginTop: '20px'}}>
+            <RangePicker renderExtraFooter={() => 'extra footer'}
+                         showTime
+                         placeholder={['PICK UP', 'DROP OFF']}
+            />
+            <RangePicker renderExtraFooter={() => 'extra footer'}
+                         showTime
+                         placeholder={['PICK UP', 'DROP OFF']}
+            />
         </Space>
     );
+
+    const Counter = () => {
+        const [count, setCount] = useState(0);
+
+        const increment = () => {
+            setCount(count + 1);
+        };
+
+        const decrement = () => {
+            if (count > 0) {
+                setCount(count - 1);
+            }
+        };
+
+        return (
+            <div style={{ padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '150px' }}>
+                <button
+                    onClick={decrement}
+                    style={{
+                        fontSize: '20px',
+                        padding: '5px 10px',
+                        backgroundColor: '#f0f0f0',
+                        color: '#333',
+                        border: 'none',
+                        borderRadius: '3px',
+                        cursor: 'pointer',
+                    }}
+                >
+                    -
+                </button>
+                <div style={{ fontSize: '24px', backgroundColor:'white', width:"100%", textAlign: 'center' }}> {count} </div>
+                <button
+                    onClick={increment}
+                    style={{
+                        fontSize: '20px',
+                        padding: '5px 10px',
+                        backgroundColor: '#f0f0f0',
+                        color: '#333',
+                        border: 'none',
+                        borderRadius: '3px',
+                        cursor: 'pointer',
+                    }}
+                >
+                    +
+                </button>
+            </div>
+        );
+    };
 
     return (<Content>
         <div className="main">
@@ -101,7 +156,7 @@ function NewReservationAddPage() {
                       style={{
                           // width: '500px',
                           margin: '10px 2rem',
-                          height: '250px',
+                          height: '500px',
                           backgroundColor: '#F9F9F9',
                           // padding: '1rem',
                           // display: 'inline-flex',
@@ -124,6 +179,15 @@ function NewReservationAddPage() {
                             <span className="speech-bubble">왕복 배송시 체크 해주세요</span>
                         </div>
                         <DatePick/>
+                    </Form.Item>
+                    <Form.Item
+                        label="짐갯수"
+                        colon={false}
+                        className="separated-form-item"
+                    >
+                        <div style={{display: "flex", alignItems: "center"}}>대(30인치 이상)<Counter/></div>
+                        <div style={{display: "flex", alignItems: "center"}}>중(21 ~ 29인치)<Counter/></div>
+                        <div style={{display: "flex", alignItems: "center"}}>소(20인치 이하)<Counter/></div>
                     </Form.Item>
                 </Card>
             </Col>
@@ -207,7 +271,11 @@ function NewReservationAddPage() {
             <Button type="primary"
                     htmlType="submit"
                     loading={loading} block
-                    style={{width: '100px', height: '35px'}}
+                    style={{
+                        width: '100px',
+                        height: '35px',
+                        margin: '20px 0',
+                    }}
             >
                 등록
             </Button>
