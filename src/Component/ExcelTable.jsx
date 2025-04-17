@@ -195,6 +195,13 @@ const App = () => {
             editable: true,
         },
         {
+            title: '담당기사',
+            dataIndex: 'delivery-driver',
+            width: '200px',
+            align: 'center',
+            editable: true,
+        },
+        {
             title: '처리현황',
             dataIndex: 'processingStatus',
             width: '90px',
@@ -255,18 +262,11 @@ const App = () => {
                 components={{
                     body: {cell: EditableCell},
                 }}
-                // style={{backgroundColor: '#838383'}}
                 bordered
                 dataSource={data}
                 columns={mergedColumns}
                 rowClassName="editable-row"
                 pagination={{onChange: cancel}}
-                // rowClassNme={(record, index) => {
-                //     if(index %2 === 0) {
-                //         return 'even-row';
-                //     }
-                //     return '';
-                // }}
             />
         </Form>
     );
