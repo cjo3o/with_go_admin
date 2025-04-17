@@ -1,5 +1,5 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useState } from 'react';
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {useState} from 'react';
 
 import './App.css';
 import 'antd/dist/reset.css';
@@ -14,11 +14,10 @@ import StorageList from "./pages/StorageList.jsx";
 import StorageCreate from "./pages/StorageCreate.jsx";
 
 import EventList from "./pages/Event_promotion.jsx";
-import employeeList from "./pages/EmployeeList.jsx";
 import EmployeeList from "./pages/EmployeeList.jsx";
 import EventAdd from "./pages/Event_add.jsx";
 import EventEdit from "./pages/Eventedit.jsx";
-
+import Login from "./pages/Login.jsx";
 import NoticeList from "./pages/Notice_promotion.jsx";
 import NoticeAdd from './pages/NoticeAdd.jsx';
 import NoticeEdit from './pages/NoticeEdit.jsx';
@@ -32,26 +31,26 @@ function App() {
     return (
         <div className="wrapper">
             <BrowserRouter>
-                <Sidebar />
+                <Sidebar/>
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/" element={<Home/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/partner/list" element={<PartnerList/>}/>
+                    <Route path="/partner/create" element={<PartnerCreate/>}/>
+                    <Route path="/storage/list" element={<StorageList/>}/>
+                    <Route path="/storage/create" element={<StorageCreate/>}/>
 
-                    <Route path="/partner/list" element={<PartnerList />} />
-                    <Route path="/partner/create" element={<PartnerCreate />} />
-                    <Route path="/storage/list" element={<StorageList />} />
-                    <Route path="/storage/create" element={<StorageCreate />} />
+                    <Route path="/event-promotion" element={<EventList/>}/>
+                    <Route path="/event-add" element={<EventAdd/>}/>
+                    <Route path="/event-edit/:id" element={<EventEdit/>}/>
+                    <Route path="/employee-list" element={<EmployeeList/>}/>
 
-                    <Route path="/event-promotion" element={<EventList />} />
-                    <Route path="/event-add" element={<EventAdd />} />
-                    <Route path="/event-edit/:id" element={<EventEdit />} />
-                    <Route path="/employee-list" element={<EmployeeList />} />
+                    <Route path="/notice-promotion" element={<NoticeList/>}/>
+                    <Route path="/notice-add" element={<NoticeAdd/>}/>
+                    <Route path="/notice-edit/:id" element={<NoticeEdit/>}/>
 
-                    <Route path="/notice-promotion" element={<NoticeList />} />
-                    <Route path="/notice-add" element={<NoticeAdd />} />
-                    <Route path="/notice-edit/:id" element={<NoticeEdit />} />
-
-                    <Route path="/review" element={<ReviewTabs />} />
-                    <Route path="/review-edit/:id" element={<ReviewEdit />} />
+                    <Route path="/review" element={<ReviewTabs/>}/>
+                    <Route path="/review-edit/:id" element={<ReviewEdit/>}/>
                 </Routes>
             </BrowserRouter>
         </div>
