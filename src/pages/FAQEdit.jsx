@@ -104,6 +104,7 @@ function FAQEdit() {
                                 <option value="배송">배송</option>
                                 <option value="보관">보관</option>
                                 <option value="결제">결제</option>
+                                <option value="결제">예약</option>
                                 <option value="기타">기타</option>
                             </select>
                             <FontAwesomeIcon icon={faArrowDown} className="select-icon" />

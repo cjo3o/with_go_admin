@@ -146,7 +146,7 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                             <FontAwesomeIcon icon={sortOrder === 'asc' ? faChevronUp : faChevronDown} />
                         )}
                     </th>
-                    <th className="col-visible">공개</th>
+                    <th className="col-visible">공개여부</th>
                     <th className="col-status">베스트리뷰등록</th>
                     <th className="col-actions">관리</th>
                 </tr>
