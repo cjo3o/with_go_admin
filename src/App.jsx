@@ -31,6 +31,7 @@ import ReviewEdit from './pages/ReviewEdit.jsx';
 import FAQList from './pages/FAQList.jsx';
 import FAQEdit from './pages/FAQEdit';
 import FAQAdd from "./pages/FAQAdd.jsx";
+import Memberlist from "./pages/memberlist.jsx";
 
 function App() {
     const [count, setCount] = useState(0);
@@ -43,6 +44,7 @@ function App() {
                     <Route path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/Admin" element={<Admin/>}/>
+                    <Route path="/Memberlist" element={<Memberlist/>}/>
                     <Route path="/partner/list" element={<PartnerList/>}/>
                     <Route path="/partner/create" element={<PartnerCreate/>}/>
                     <Route path="/storage/list" element={<StorageList/>}/>

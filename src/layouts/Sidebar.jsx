@@ -50,7 +50,7 @@ function Sidebar(props) {
                     {openMenu === 'user' && (
                         <div className="sub-menu">
                             <ul>
-                                <li><Link to="">회원목록</Link></li>
+                                <li><Link to="/Memberlist">회원목록</Link></li>
                             </ul>
                         </div>
                     )}
