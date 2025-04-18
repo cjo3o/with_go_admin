@@ -24,9 +24,9 @@ import NoticeEdit from './pages/NoticeEdit.jsx';
 import ReviewTabs from './pages/ReviewTabs.jsx';
 import ReviewEdit from './pages/ReviewEdit.jsx';
 
-import FAQList from './pages/FAQList.jsx';
 import FAQEdit from './pages/FAQEdit';
 import FAQAdd from "./pages/FAQAdd.jsx";
+import FAQTabspage from './pages/FAQTabspage.jsx'
 
 function App() {
     const [count, setCount] = useState(0);
@@ -54,7 +54,7 @@ function App() {
                     <Route path="/review" element={<ReviewTabs />} />
                     <Route path="/review-edit/:id" element={<ReviewEdit />} />
 
-                    <Route path="/faq/list" element={<FAQList />} />
+                    <Route path="/faq/list" element={<FAQTabspage />} />
                     <Route path="/faq-edit/:id" element={<FAQEdit />} />
                     <Route path="/faq-add" element={<FAQAdd />} />
                 </Routes>

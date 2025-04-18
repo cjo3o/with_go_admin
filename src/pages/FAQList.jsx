@@ -1,121 +1,95 @@
+// ✅ FAQList.jsx (수정 완료본)
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Checkbox, Input, Switch } from 'antd';
+import { Checkbox, Switch } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faChevronUp, faChevronDown,
-    faAnglesLeft, faAnglesRight,
-    faChevronLeft, faChevronRight
+    faAnglesLeft,
+    faAnglesRight,
+    faChevronLeft,
+    faChevronRight,
+    faChevronDown,
+    faChevronUp
 } from '@fortawesome/free-solid-svg-icons';
 import supabase from '../lib/supabase';
 import '../css/FAQ.css';
 
-function FAQList({ filterType = '', searchKeyword = '' }) {
+const FAQList = ({ filterType = '', searchKeyword = '' }) => {
     const [faqs, setFaqs] = useState([]);
     const [selectedIds, setSelectedIds] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [expanded, setExpanded] = useState(null);
-    const [sortField, setSortField] = useState('created_at');
     const [sortOrder, setSortOrder] = useState('desc');
+    const [expanded, setExpanded] = useState(null);
     const navigate = useNavigate();
     const itemsPerPage = 7;
 
     useEffect(() => {
         fetchFAQs();
-    }, [sortField, sortOrder]);
+    }, [filterType, searchKeyword, sortOrder]);
 
     const fetchFAQs = async () => {
-        const { data, error } = await supabase
-            .from('withgo_faqs')
-            .select('*')
-            .order(sortField, { ascending: sortOrder === 'asc' });
+        let query = supabase.from('withgo_faqs').select('*');
+        if (filterType) query = query.eq('category', filterType);
+        if (searchKeyword) query = query.ilike('question', `%${searchKeyword}%`);
+        query = query.order('created_at', { ascending: sortOrder === 'asc' });
+        const { data, error } = await query;
         if (!error) setFaqs(data);
-    };
-
-    const handleToggle = (id) => {
-        setExpanded(expanded === id ? null : id);
     };
 
     const handleDeleteSelected = async () => {
         if (!window.confirm('선택한 FAQ를 삭제할까요?')) return;
-        const { error } = await supabase
-            .from('withgo_faqs')
-            .delete()
-            .in('id', selectedIds);
+        const { error } = await supabase.from('withgo_faqs').delete().in('id', selectedIds);
         if (!error) {
-            setFaqs((prev) => prev.filter((faq) => !selectedIds.includes(faq.id)));
+            setFaqs(faqs.filter(faq => !selectedIds.includes(faq.id)));
             setSelectedIds([]);
-            alert('삭제 완료!');
         }
     };
 
-    const handleToggleStatus = async (id, checked) => {
-        const newStatus = checked ? '공개' : '숨김';
+    const handleStatusToggle = async (id, newStatus) => {
         const { error } = await supabase
             .from('withgo_faqs')
-            .update({ status: newStatus })
+            .update({ status: newStatus ? '공개' : '숨김' })
             .eq('id', id);
         if (!error) {
-            setFaqs((prev) =>
-                prev.map((faq) =>
-                    faq.id === id ? { ...faq, status: newStatus } : faq
-                )
-            );
+            setFaqs(faqs.map(f => f.id === id ? { ...f, status: newStatus ? '공개' : '숨김' } : f));
         }
     };
 
-    const handleCheckbox = (id) => {
-        setSelectedIds((prev) =>
-            prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]
+    const toggleSelect = (id) => {
+        setSelectedIds(prev =>
+            prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
         );
     };
 
-    const handleSelectAll = (checked) => {
-        if (checked) setSelectedIds(currentItems.map((faq) => faq.id));
-        else setSelectedIds([]);
-    };
-
-    const stripBr = (text) => text?.replace(/<br\s*\/?>/gi, ' ') ?? '';
-    const formatDate = (str) => {
-        if (!str) return '-';
-        const date = new Date(str);
-        return isNaN(date.getTime()) ? '-' : date.toISOString().split('T')[0];
-    };
-
-    const handleSort = (field) => {
-        if (sortField === field) {
-            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    const toggleAll = () => {
+        if (selectedIds.length === currentItems.length) {
+            setSelectedIds([]);
         } else {
-            setSortField(field);
-            setSortOrder('asc');
+            setSelectedIds(currentItems.map(item => item.id));
         }
     };
 
-    const filtered = faqs
-        .filter((f) => f.question.toLowerCase().includes(searchKeyword.toLowerCase()))
-        .filter((f) => (filterType === '' ? true : f.category === filterType));
+    const toggleSortOrder = () => {
+        setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+    };
 
-    const totalPages = Math.ceil(filtered.length / itemsPerPage);
-    const indexOfLast = currentPage * itemsPerPage;
-    const indexOfFirst = indexOfLast - itemsPerPage;
-    const currentItems = filtered.slice(indexOfFirst, indexOfLast);
-
-    const groupSize = 7;
-    const currentGroup = Math.floor((currentPage - 1) / groupSize);
-    const startPage = currentGroup * groupSize + 1;
-    const endPage = Math.min(startPage + groupSize - 1, totalPages);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentItems = faqs.slice(startIndex, startIndex + itemsPerPage);
+    const totalPages = Math.ceil(faqs.length / itemsPerPage);
 
     return (
-        <div className="faq-card">
-            <table>
+        <div className="faq-list-page">
+            <table className="faq-table">
                 <thead>
                 <tr>
-                    <th className="col-select"><Checkbox onChange={(e) => handleSelectAll(e.target.checked)} checked={selectedIds.length === currentItems.length && currentItems.length > 0} /></th>
-                    <th className="col-type">카테고리</th>
+                    <th className="col-select">
+                        <Checkbox onChange={toggleAll} checked={selectedIds.length === currentItems.length} />
+                    </th>
+                    <th className="col-category">카테고리</th>
                     <th className="col-title">질문</th>
                     <th className="col-content">답변</th>
-                    <th className="col-status" style={{ width: '8%' }}>공개</th>
-                    <th className="col-date" style={{ width: '9%' }} onClick={() => handleSort('created_at')}>
+                    <th className="col-visible">공개</th>
+                    <th className="col-date" onClick={toggleSortOrder}>
                         등록일 <FontAwesomeIcon icon={sortOrder === 'asc' ? faChevronUp : faChevronDown} />
                     </th>
                     <th className="col-actions">관리</th>
@@ -124,19 +98,22 @@ function FAQList({ filterType = '', searchKeyword = '' }) {
                 <tbody>
                 {currentItems.map((faq) => (
                     <tr key={faq.id}>
-                        <td className="col-select"><Checkbox checked={selectedIds.includes(faq.id)} onChange={() => handleCheckbox(faq.id)} /></td>
-                        <td className="col-type">{faq.category}</td>
-                        <td className="col-title" style={{ whiteSpace: 'normal' }}>{faq.question}</td>
+                        <td><Checkbox onChange={() => toggleSelect(faq.id)} checked={selectedIds.includes(faq.id)} /></td>
+                        <td>{faq.category}</td>
+                        <td className="col-title">{faq.question}</td>
                         <td className="col-content">
-                            <div className={`faq-toggle-box ${expanded === faq.id ? 'open' : ''}`} onClick={() => handleToggle(faq.id)}>
-                                {expanded === faq.id ? stripBr(faq.answer) : stripBr(faq.answer).slice(0, 30) + '...'}
+                            <div
+                                className={`faq-toggle-box ${expanded === faq.id ? 'open' : ''}`}
+                                onClick={() => setExpanded(expanded === faq.id ? null : faq.id)}
+                            >
+                                {faq.answer}
                             </div>
                         </td>
-                        <td className="col-visible">
-                            <Switch checked={faq.status === '공개'} onChange={(checked) => handleToggleStatus(faq.id, checked)} size="small" />
+                        <td>
+                            <Switch checked={faq.status === '공개'} onChange={(checked) => handleStatusToggle(faq.id, checked)} />
                         </td>
-                        <td className="col-date">{formatDate(faq.created_at)}</td>
-                        <td className="col-actions">
+                        <td>{faq.created_at?.split('T')[0]}</td>
+                        <td>
                             <button className="btn btn-edit" onClick={() => navigate(`/faq-edit/${faq.id}`)}>수정</button>
                         </td>
                     </tr>
@@ -147,11 +124,11 @@ function FAQList({ filterType = '', searchKeyword = '' }) {
                     <td colSpan="7">
                         <div className="add-button-wrapper">
                             {selectedIds.length > 0 && (
-                                <button className="btn btn-delete" onClick={handleDeleteSelected}>
+                                <button className="btn btn-delete btn-standard" onClick={handleDeleteSelected}>
                                     선택 삭제 ({selectedIds.length})
                                 </button>
                             )}
-                            <button className="btn btn-add" onClick={() => navigate('/faq-add')}>
+                            <button className="btn btn-add-event btn-standard" onClick={() => navigate('/faq-add')}>
                                 새 FAQ 등록
                             </button>
                         </div>
@@ -161,35 +138,30 @@ function FAQList({ filterType = '', searchKeyword = '' }) {
             </table>
 
             <div className="pagination">
-                <button className="group-btn" onClick={() => setCurrentPage(1)} disabled={currentGroup === 0}>
+                <button className="arrow-btn" onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
                     <FontAwesomeIcon icon={faAnglesLeft} />
                 </button>
-                <button className="arrow-btn" onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
+                <button className="arrow-btn" onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>
                     <FontAwesomeIcon icon={faChevronLeft} />
                 </button>
-                <div className="page-btns">
-                    {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
-                        const pageNum = startPage + i;
-                        return (
-                            <button
-                                key={pageNum}
-                                className={`page-btn ${pageNum === currentPage ? 'active' : ''}`}
-                                onClick={() => setCurrentPage(pageNum)}
-                            >
-                                {pageNum}
-                            </button>
-                        );
-                    })}
-                </div>
-                <button className="arrow-btn" onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
+                {[...Array(totalPages)].map((_, idx) => (
+                    <button
+                        key={idx + 1}
+                        className={`page-btn ${currentPage === idx + 1 ? 'active' : ''}`}
+                        onClick={() => setCurrentPage(idx + 1)}
+                    >
+                        {idx + 1}
+                    </button>
+                ))}
+                <button className="arrow-btn" onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
                     <FontAwesomeIcon icon={faChevronRight} />
                 </button>
-                <button className="group-btn" onClick={() => setCurrentPage(endPage + 1)} disabled={endPage === totalPages}>
+                <button className="arrow-btn" onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>
                     <FontAwesomeIcon icon={faAnglesRight} />
                 </button>
             </div>
         </div>
     );
-}
+};
 
 export default FAQList;
