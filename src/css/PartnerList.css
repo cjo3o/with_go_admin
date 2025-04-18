@@ -31,8 +31,7 @@ table {
 }
 
 .partner-card {
-    width: 100%;
-    max-width: 340px; /* 카드 최대 너비 고정 */
+    width: 340px;
     min-height: 450px; /* 카드 최소 높이 설정 - 필요시 조절 가능 */
 
     border-radius: 8px;
@@ -105,7 +104,7 @@ table {
 
 .card-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 반응형 1~4열 */
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); /* 반응형 1~4열 */
     gap: 15px;
     padding: 20px 0;
 }

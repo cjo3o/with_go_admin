@@ -80,7 +80,7 @@ function PartnerCreate() {
         const {name, address, phone, map_url} = form;
 
         // 필수 입력 체크
-        if (!name || !address || !phone || !map_url) {
+        if (!name || !address || !phone || !map_url || !imageFile) {
             alert('모두 다 입력해야 합니다.');
             return;
         }

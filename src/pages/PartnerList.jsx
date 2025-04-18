@@ -17,7 +17,7 @@ function PartnerList() {
     const itemsPerPage = 4;
     const totalPages = Math.ceil(filteredPartners.length / itemsPerPage);
 
-    const groupSize = 7;
+    const groupSize = 10;
     const currentGroup = Math.floor((currentPage - 1) / groupSize);
     const startPage = currentGroup * groupSize + 1;
     const endPage = Math.min(startPage + groupSize - 1, totalPages);
