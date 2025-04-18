@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import custody from "../assets/Icon/custody.svg";
 import delivery from "../assets/Icon/delivery.svg";
 import "../css/Admin.css";
-import { supabase } from "../lib/supabase.js";
+import supabase from "../lib/supabase.js";
+
 import Lookup from "../../src/layouts/Lookup.jsx";
 import { Radio } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

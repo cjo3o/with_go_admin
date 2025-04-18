@@ -36,24 +36,13 @@ function App() {
     const [count, setCount] = useState(0);
 
     return (
-        <>
-            <div className="wrapper">
-                <BrowserRouter>
-                    <Sidebar></Sidebar>
-                    <Routes>
-                        <Route path="/" element={<Home/>}></Route>
-                        <Route path="/Admin" element={<Admin/>}></Route>
-
-                        <Route path="/partner/list" element={<PartnerList />} />
-                        <Route path="/partner/create" element={<PartnerCreate />} />
-                        <Route path="/storage/list" element={<StorageList />} />
-                        <Route path="/storage/create" element={<StorageCreate />} />
         <div className="wrapper">
             <BrowserRouter>
                 <Sidebar />
                 <Routes>
                     <Route path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
+                    <Route path="/Admin" element={<Admin/>}/>
                     <Route path="/partner/list" element={<PartnerList/>}/>
                     <Route path="/partner/create" element={<PartnerCreate/>}/>
                     <Route path="/storage/list" element={<StorageList/>}/>
