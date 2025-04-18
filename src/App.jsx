@@ -14,11 +14,10 @@ import StorageList from "./pages/StorageList.jsx";
 import StorageCreate from "./pages/StorageCreate.jsx";
 
 import EventList from "./pages/Event_promotion.jsx";
-import employeeList from "./pages/EmployeeList.jsx";
 import EmployeeList from "./pages/EmployeeList.jsx";
 import EventAdd from "./pages/Event_add.jsx";
 import EventEdit from "./pages/Eventedit.jsx";
-
+import Login from "./pages/Login.jsx";
 import NoticeList from "./pages/Notice_promotion.jsx";
 import NoticeAdd from './pages/NoticeAdd.jsx';
 import NoticeEdit from './pages/NoticeEdit.jsx';
@@ -29,6 +28,7 @@ import ReviewEdit from './pages/ReviewEdit.jsx';
 import FAQList from './pages/FAQList.jsx';
 import FAQEdit from './pages/FAQEdit';
 import FAQAdd from "./pages/FAQAdd.jsx";
+
 function App() {
     const [count, setCount] = useState(0);
 
@@ -37,13 +37,13 @@ function App() {
             <BrowserRouter>
                 <Sidebar />
                 <Routes>
-                    <Route path="/" element={<Home />} />
-
-                    <Route path="/partner/list" element={<PartnerList />} />
-                    <Route path="/partner/create" element={<PartnerCreate />} />
+                    <Route path="/" element={<Home/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/partner/list" element={<PartnerList/>}/>
+                    <Route path="/partner/create" element={<PartnerCreate/>}/>
                     <Route path="/partner/create/:partner_id" element={<PartnerCreate />} />
-                    <Route path="/storage/list" element={<StorageList />} />
-                    <Route path="/storage/create" element={<StorageCreate />} />
+                    <Route path="/storage/list" element={<StorageList/>}/>
+                    <Route path="/storage/create" element={<StorageCreate/>}/>
 
                     <Route path="/event-promotion" element={<EventList />} />
                     <Route path="/event-add" element={<EventAdd />} />

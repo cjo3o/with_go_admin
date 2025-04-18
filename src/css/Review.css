@@ -12,7 +12,7 @@ body {
 }
 
 .sidebar {
-    width: 280px;
+    width: 250px;
     flex-shrink: 0;
     background-color: var(--sidebar-bg, #013f83);
     color: white;
