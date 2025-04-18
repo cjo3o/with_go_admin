@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {supabase} from "../lib/supabase.js";
+import supabase from '../lib/supabase';
 
 function PartnerList() {
     const [partners, setPartners] = useState([]);
