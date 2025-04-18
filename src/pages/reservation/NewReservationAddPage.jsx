@@ -12,7 +12,7 @@ import {
     Modal,
     Checkbox,
     DatePicker,
-    Space
+    Space, Select, Cascader
 } from "antd";
 import supabase from "../../SupabaseClient_evpro.js";
 import bcrypt from 'bcryptjs';
@@ -67,45 +67,114 @@ function NewReservationAddPage() {
         </Flex>
     );
 
-    const onChange = e => {
-        console.log(`checked = ${e.target.checked}`);
-    };
-    const Check = () => <Checkbox onChange={onChange}>왕복</Checkbox>;
+    // const onChange = e => {
+    //     console.log(`checked = ${e.target.checked}`);
+    // };
+    // const Check = () => <Checkbox onChange={onChange}>왕복</Checkbox>;
+    //
+    // const {RangePicker} = DatePicker;
+    // const DatePick = () => (
+    //     <Space direction="vertical" size={12} style={{marginTop: '20px'}}>
+    //         <RangePicker renderExtraFooter={() => 'extra footer'}
+    //                      showTime
+    //                      placeholder={['PICK UP', 'DROP OFF']}
+    //         />
+    //         <RangePicker renderExtraFooter={() => 'extra footer'}
+    //                      showTime
+    //                      placeholder={['PICK UP', 'DROP OFF']}
+    //         />
+    //     </Space>
+    // );
 
-    const {RangePicker} = DatePicker;
-    const DatePick = () => (
-        <Space direction="vertical" size={12} style={{marginTop: '20px'}}>
-            <RangePicker renderExtraFooter={() => 'extra footer'}
-                         showTime
-                         placeholder={['PICK UP', 'DROP OFF']}
-            />
-            <RangePicker renderExtraFooter={() => 'extra footer'}
-                         showTime
-                         placeholder={['PICK UP', 'DROP OFF']}
-            />
-        </Space>
-    );
+    const DatePick = () => {
+        const [isReturnTrip, setIsReturnTrip] = useState(false);
 
-    const Counter = () => {
-        const [count, setCount] = useState(0);
+        const {RangePicker} = DatePicker;
 
-        const increment = () => {
-            setCount(count + 1);
+        const handleChange = value => {
+            console.log(`selected ${value}`);
         };
+        const App = () => (
+            <Select
+                className="select"
+                defaultValue="배송지"
+                style={{width: 125}}
+                onChange={handleChange}
+                options={[
+                    {
+                        label: <span>location</span>,
+                        title: 'manager',
+                        options: [
+                            {label: <span>동대구역</span>, value: 'eastDaeguStation'},
+                            {label: <span>대구역</span>, value: 'DaeguStation'},
+                            {label: <span>경주역</span>, value: 'GyeongjuStation'},
+                        ],
+                    },
+                ]}
+            />
+        );
 
-        const decrement = () => {
-            if (count > 0) {
-                setCount(count - 1);
-            }
+        const onCheckboxChange = e => {
+            setIsReturnTrip(e.target.checked);
+            console.log(`checked = ${e.target.checked}`);
         };
 
         return (
-            <div style={{ padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '150px' }}>
+            <Space direction="vertical" size={12} style={{marginTop: '5px'}}>
+                <Checkbox onChange={onCheckboxChange}>왕복
+                    <span className="speech-bubble">왕복 배송시 체크 해주세요</span>
+                </Checkbox>
+                <div style={{display: "flex", alignItems: "center"}}>
+                    <RangePicker
+                        renderExtraFooter={() => 'extra footer'}
+                        showTime
+                        placeholder={['PICK UP', 'DROP OFF']}
+                        style={{marginTop: '5px', marginBottom: '5px'}}
+                    /><App/><Cascader/>
+                </div>
+                {isReturnTrip && (
+                    <RangePicker
+                        renderExtraFooter={() => '※'}
+                        showTime
+                        placeholder={['PICK UP', 'DROP OFF']}
+                    />
+                )}
+            </Space>
+        );
+    };
+
+    const Counter = ({initialCount = 0, onCountChange}) => {
+        const [count, setCount] = useState(initialCount);
+
+        const increment = () => {
+            setCount(prevCount => {
+                const newCount = prevCount + 1;
+                onCountChange(newCount); // 값이 변경될 때 부모에게 알림
+                return newCount;
+            });
+        };
+
+        const decrement = () => {
+            setCount(prevCount => {
+                const newCount = Math.max(0, prevCount - 1);
+                onCountChange(newCount); // 값이 변경될 때 부모에게 알림
+                return newCount;
+            });
+        };
+
+        return (
+            <div style={{
+                padding: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '150px'
+            }}>
                 <button
                     onClick={decrement}
                     style={{
                         fontSize: '20px',
-                        padding: '5px 10px',
+                        padding: '5px 15px',
                         backgroundColor: '#f0f0f0',
                         color: '#333',
                         border: 'none',
@@ -115,12 +184,18 @@ function NewReservationAddPage() {
                 >
                     -
                 </button>
-                <div style={{ fontSize: '24px', backgroundColor:'white', width:"100%", textAlign: 'center' }}> {count} </div>
+                <div style={{
+                    fontSize: '24px',
+                    backgroundColor: 'white',
+                    width: "100%",
+                    height: "100%",
+                    textAlign: 'center'
+                }}> {count} </div>
                 <button
                     onClick={increment}
                     style={{
                         fontSize: '20px',
-                        padding: '5px 10px',
+                        padding: '5px 15px',
                         backgroundColor: '#f0f0f0',
                         color: '#333',
                         border: 'none',
@@ -133,6 +208,69 @@ function NewReservationAddPage() {
             </div>
         );
     };
+
+    const PaymentDisplay = ({amount}) => {
+        const formattedAmount = amount.toLocaleString();
+        return <span style={{
+            fontSize: '30px',
+            fontWeight: "bold",
+            color: '#1e83f1'
+        }}>{formattedAmount} 원</span>;
+    };
+
+    const LuggageForm = () => {
+        const [largeCount, setLargeCount] = useState(0);
+        const [middleCount, setMiddleCount] = useState(0);
+        const [smallCount, setSmallCount] = useState(0);
+        const [totalPayment, setTotalPayment] = useState(0);
+
+        const largePrice = 5000; // 예시 가격
+        const middlePrice = 3000;  // 예시 가격
+        const smallPrice = 1000;   // 예시 가격
+
+        const handleLargeCountChange = (count) => {
+            setLargeCount(count);
+        };
+
+        const handleMiddleCountChange = (count) => {
+            setMiddleCount(count);
+        };
+
+        const handleSmallCountChange = (count) => {
+            setSmallCount(count);
+        };
+
+        // 짐 갯수가 변경될 때마다 총 결제 금액 업데이트
+        React.useEffect(() => {
+            const total = (largeCount * largePrice) + (middleCount * middlePrice) + (smallCount * smallPrice);
+            setTotalPayment(total);
+        }, [largeCount, middleCount, smallCount, largePrice, middlePrice, smallPrice]);
+        return (
+            <Form layout="horizontal">
+                <Form.Item
+                    label="짐갯수"
+                    colon={false}
+                    className="separated-form-item"
+                >
+                    <div id="large" style={{display: "flex", alignItems: "center"}}>대(30인치 이상)<Counter
+                        onCountChange={handleLargeCountChange}/></div>
+                    <div id="middle" style={{display: "flex", alignItems: "center"}}>중(21 ~ 29인치)<Counter
+                        onCountChange={handleMiddleCountChange}/></div>
+                    <div id="small" style={{display: "flex", alignItems: "center"}}>소(20인치 이하)<Counter
+                        onCountChange={handleSmallCountChange}/></div>
+                </Form.Item>
+                <Form.Item
+                    label="결제금액"
+                    colon={false}
+                    className="separated-form-item"
+
+                >
+                    <PaymentDisplay amount={totalPayment}/>
+                </Form.Item>
+            </Form>
+        );
+    }
+
 
     return (<Content>
         <div className="main">
@@ -174,20 +312,12 @@ function NewReservationAddPage() {
                         colon={false}
                         className="separated-form-item"
                     >
-                        <div>
-                            <Check/>
-                            <span className="speech-bubble">왕복 배송시 체크 해주세요</span>
-                        </div>
                         <DatePick/>
                     </Form.Item>
                     <Form.Item
-                        label="짐갯수"
-                        colon={false}
                         className="separated-form-item"
                     >
-                        <div style={{display: "flex", alignItems: "center"}}>대(30인치 이상)<Counter/></div>
-                        <div style={{display: "flex", alignItems: "center"}}>중(21 ~ 29인치)<Counter/></div>
-                        <div style={{display: "flex", alignItems: "center"}}>소(20인치 이하)<Counter/></div>
+                        <LuggageForm/>
                     </Form.Item>
                 </Card>
             </Col>
