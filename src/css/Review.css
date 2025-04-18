@@ -149,7 +149,6 @@ th {
     color: #ff9900;
 }
 
-
 .pagination {
     display: flex;
     justify-content: center;
@@ -254,4 +253,36 @@ input[type='checkbox'] {
     justify-content: center;
     align-items: center;
     gap: 6px;
+}
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.tab-and-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+}
+
+.review-search-input {
+    width: 200px;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.add-button-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+    gap: 8px;
+    padding-right: 0;
+}
+
+.col-visible {
+    width: 90px;
+    text-align: center;
 }

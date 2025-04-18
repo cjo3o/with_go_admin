@@ -1,5 +1,5 @@
-import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {useState} from 'react';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useState } from 'react';
 
 import './App.css';
 import 'antd/dist/reset.css';
@@ -25,13 +25,17 @@ import NoticeEdit from './pages/NoticeEdit.jsx';
 import ReviewTabs from './pages/ReviewTabs.jsx';
 import ReviewEdit from './pages/ReviewEdit.jsx';
 
+import FAQList from './pages/FAQList.jsx';
+import FAQEdit from './pages/FAQEdit';
+import FAQAdd from "./pages/FAQAdd.jsx";
+
 function App() {
     const [count, setCount] = useState(0);
 
     return (
         <div className="wrapper">
             <BrowserRouter>
-                <Sidebar/>
+                <Sidebar />
                 <Routes>
                     <Route path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
@@ -40,17 +44,21 @@ function App() {
                     <Route path="/storage/list" element={<StorageList/>}/>
                     <Route path="/storage/create" element={<StorageCreate/>}/>
 
-                    <Route path="/event-promotion" element={<EventList/>}/>
-                    <Route path="/event-add" element={<EventAdd/>}/>
-                    <Route path="/event-edit/:id" element={<EventEdit/>}/>
-                    <Route path="/employee-list" element={<EmployeeList/>}/>
+                    <Route path="/event-promotion" element={<EventList />} />
+                    <Route path="/event-add" element={<EventAdd />} />
+                    <Route path="/event-edit/:id" element={<EventEdit />} />
+                    <Route path="/employee-list" element={<EmployeeList />} />
 
-                    <Route path="/notice-promotion" element={<NoticeList/>}/>
-                    <Route path="/notice-add" element={<NoticeAdd/>}/>
-                    <Route path="/notice-edit/:id" element={<NoticeEdit/>}/>
+                    <Route path="/notice-promotion" element={<NoticeList />} />
+                    <Route path="/notice-add" element={<NoticeAdd />} />
+                    <Route path="/notice-edit/:id" element={<NoticeEdit />} />
 
-                    <Route path="/review" element={<ReviewTabs/>}/>
-                    <Route path="/review-edit/:id" element={<ReviewEdit/>}/>
+                    <Route path="/review" element={<ReviewTabs />} />
+                    <Route path="/review-edit/:id" element={<ReviewEdit />} />
+
+                    <Route path="/faq/list" element={<FAQList />} />
+                    <Route path="/faq-edit/:id" element={<FAQEdit />} />
+                    <Route path="/faq-add" element={<FAQAdd />} />
                 </Routes>
             </BrowserRouter>
         </div>
