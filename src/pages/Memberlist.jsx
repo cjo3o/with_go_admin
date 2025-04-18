@@ -4,9 +4,12 @@ import "../css/Memberlist.css";
 import Pagination from "./pagination.jsx";
 import LookupSearch from "./LookupSearch.jsx";
 import UserList from "./UserList.jsx";
+import { Checkbox } from "antd";
 
 function Memberlist() {
   const [users, setUsers] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
+
   const [searchTerm2, setSearchTerm2] = useState("");
   const [currentPage2, setCurrentPage2] = useState(1);
   const usersPerPage2 = 10; // 페이지당 보여줄 유저 수
@@ -53,6 +56,15 @@ function Memberlist() {
       </tr>
     ) : null;
 
+  const checkbox = (checked) => {
+    if (checked) {
+      // 현재 페이지에 있는 유저 id만 모아서 선택
+      setSelectedIds(currentUsers2.map((user) => user.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
   return (
     <>
       <div className="content2">
@@ -61,13 +73,14 @@ function Memberlist() {
         </div>
         <div className="Memberlist_content card">
           <div className="Memberlist_search">
-            <LookupSearch 
+            <LookupSearch
               onSearch={handleSearch2}
               placeholder="검색어를 입력하세요"
             />
           </div>
           <table>
             <colgroup>
+              <col style={{ width: "3%" }} />
               <col style={{ width: "3%" }} />
               <col style={{ width: "5%" }} />
               <col style={{ width: "8%" }} />
@@ -77,6 +90,17 @@ function Memberlist() {
             </colgroup>
             <thead>
               <tr>
+                <th className="col-select">
+                  <Checkbox
+                    onChange={(e) => checkbox(e.target.checked)}
+                    checked={
+                      currentUsers2.length > 0 &&
+                      currentUsers2.every((user) =>
+                        selectedIds.includes(user.id)
+                      )
+                    }
+                  />
+                </th>
                 <th>순번</th>
                 <th>성함</th>
                 <th>Email</th>
@@ -86,12 +110,14 @@ function Memberlist() {
               </tr>
             </thead>
             <tbody>
-            {currentUsers2.map((user, index) => (
+              {currentUsers2.map((user, index) => (
                 <UserList
                   key={user.id}
                   user={user}
                   index={index}
                   indexOfFirstUser2={indexOfFirstUser2}
+                  checkbox={Checkbox}
+                  selectedIds={selectedIds}
                 />
               ))}
               {noResultsMessage}
