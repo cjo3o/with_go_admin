@@ -1,35 +1,3 @@
-table {
-    width: 100%;
-    justify-content: center;
-    border-collapse: collapse;
-    table-layout: fixed;
-}
-
-
-.main {
-    flex-grow: 1;
-    padding: 50px 60px 0;
-    min-width: 0;
-    overflow-x: auto;
-    max-width: calc(100% - 240px);
-}
-
-.card {
-    background: white;
-    padding: 16px;
-    border-radius: 10px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    font-size: 14px;
-    line-height: 1.4;
-
-    min-width: 400px;
-    overflow-x: auto;
-    scrollbar-width: none;
-
-}
-
 .partner-card {
     width: 100%;
     max-width: 340px; /* 카드 최대 너비 고정 */

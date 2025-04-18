@@ -1,72 +1,5 @@
-.main {
-    flex-grow: 1;
-    padding: 50px 60px 0;
-    position: relative;
-}
-
-.header {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: rgb(0, 102, 204);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.card {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-    position: relative;
-}
-
-.top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-
-.top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-/* 테이블 */
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-a {
-    text-decoration: none;
-    color: black;
-}
-
-a:hover {
-    color: rgb(0, 102, 204);
-}
-
-th, td {
-    text-align: center;
-    vertical-align: middle;
-    padding: 12px 50px;
-    border-bottom: 1px solid #ddd;
-}
-
 input[type="checkbox"] {
     margin-left: 30px;
-}
-
-th {
-    background-color: #f0f2f5;
-    font-weight: bold;
 }
 
 .col-title {
@@ -95,47 +28,47 @@ th {
     text-align: center;
 }
 
-/* 공통 버튼 스타일 */
-.btn {
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: normal !important;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    box-sizing: border-box;
-    white-space: nowrap;
-    margin: 0;
-}
+/*!* 공통 버튼 스타일 *!*/
+/*.btn {*/
+/*    padding: 8px 16px;*/
+/*    font-size: 14px;*/
+/*    font-weight: normal !important;*/
+/*    border: none;*/
+/*    border-radius: 6px;*/
+/*    cursor: pointer;*/
+/*    box-sizing: border-box;*/
+/*    white-space: nowrap;*/
+/*    margin: 0;*/
+/*}*/
 
-.btn-standard {
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: normal;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    box-sizing: border-box;
-}
+/*.btn-standard {*/
+/*    padding: 8px 16px;*/
+/*    font-size: 14px;*/
+/*    font-weight: normal;*/
+/*    border: none;*/
+/*    border-radius: 6px;*/
+/*    cursor: pointer;*/
+/*    box-sizing: border-box;*/
+/*}*/
 
-.btn-edit {
-    background-color: rgb(79, 23, 135);
-    color: white;
-}
+/*.btn-edit {*/
+/*    background-color: rgb(79, 23, 135);*/
+/*    color: white;*/
+/*}*/
 
-.btn-edit:hover {
-    background-color: rgb(24, 1, 97);
-    color: white;
-}
+/*.btn-edit:hover {*/
+/*    background-color: rgb(24, 1, 97);*/
+/*    color: white;*/
+/*}*/
 
-.btn-delete {
-    background-color: rgb(158, 158, 158);
-    color: white;
-}
+/*.btn-delete {*/
+/*    background-color: rgb(158, 158, 158);*/
+/*    color: white;*/
+/*}*/
 
-.btn-delete:hover {
-    background-color: rgb(247, 55, 79);
-}
+/*.btn-delete:hover {*/
+/*    background-color: rgb(247, 55, 79);*/
+/*}*/
 
 .btn-add-event {
     background-color: rgb(158, 158, 158);
@@ -147,16 +80,16 @@ th {
     background-color: rgb(0, 102, 204);
 }
 
-.btn-add-register {
-    background-color: rgb(158, 158, 158);
-    color: white;
-    transition: background-color 0.2s ease-in-out;
-    align-self: auto;
-}
+/*.btn-add-register {*/
+/*    background-color: rgb(158, 158, 158);*/
+/*    color: white;*/
+/*    transition: background-color 0.2s ease-in-out;*/
+/*    align-self: auto;*/
+/*}*/
 
-.btn-add-register:hover {
-    background-color: rgb(0, 102, 204);
-}
+/*.btn-add-register:hover {*/
+/*    background-color: rgb(0, 102, 204);*/
+/*}*/
 
 .btn-back {
     background-color: rgb(92, 92, 92);
@@ -168,62 +101,62 @@ th {
     background-color: #373737;
     color: white;
 }
-.select-wrapper {
-    position: relative;
-}
+/*.select-wrapper {*/
+/*    position: relative;*/
+/*}*/
 
-.custom-select {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-}
+/*.custom-select {*/
+/*    position: relative;*/
+/*    display: inline-block;*/
+/*    width: 100%;*/
+/*}*/
 
-.custom-select select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    width: 100%;
-    padding: 8px 40px 8px 12px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
-    height: 38px;
-}
+/*.custom-select select {*/
+/*    appearance: none;*/
+/*    -webkit-appearance: none;*/
+/*    -moz-appearance: none;*/
+/*    width: 100%;*/
+/*    padding: 8px 40px 8px 12px;*/
+/*    font-size: 14px;*/
+/*    border: 1px solid #ccc;*/
+/*    border-radius: 6px;*/
+/*    box-sizing: border-box;*/
+/*    height: 38px;*/
+/*}*/
 
-.select-icon {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    color: gray;
-    font-size: 14px;
-}
+/*.select-icon {*/
+/*    position: absolute;*/
+/*    right: 12px;*/
+/*    top: 50%;*/
+/*    transform: translateY(-50%);*/
+/*    pointer-events: none;*/
+/*    color: gray;*/
+/*    font-size: 14px;*/
+/*}*/
 
 
-.btn-group {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-}
+/*.btn-group {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    gap: 8px;*/
+/*}*/
 
-.add-button-wrapper {
-    margin-top: 10px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    box-sizing: border-box;
-}
+/*.add-button-wrapper {*/
+/*    margin-top: 10px;*/
+/*    display: flex;*/
+/*    justify-content: flex-end;*/
+/*    gap: 10px;*/
+/*    box-sizing: border-box;*/
+/*}*/
 
-.bulk-action-bar {
-    margin-bottom: 5px;
-    padding: 10px 20px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: flex-end;
-}
+/*.bulk-action-bar {*/
+/*    margin-bottom: 5px;*/
+/*    padding: 10px 20px;*/
+/*    border-radius: 8px;*/
+/*    display: flex;*/
+/*    justify-content: flex-end;*/
+/*}*/
 
 /* 상태 뱃지 */
 .status-badge {

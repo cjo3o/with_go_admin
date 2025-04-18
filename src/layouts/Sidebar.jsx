@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 
+import '../css/Sidebar.css';
+
 import logoWithgo from '../assets/Icon/logo_withgo.png';
 import homeIcon from '../assets/Icon/home.png';
 import backIcon from '../assets/Icon/back.png';
