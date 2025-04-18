@@ -414,135 +414,143 @@ function Admin() {
                 </tr>
               </thead>
               <tbody>
-                {currentItems
-                  .filter((item) => {
-                    const dateStr = (
-                      item.reservation_time || item.reserve_time
-                    )?.slice(0, 10);
-                    const isToday = dateStr === todayStr;
-                    const isTypeMatch =
-                      filterType === "" || item.type === filterType;
-                    return isToday && isTypeMatch;
-                  })
-                  .map((item, index) => {
-                    const sizes = [
-                      Number(item.small) > 0 ? `S ${item.small}개` : null,
-                      Number(item.medium) > 0 ? `M ${item.medium}개` : null,
-                      Number(item.large) > 0 ? `L ${item.large}개` : null,
-                    ].filter(Boolean);
+                {currentItems.length > 0 ? (
+                  currentItems
+                    .filter((item) => {
+                      const dateStr = (
+                        item.reservation_time || item.reserve_time
+                      )?.slice(0, 10);
+                      const isToday = dateStr === todayStr;
+                      const isTypeMatch =
+                        filterType === "" || item.type === filterType;
+                      return isToday && isTypeMatch;
+                    })
+                    .map((item, index) => {
+                      const sizes = [
+                        Number(item.small) > 0 ? `S ${item.small}개` : null,
+                        Number(item.medium) > 0 ? `M ${item.medium}개` : null,
+                        Number(item.large) > 0 ? `L ${item.large}개` : null,
+                      ].filter(Boolean);
 
-                    const inches = [
-                      Number(item.under) > 0
-                        ? `26"이하 : ${item.under}개`
-                        : null,
-                      Number(item.over) > 0 ? `26"이상 : ${item.over}개` : null,
-                    ].filter(Boolean);
+                      const inches = [
+                        Number(item.under) > 0
+                          ? `26"이하 : ${item.under}개`
+                          : null,
+                        Number(item.over) > 0
+                          ? `26"이상 : ${item.over}개`
+                          : null,
+                      ].filter(Boolean);
 
-                    const luggageInfo =
-                      sizes.length > 0
-                        ? sizes.join(", ")
-                        : inches.length > 0
-                        ? inches.join(", ")
-                        : "입력된 수량이 없습니다.";
+                      const luggageInfo =
+                        sizes.length > 0
+                          ? sizes.join(", ")
+                          : inches.length > 0
+                          ? inches.join(", ")
+                          : "입력된 수량이 없습니다.";
 
-                    return (
-                      <React.Fragment key={index}>
-                        <tr onClick={() => toggleRow(index, item)}>
-                          <td>
-                            {item.reservation_time || item.reserve_time
-                              ? (item.reservation_time || item.reserve_time)
-                                  .slice(0, 10)
-                                  .replaceAll("-", ".")
-                              : "-"}
-                          </td>
-                          <td>{item.type}</td>
-                          <td>{item.name}</td>
-                          <td>{item.phone}</td>
-                          <td>
-                            {item.storage_start_date && item.storage_end_date
-                              ? `${item.storage_start_date.replaceAll(
-                                  "-",
-                                  "."
-                                )} ~ ${item.storage_end_date.replaceAll(
-                                  "-",
-                                  "."
-                                )}`
-                              : item.delivery_date
-                              ? item.delivery_date.replaceAll("-", ".")
-                              : "-"}
-                          </td>
-                          <td>{luggageInfo}</td>
-                          <td>{`${item.price.toLocaleString()}원`}</td>
-                          <td>
-                            {item.situation === "완료" && item.success_time
-                              ? item.success_time
-                                  .slice(0, 16)
-                                  .replace("T", " ")
-                                  .replaceAll("-", ".")
-                              : "-"}
-                          </td>
-                          <td>
-                            <select
-                              className="select"
-                              value={item.situation || "접수"}
-                              onChange={(e) => eChange(e, item)}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {selectOptions[item.type].map((status) => (
-                                <option key={status} value={status}>
-                                  {status}
-                                </option>
-                              ))}
-                            </select>
-                          </td>
-                        </tr>
-
-                        {openRow === index && (
-                          <tr>
-                            <td colSpan="9">
-                              <div className="status-details">
-                                <div className="status-log-list">
-                                  {statusLogs[index]?.length > 0 ? (
-                                    <table className="log-table">
-                                      <colgroup>
-                                        <col style={{ width: "3%" }} />
-                                        <col style={{ width: "3%" }} />
-                                        <col style={{ width: "4%" }} />
-                                      </colgroup>
-                                      <thead>
-                                        <tr>
-                                          <th>변경시간</th>
-                                          <th>이전상태</th>
-                                          <th>변경상태</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        {statusLogs[index].map(
-                                          (log, logIndex) => (
-                                            <tr key={logIndex}>
-                                              <td>
-                                                {new Date(
-                                                  log.updated_at
-                                                ).toLocaleString()}
-                                              </td>
-                                              <td>{log.prev_status}</td>
-                                              <td>{log.new_status}</td>
-                                            </tr>
-                                          )
-                                        )}
-                                      </tbody>
-                                    </table>
-                                  ) : (
-                                    <p>변경 이력이 없습니다.</p>
-                                  )}
-                                </div>
-                              </div>
+                      return (
+                        <React.Fragment key={index}>
+                          <tr onClick={() => toggleRow(index, item)}>
+                            <td>
+                              {item.reservation_time || item.reserve_time
+                                ? (item.reservation_time || item.reserve_time)
+                                    .slice(0, 10)
+                                    .replaceAll("-", ".")
+                                : "-"}
+                            </td>
+                            <td>{item.type}</td>
+                            <td>{item.name}</td>
+                            <td>{item.phone}</td>
+                            <td>
+                              {item.storage_start_date && item.storage_end_date
+                                ? `${item.storage_start_date.replaceAll(
+                                    "-",
+                                    "."
+                                  )} ~ ${item.storage_end_date.replaceAll(
+                                    "-",
+                                    "."
+                                  )}`
+                                : item.delivery_date
+                                ? item.delivery_date.replaceAll("-", ".")
+                                : "-"}
+                            </td>
+                            <td>{luggageInfo}</td>
+                            <td>{`${item.price.toLocaleString()}원`}</td>
+                            <td>
+                              {item.situation === "완료" && item.success_time
+                                ? item.success_time
+                                    .slice(0, 16)
+                                    .replace("T", " ")
+                                    .replaceAll("-", ".")
+                                : "-"}
+                            </td>
+                            <td>
+                              <select
+                                className="select"
+                                value={item.situation || "접수"}
+                                onChange={(e) => eChange(e, item)}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {selectOptions[item.type].map((status) => (
+                                  <option key={status} value={status}>
+                                    {status}
+                                  </option>
+                                ))}
+                              </select>
                             </td>
                           </tr>
-                        )}
-                      </React.Fragment>
-                    );
-                  })}
+
+                          {openRow === index && (
+                            <tr>
+                              <td colSpan="9">
+                                <div className="status-details">
+                                  <div className="status-log-list">
+                                    {statusLogs[index]?.length > 0 ? (
+                                      <table className="log-table">
+                                        <colgroup>
+                                          <col style={{ width: "3%" }} />
+                                          <col style={{ width: "3%" }} />
+                                          <col style={{ width: "4%" }} />
+                                        </colgroup>
+                                        <thead>
+                                          <tr>
+                                            <th>변경시간</th>
+                                            <th>이전상태</th>
+                                            <th>변경상태</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {statusLogs[index].map(
+                                            (log, logIndex) => (
+                                              <tr key={logIndex}>
+                                                <td>
+                                                  {new Date(
+                                                    log.updated_at
+                                                  ).toLocaleString()}
+                                                </td>
+                                                <td>{log.prev_status}</td>
+                                                <td>{log.new_status}</td>
+                                              </tr>
+                                            )
+                                          )}
+                                        </tbody>
+                                      </table>
+                                    ) : (
+                                      <p>변경 이력이 없습니다.</p>
+                                    )}
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
+                      );
+                    })
+                ) : (
+                  <tr>
+                    <td colSpan="9">접수된 이력이 없습니다.</td>
+                  </tr>
+                )}
               </tbody>
             </table>
             <div className="pagination">
