@@ -57,7 +57,7 @@ function FAQAdd() {
                     </div>
 
                     <div className="form-button-wrapper">
-                        <button type="button" className="btn btn-back" onClick={() => navigate('/admin/faq')}>취소</button>
+                        <button type="button" className="btn btn-back" onClick={() => navigate('/faq/list')}>뒤로가기</button>
                         <button type="submit" className="btn btn-add-register">등록</button>
                     </div>
                 </form>

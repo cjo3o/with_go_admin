@@ -171,7 +171,7 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                             <Switch
                                 checked={r.status === '공개'}
                                 onChange={(checked) => toggleStatus(r.review_num, checked)}
-                                size="small"
+
                             />
                         </td>
                         <td className="col-status">

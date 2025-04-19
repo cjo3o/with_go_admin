@@ -59,7 +59,7 @@ function FAQEdit() {
             console.error(error);
         } else {
             alert('FAQ가 성공적으로 수정되었습니다');
-            navigate('/admin/faq');
+            navigate('/faq/list');
         }
     };
 
@@ -89,7 +89,7 @@ function FAQEdit() {
                     </div>
 
                     <div className="form-button-wrapper">
-                        <button type="button" className="btn btn-back" onClick={() => navigate('/admin/faq')}>뒤로가기</button>
+                        <button type="button" className="btn btn-back" onClick={() => navigate('/faq/list')}>뒤로가기</button>
                         <button type="submit" className="btn btn-add-register">수정</button>
                     </div>
                 </form>

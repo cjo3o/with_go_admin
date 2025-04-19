@@ -1,4 +1,4 @@
-// ✅ FAQList.jsx (수정 완료본)
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox, Switch } from 'antd';
@@ -105,9 +105,13 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
                             <div
                                 className={`faq-toggle-box ${expanded === faq.id ? 'open' : ''}`}
                                 onClick={() => setExpanded(expanded === faq.id ? null : faq.id)}
-                            >
-                                {faq.answer}
-                            </div>
+                                dangerouslySetInnerHTML={{
+                                    __html: expanded === faq.id
+                                        ? faq.answer
+                                        : faq.answer.replace(/<br\s*\/?>/gi, ' ')
+                                }}
+                            ></div>
+
                         </td>
                         <td>
                             <Switch checked={faq.status === '공개'} onChange={(checked) => handleStatusToggle(faq.id, checked)} />
