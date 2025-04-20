@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import custody from "../assets/Icon/custody.svg";
 import delivery from "../assets/Icon/delivery.svg";
 import "../css/Admin.css";
+import AdminStyle from "../css/Admin.module.css";
 import supabase from "../lib/supabase.js";
 
 import Lookup from "../../src/layouts/Lookup.jsx";
@@ -36,8 +37,18 @@ function Admin() {
   const [todayDeliveryCount, setTodayDeliveryCount] = useState(0);
   const [todayStorageCount, setTodayStorageCount] = useState(0);
 
+
   const today = new Date();
-  const todayStr = today.toISOString().slice(0, 10);
+  const formatter = new Intl.DateTimeFormat('ko-KR', {
+    timeZone: 'Asia/Seoul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+
+  const parts = formatter.formatToParts(today);
+  const todayStr = `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value}`;
+
 
   const [openRow, setOpenRow] = useState(null);
 
@@ -58,7 +69,7 @@ function Admin() {
         .from("status_logs")
         .select("*")
         .eq("key_value", keyValue)
-        .order("updated_at", { ascending: false });
+        .order("updated_at", { ascending: true });
 
       if (error) {
         console.error("로그 가져오기 실패", error);
@@ -77,21 +88,18 @@ function Admin() {
             received_at: reserveTime,
           },
         ]);
-        if (newError) {
-          console.error("로그 가져오기 실패", newError);
-          return;
-        }
 
         const { data: newData, error: newError } = await supabase
           .from("status_logs")
           .select("*")
           .eq("key_value", keyValue)
-          .order("updated_at", { ascending: false });
+          .order("updated_at", { ascending: true });
 
         if (newError) {
           console.error("로그 가져오기 실패", newError);
           return;
         }
+
         setStatusLogs((prev) => ({ ...prev, [index]: newData }));
       } else {
         setStatusLogs((prev) => ({ ...prev, [index]: data }));
@@ -152,13 +160,13 @@ function Admin() {
       const completeCount = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-            todayStr && item.situation === "완료"
+          todayStr && item.situation === "완료"
       ).length;
 
       const cancelCount = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-            todayStr && item.situation === "취소"
+          todayStr && item.situation === "취소"
       ).length;
 
       const totalPrice = AllData.filter(
@@ -170,7 +178,7 @@ function Admin() {
       const canceledPrice = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-            todayStr && item.situation === "취소"
+          todayStr && item.situation === "취소"
       ).reduce((sum, item) => sum + (item.price || 0), 0);
 
       setTotalPrice(totalPrice);
@@ -184,7 +192,7 @@ function Admin() {
       setTodayStorageCount(todayStorageCount);
     };
     supaData();
-  }, []);
+  }, [todayStr, twoData]);
 
   const eChange = async (e, item) => {
     const status = e.target.value;
@@ -263,11 +271,11 @@ function Admin() {
       prevData.map((i) =>
         i[keyColumn] === keyValue
           ? {
-              ...i,
-              situation: status,
-              status_updated_at: new Date().toISOString(),
-              success_time: status === "완료" ? new Date().toISOString() : null,
-            }
+            ...i,
+            situation: status,
+            status_updated_at: new Date().toISOString(),
+            success_time: status === "완료" ? new Date().toISOString() : null,
+          }
           : i
       )
     );
@@ -285,7 +293,7 @@ function Admin() {
     const phoneMatch = phoneClean.includes(searchLower);
 
     return isToday && isTypeMatch && (nameMatch || phoneMatch);
-  });
+  }, [twoData, searchTerm, filterType, todayStr]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -402,7 +410,7 @@ function Admin() {
                 <col style={{ width: "6%" }} />
               </colgroup>
               <thead>
-                <tr style={{ cursor: "auto" }}>
+                <tr className={AdminStyle.noPointer}>
                   <th>신청일</th>
                   <th>구분</th>
                   <th>예약자명</th>
@@ -446,17 +454,17 @@ function Admin() {
                         sizes.length > 0
                           ? sizes.join(", ")
                           : inches.length > 0
-                          ? inches.join(", ")
-                          : "입력된 수량이 없습니다.";
+                            ? inches.join(", ")
+                            : "입력된 수량이 없습니다.";
 
                       return (
                         <React.Fragment key={index}>
-                          <tr onClick={() => toggleRow(index, item)}>
+                          <tr className={AdminStyle.trpointer} onClick={() => toggleRow(index, item)}>
                             <td>
                               {item.reservation_time || item.reserve_time
                                 ? (item.reservation_time || item.reserve_time)
-                                    .slice(0, 10)
-                                    .replaceAll("-", ".")
+                                  .slice(0, 10)
+                                  .replaceAll("-", ".")
                                 : "-"}
                             </td>
                             <td>{item.type}</td>
@@ -465,24 +473,24 @@ function Admin() {
                             <td>
                               {item.storage_start_date && item.storage_end_date
                                 ? `${item.storage_start_date.replaceAll(
-                                    "-",
-                                    "."
-                                  )} ~ ${item.storage_end_date.replaceAll(
-                                    "-",
-                                    "."
-                                  )}`
+                                  "-",
+                                  "."
+                                )} ~ ${item.storage_end_date.replaceAll(
+                                  "-",
+                                  "."
+                                )}`
                                 : item.delivery_date
-                                ? item.delivery_date.replaceAll("-", ".")
-                                : "-"}
+                                  ? item.delivery_date.replaceAll("-", ".")
+                                  : "-"}
                             </td>
                             <td>{luggageInfo}</td>
                             <td>{`${item.price.toLocaleString()}원`}</td>
                             <td>
                               {item.situation === "완료" && item.success_time
                                 ? item.success_time
-                                    .slice(0, 16)
-                                    .replace("T", " ")
-                                    .replaceAll("-", ".")
+                                  .slice(0, 16)
+                                  .replace("T", " ")
+                                  .replaceAll("-", ".")
                                 : "-"}
                             </td>
                             <td>
@@ -549,7 +557,7 @@ function Admin() {
                     })
                 ) : (
                   <tr>
-                    <td colSpan="9">접수된 이력이 없습니다.</td>
+                    <td colSpan="9">{searchTerm ? "검색 결과가 없습니다." : "접수된 이력이 없습니다."}</td>
                   </tr>
                 )}
               </tbody>

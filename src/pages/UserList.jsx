@@ -2,8 +2,7 @@
 import { Checkbox } from "antd";
 import React, { useState } from "react";
 
-function UserList({ user, index, indexOfFirstUser2 }) {
-  const [selectedIds, setSelectedIds] = useState([]);
+function UserList({ user, index, indexOfFirstUser2, selectedIds, setSelectedIds, totalUsers }) {
   const displayName =
     user.user_metadata && user.user_metadata.name === "-"
       ? "설정 안함"
@@ -11,7 +10,7 @@ function UserList({ user, index, indexOfFirstUser2 }) {
 
   const provider =
     Array.isArray(user.app_metadata?.providers) &&
-    user.app_metadata?.providers.length > 0
+      user.app_metadata?.providers.length > 0
       ? user.app_metadata?.providers.join(", ") // 배열을 콤마로 구분된 문자열로 합침
       : "로그인 방식 없음";
 
@@ -24,12 +23,12 @@ function UserList({ user, index, indexOfFirstUser2 }) {
     .replace("T", " ")
     .replaceAll("-", ".");
 
-  const checkbox = (checked) => {
+  const checkbox = (e) => {
+    const checked = e.target.checked;
     if (checked) {
-      // 현재 페이지에 있는 유저 id만 모아서 선택
-      setSelectedIds(currentUsers2.map((user) => user.id));
+      setSelectedIds((prev) => [...prev, user.id]);
     } else {
-      setSelectedIds([]);
+      setSelectedIds((prev) => prev.filter((id) => id !== user.id));
     }
   };
 
@@ -37,13 +36,11 @@ function UserList({ user, index, indexOfFirstUser2 }) {
     <tr key={user.id}>
       <td className="col-select">
         <Checkbox
-          onChange={(e) =>
-            checkbox(e.target.checked, indexOfFirstUser2 + index)
-          }
-          checked={selectedIds.includes(indexOfFirstUser2 + index)}
+          checked={selectedIds.includes(user.id)}
+          onChange={checkbox}
         />
       </td>
-      <td>{indexOfFirstUser2 + index + 1}</td>
+      <td>{totalUsers - (indexOfFirstUser2 + index)}</td>
       <td>{displayName}</td>
       <td>{user.email}</td>
       <td>{provider}</td>

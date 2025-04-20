@@ -5,6 +5,7 @@ import Pagination from "./pagination.jsx";
 import LookupSearch from "./LookupSearch.jsx";
 import UserList from "./UserList.jsx";
 import { Checkbox } from "antd";
+import supabaseRole from "../lib/supabaserole.js";
 
 function Memberlist() {
   const [users, setUsers] = useState([]);
@@ -12,7 +13,7 @@ function Memberlist() {
 
   const [searchTerm2, setSearchTerm2] = useState("");
   const [currentPage2, setCurrentPage2] = useState(1);
-  const usersPerPage2 = 10; // 페이지당 보여줄 유저 수
+  const usersPerPage2 = 10;
 
   const indexOfLastUser2 = currentPage2 * usersPerPage2;
   const indexOfFirstUser2 = indexOfLastUser2 - usersPerPage2;
@@ -35,13 +36,19 @@ function Memberlist() {
   const handleSearch2 = (value) => {
     setSearchTerm2(value);
     setCurrentPage2(1);
+    setSelectedIds([]);
   };
 
   useEffect(() => {
     const getUsers = async () => {
       const { data, error } = await MemberlistUser();
       if (error) return;
-      setUsers(data);
+
+      const sortedData2 = data.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
+  
+      setUsers(sortedData2);
     };
 
     getUsers();
@@ -50,7 +57,7 @@ function Memberlist() {
   const noResultsMessage =
     currentUsers2.length === 0 && searchTerm2 !== "" ? (
       <tr>
-        <td colSpan="6" style={{ textAlign: "center" }}>
+        <td colSpan="7" style={{ textAlign: "center" }}>
           일치하는 회원이 없습니다.
         </td>
       </tr>
@@ -58,10 +65,35 @@ function Memberlist() {
 
   const checkbox = (checked) => {
     if (checked) {
-      // 현재 페이지에 있는 유저 id만 모아서 선택
       setSelectedIds(currentUsers2.map((user) => user.id));
     } else {
       setSelectedIds([]);
+    }
+  };
+
+   const deleteUser = async (userId) => {
+    const { error } = await supabaseRole.auth.admin.deleteUser(userId);
+    if (error) {
+      console.error("삭제 실패:", error);
+      throw error;
+    }
+    console.log("사용자 삭제 완료");
+  };
+
+  const DeleteSelected = async () => {
+    if (!window.confirm('선택한 회원을 삭제하시겠습니까?')) return;
+
+    try {
+      for (const userId of selectedIds) {
+        await deleteUser(userId);
+      }
+
+      setUsers(users.filter((user) => !selectedIds.includes(user.id)));
+      setSelectedIds([]);
+      alert('삭제 완료되었습니다.');
+    } catch (err) {
+      console.error(err);
+      alert('삭제 중 오류가 발생했습니다.');
     }
   };
 
@@ -80,17 +112,17 @@ function Memberlist() {
           </div>
           <table>
             <colgroup>
-              <col style={{ width: "3%" }} />
+              <col style={{ width: "1%" }} />
+              <col style={{ width: "1%" }} />
               <col style={{ width: "3%" }} />
               <col style={{ width: "5%" }} />
-              <col style={{ width: "8%" }} />
-              <col style={{ width: "5%" }} />
-              <col style={{ width: "9%" }} />
-              <col style={{ width: "11%" }} />
+              <col style={{ width: "2%" }} />
+              <col style={{ width: "4%" }} />
+              <col style={{ width: "4%" }} />
             </colgroup>
             <thead>
               <tr>
-                <th className="col-select">
+                <th className="th_first">
                   <Checkbox
                     onChange={(e) => checkbox(e.target.checked)}
                     checked={
@@ -116,12 +148,29 @@ function Memberlist() {
                   user={user}
                   index={index}
                   indexOfFirstUser2={indexOfFirstUser2}
-                  checkbox={Checkbox}
                   selectedIds={selectedIds}
+                  setSelectedIds={setSelectedIds}
+                  totalUsers={users.length}
                 />
               ))}
               {noResultsMessage}
             </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan="7">
+                  <div className="foot_btn">
+                    {selectedIds.length > 0 && (
+                      <button
+                        className="btn_delete"
+                        onClick={DeleteSelected}
+                      >
+                        선택 삭제 ({selectedIds.length})
+                      </button>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
           </table>
           <Pagination
             currentPage2={currentPage2}

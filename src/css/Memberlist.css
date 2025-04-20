@@ -109,4 +109,30 @@ tr {
   .arrow-btn2 i {
     font-size: 16px;
   }
+
+  .foot_btn {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    width: 100%;  /* 부모 컨테이너의 너비를 100%로 설정 */
+    padding: 10px 0;
+  }
+  
+  .btn_delete {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 0 4px;
+    background-color: rgb(158, 158, 158);
+    color: white;
+  }
+  
+  .btn_delete:hover {
+    background-color: rgb(247, 55, 79);
+  }
+  
+  tfoot td {
+    text-align: right;  /* 오른쪽 정렬 */
+  }
   

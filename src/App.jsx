@@ -31,7 +31,7 @@ import ReviewEdit from './pages/ReviewEdit.jsx';
 import FAQList from './pages/FAQList.jsx';
 import FAQEdit from './pages/FAQEdit';
 import FAQAdd from "./pages/FAQAdd.jsx";
-import Memberlist from "./pages/memberlist.jsx";
+import Memberlist from "./pages/Memberlist.jsx";
 
 function App() {
     const [count, setCount] = useState(0);

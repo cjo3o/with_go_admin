@@ -249,6 +249,10 @@ tr {
   margin-bottom: 0;
 }
 
+.th_first {
+  width: 2% !important;
+}
+
 .list_up {
   display: flex;
   justify-content: space-between;
@@ -286,6 +290,7 @@ tr {
   gap: 3px;
   margin-top: 10px;
 }
+
 .pagination button {
   padding: 6px 11px;
   border-radius: 3px;
@@ -294,11 +299,13 @@ tr {
   border: 1px solid #f4f4f4;
   cursor: pointer;
 }
+
 .pagination button.active {
   background-color: rgb(0, 102, 204);
   color: white;
   font-weight: bold;
 }
+
 /* .pagination i {
   font-size: 14px;
 } */
@@ -355,4 +362,3 @@ tr {
 .arrow-btn i {
   font-size: 16px;
 }
-
