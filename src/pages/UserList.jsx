@@ -34,7 +34,7 @@ function UserList({ user, index, indexOfFirstUser2, selectedIds, setSelectedIds,
 
   return (
     <tr key={user.id}>
-      <td className="col-select">
+      <td className="col_select">
         <Checkbox
           checked={selectedIds.includes(user.id)}
           onChange={checkbox}

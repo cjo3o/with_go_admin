@@ -61,7 +61,7 @@ tr {
     /* cursor: not-allowed; */
   }
   
-  .page-btn2 {
+  .page_btn2 {
     border: 1px solid #ccc;
     padding: 8px 12px;
     border-radius: 6px;
@@ -69,20 +69,20 @@ tr {
     transition: all 0.2s ease;
   }
   
-  .page-btn2:hover {
+  .page_btn2:hover {
     background-color: #0056b3;
     color: #fff;
     transform: translateY(-2px);
   }
   
-  .page-btn2.active {
+  .page_btn2.active {
     background-color: #0066cc;
     color: #fff;
     font-weight: bold;
     border-color: #0066cc;
   }
   
-  .arrow2-btn {
+  .arrow2_btn {
     border: 1px solid #ccc;
     padding: 8px 12px;
     border-radius: 6px;
@@ -92,21 +92,21 @@ tr {
     transition: all 0.2s ease;
   }
   
-  .arrow-btn2:hover {
+  .arrow_btn2:hover {
     transform: translateY(-2px);
     background-color: #0056b3;
     color: white;
   }
   
   
-  .arrow-btn2:disabled {
+  .arrow_btn2:disabled {
     background-color: #f0f0f0;
     color: #aaa;
     cursor: default;
     opacity: 0.7;
   }
   
-  .arrow-btn2 i {
+  .arrow_btn2 i {
     font-size: 16px;
   }
 
@@ -136,3 +136,6 @@ tr {
     text-align: right;  /* 오른쪽 정렬 */
   }
   
+  .th_first {
+    width: 1% !important;
+  }

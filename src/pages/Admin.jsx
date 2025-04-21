@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import custody from "../assets/Icon/custody.svg";
 import delivery from "../assets/Icon/delivery.svg";
-import "../css/Admin.css";
 import AdminStyle from "../css/Admin.module.css";
 import supabase from "../lib/supabase.js";
 
@@ -332,29 +331,29 @@ function Admin() {
 
   return (
     <>
-      <div className="content">
-        <div className="Admin_top">
+      <div className={AdminStyle.content}>
+        <div className={AdminStyle.Admin_top}>
           <h1>관리자 메인</h1>
         </div>
-        <div className="Admin_content">
-          <div className="top">
-            <div className="left">
-              <div className="left1">
+        <div className={AdminStyle.Admin_content}>
+          <div className={AdminStyle.top}>
+            <div className={AdminStyle.left}>
+              <div className={AdminStyle.left1}>
                 <h3>금일 신규예약</h3>
                 <p>{today.toLocaleDateString()}</p>
               </div>
-              <div className="left2">
-                <span className="left2-1">{todayCount}</span>
-                <span className="left2-2">건</span>
+              <div className={AdminStyle.left2}>
+                <span className={AdminStyle.left2_1}>{todayCount}</span>
+                <span className={AdminStyle.left2_2}>건</span>
               </div>
-              <div className="left3">
-                <div className="left3-1">
+              <div className={AdminStyle.left3}>
+                <div className={AdminStyle.left3_1}>
                   <img src={delivery} alt="" />
                   <h4>배송</h4>
                   <p>DELIVERY</p>
                   <span>{todayDeliveryCount}건</span>
                 </div>
-                <div className="left3-2">
+                <div className={AdminStyle.left3_2}>
                   <img src={custody} alt="" />
                   <h4>보관</h4>
                   <p>STORAGE</p>
@@ -363,24 +362,24 @@ function Admin() {
               </div>
             </div>
           </div>
-          <div className="top2">
-            <div className="center1">
+          <div className={AdminStyle.top2}>
+            <div className={AdminStyle.center1}>
               <h3>금일배송/보관관리</h3>
               <span>{todayCount}건</span>
             </div>
-            <div className="center2-3">
-              <div className="center2">
+            <div className={AdminStyle.center2_3}>
+              <div className={AdminStyle.center2}>
                 <h3>처리완료</h3>
                 <span>{completeCount}건</span>
               </div>
-              <div className="center3">
+              <div className={AdminStyle.center3}>
                 <h3>취소</h3>
                 <span>{cancelCount}건</span>
               </div>
             </div>
           </div>
-          <div className="top3">
-            <div className="right1">
+          <div className={AdminStyle.top3}>
+            <div className={AdminStyle.right1}>
               <h3>금일 실결제액</h3>
               <p>{actualPayment.toLocaleString()}원</p>
               <span>
@@ -392,24 +391,24 @@ function Admin() {
             </div>
           </div>
         </div>
-        <div className="Admin_list">
-          <div className="list card">
-            <div className="list_up">
+        <div className={AdminStyle.Admin_list}>
+        <div className={`${AdminStyle.list} card`}>
+            <div className={AdminStyle.list_up}>
               <h3>실시간 예약현황</h3>
-              <div className="admin_search">
+              <div className={AdminStyle.admin_search}>
                 <Radio.Group
                   value={filterType}
                   buttonStyle="solid"
                   onChange={(e) => setFilterType(e.target.value)}
                   style={{ marginRight: "16px" }}
                 >
-                  <Radio.Button value="" className="custom-radio-button">
+                  <Radio.Button value="" className={AdminStyle.custom_radio_button}>
                     전체
                   </Radio.Button>
-                  <Radio.Button value="보관" className="custom-radio-button">
+                  <Radio.Button value="보관" className={AdminStyle.custom_radio_button}>
                     보관
                   </Radio.Button>
-                  <Radio.Button value="배송" className="custom-radio-button">
+                  <Radio.Button value="배송" className={AdminStyle.custom_radio_button}>
                     배송
                   </Radio.Button>
                 </Radio.Group>
@@ -520,7 +519,7 @@ function Admin() {
                             </td>
                             <td>
                               <select
-                                className="select"
+                                className={AdminStyle.select}
                                 value={item.situation || "접수"}
                                 onChange={(e) => eChange(e, item)}
                                 onClick={(e) => e.stopPropagation()}
@@ -537,10 +536,10 @@ function Admin() {
                           {openRow === index && (
                             <tr>
                               <td colSpan="9">
-                                <div className="status-details">
-                                  <div className="status-log-list">
+                                <div className={AdminStyle.status_details}>
+                                  <div className={AdminStyle.status_log_list}>
                                     {statusLogs[index]?.length > 0 ? (
-                                      <table className="log-table">
+                                      <table className={AdminStyle.log_table}>
                                         <colgroup>
                                           <col style={{ width: "3%" }} />
                                           <col style={{ width: "3%" }} />
@@ -584,23 +583,23 @@ function Admin() {
                   <tr>
                     <td colSpan="9">
                       {searchTerm
-                        ? "검색 결과가 없습니다."
+                        ? "일치하는 접수건이 없습니다."
                         : "접수된 이력이 없습니다."}
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
-            <div className="pagination">
+            <div className={AdminStyle.pagination}>
               <button
-                className="arrow-btn"
+                className={AdminStyle.arrow_btn}
                 onClick={goToFirstGroup}
                 disabled={currentPage === 1}
               >
                 <FontAwesomeIcon icon={faAnglesLeft} />
               </button>
               <button
-                className="arrow-btn"
+                className={AdminStyle.arrow_btn}
                 onClick={goToPrevPage}
                 disabled={currentPage === 1}
               >
@@ -611,14 +610,14 @@ function Admin() {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`page-btn ${currentPage === page ? "active" : ""}`}
+                  className={`${AdminStyle.page_btn} ${currentPage === page ? "active" : ""}`}
                 >
                   {page}
                 </button>
               ))}
 
               <button
-                className="arrow-btn"
+                className={AdminStyle.arrow_btn}
                 onClick={goToNextPage}
                 disabled={currentPage === totalPages || totalPages === 0}
               >
