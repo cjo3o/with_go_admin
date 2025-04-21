@@ -1,4 +1,72 @@
 
+body {
+    font-size: 16px !important;
+    margin: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f4f6f9;
+}
+
+.sidebar {
+    width: 250px;
+    flex-shrink: 0;
+    background-color: var(--sidebar-bg, #013f83);
+    color: white;
+}
+
+.main {
+    flex-grow: 1;
+    min-width: 0;
+    padding: 70px 60px 0;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: rgb(0, 102, 204);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    position: relative;
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    font-size: 15px;
+}
+
+th {
+    background-color: #f0f2f5;
+    font-weight: bold;
+}
 
 .col-select { width: 5%; }
 .col-title { width: 18%; text-align: left; padding-left: 30px; }
