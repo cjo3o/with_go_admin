@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
@@ -8,42 +8,51 @@ import luggage1 from "../../images/luggage_01.png"
 import Select_1 from "../../Component/Select_1.jsx";
 import FloatingBtn from "../../Component/ExcelDownload.jsx";
 import ExcelTable from "../../Component/ExcelTable.jsx";
+import {Button} from "antd";
 
 import('../../css/Reservation.css')
 
 function Reservation() {
-
-    const [date, setDate] = React.useState(new Date().toLocaleDateString());
+    const [date, setDate] = useState(new Date().toLocaleDateString());
+    const [showCheckbox, setShowCheckbox] = useState(false);
 
     const handlePrevDate = () => {
         setDate((prevDate) => {
             const newDate = new Date(prevDate);
             newDate.setDate(newDate.getDate() - 1);
             return newDate;
-        })
-    }
+        });
+    };
 
     const handleNextDate = () => {
         setDate((prevDate) => {
             const newDate = new Date(prevDate);
             newDate.setDate(newDate.getDate() + 1);
             return newDate;
-        })
-    }
+        });
+    };
 
     async function getDate() {
-        const res = await fetch("/api/date");
-        console.log(res);
-
-        // if (result.data.status == 200) {
-        //     // setDate([res.data.date]);
-        //     setDate(new Date(data.date).toLocaleDateString());
-        // }
+        try {
+            const res = await fetch("/api/date");
+            if (res.ok) {
+                const data = await res.json();
+                setDate(new Date(data.date).toLocaleDateString());
+            } else {
+                console.error("Failed to fetch date:", res.status);
+            }
+        } catch (error) {
+            console.error("Error fetching date:", error);
+        }
     }
 
     useEffect(() => {
         getDate();
-    }, [date])
+    }, [date]);
+
+    const handleShowCheckbox = () => {
+        setShowCheckbox(!showCheckbox);
+    };
 
     return (
         <div className="main_R">
@@ -64,7 +73,6 @@ function Reservation() {
                     <button onClick={handleNextDate} style={{marginLeft: "10px"}}><FontAwesomeIcon
                         icon={faChevronRight}/></button>
                     <div>
-
                     </div>
                 </div>
             </div>
@@ -110,17 +118,18 @@ function Reservation() {
             </div>
             <div className="content_middle">
                 <div className="content_middle_one">
-                    {/*<button className="button-more">다중관리</button>*/}
-                    {/*<div className="downmenu">*/}
-                    {/*</div>*/}
+                    <Button className="button-more" onClick={handleShowCheckbox}>다중관리</Button>
+                    <div className="downmenu">
+                    </div>
                     <Select_1/>
                     <FloatingBtn/>
                 </div>
                 <div className="content_middle_two">
-                    <ExcelTable/>
+                    <ExcelTable showCheckbox={showCheckbox}/>
                 </div>
             </div>
-        </div>);
+        </div>
+    );
 }
 
 export default Reservation;
