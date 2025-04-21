@@ -97,11 +97,11 @@ function Sidebar(props) {
                     {openMenu === 'feature' && (
                         <div className="sub-menu">
                             <ul>
-                                <li><Link to="/event-promotion">이벤트/프로모션관리</Link></li>
+                                <li><Link to="/event/list">이벤트/프로모션관리</Link></li>
                                 <li><Link to="/notice-promotion">공지사항관리</Link></li>
                                 <li><Link to="/review">이용후기관리</Link></li>
                                 <li><Link to="/faq/list">FAQ 관리</Link></li>
-                                <li><Link to="">1:1문의관리</Link></li>
+                                <li><Link to="/inquiry/list">1:1문의관리</Link></li>
                             </ul>
                         </div>
                     )}

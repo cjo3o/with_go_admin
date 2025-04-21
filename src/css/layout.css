@@ -1,0 +1,100 @@
+
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f4f6f9;
+}
+
+.sidebar {
+    width: 280px;
+    background-color: var(--sidebar-bg, #013f83);
+    color: white;
+    flex-shrink: 0;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 50px 60px 0;
+    font-size: 16px;
+    min-width: 0;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+th, td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 15px;
+}
+
+th {
+    background-color: #f0f2f5;
+    font-weight: bold;
+}
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 20px;
+}
+
+.page-btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.page-btn,
+.group-btn,
+.arrow-btn {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    min-width: 32px;
+    min-height: 32px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-btn.active {
+    background-color: #0066cc;
+    color: #fff;
+    font-weight: bold;
+    border-color: #0066cc;
+}
+
+.page-btn:hover,
+.group-btn:hover,
+.arrow-btn:hover {
+    background-color: #0056b3;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.page-btn:disabled,
+.group-btn:disabled,
+.arrow-btn:disabled {
+    background-color: #f0f0f0;
+    color: #aaa;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.7;
+}

@@ -1,64 +1,113 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import supabase from '../lib/supabase';
-import '../css/faq.css';
+import '../css/Event.css';
+import '../css/layout.css';
+import '../css/ui.css';
 
-function FAQAdd() {
+function EventAdd() {
     const navigate = useNavigate();
-
     const [formData, setFormData] = useState({
-        question: '',
-        answer: '',
-        category: '기타'
+        title: '',
+        date: '',
+        link_url: '',
+        img_url: '',
+        status: '이벤트 진행중'
     });
+    const [file, setFile] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        setFile(selectedFile);
+        setPreviewUrl(URL.createObjectURL(selectedFile));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { error } = await supabase.from('withgo_faqs').insert([{ ...formData, status: '공개' }]);
-
+        let imageUrl = '';
+        if (file) {
+            const fileName = `${Date.now()}_${file.name}`;
+            const filePath = `event-images/${fileName}`;
+            const { data, error: uploadError } = await supabase.storage.from('images').upload(filePath, file);
+            if (uploadError) {
+                alert('이미지 업로드 실패');
+                return;
+            }
+            const { data: publicData } = supabase.storage.from('images').getPublicUrl(filePath);
+            imageUrl = publicData.publicUrl;
+        }
+        const { error } = await supabase.from('withgo_event').insert([{
+            title: formData.title,
+            date: formData.date,
+            link_url: formData.link_url,
+            status: formData.status,
+            img_url: imageUrl
+        }]);
         if (error) {
-            alert('등록에 실패했습니다');
-            console.error(error);
+            alert('이벤트 등록에 실패했습니다');
         } else {
-            alert('FAQ가 성공적으로 등록되었습니다');
-            navigate('/admin/faq');
+            alert('이벤트 등록이 완료되었습니다');
+            navigate('/event/list');
         }
     };
 
     return (
-        <div className="main">
-            <div className="card">
-                <div className="header">새 FAQ 등록</div>
-                <form className="form" onSubmit={handleSubmit}>
-                    <div className="form-group" style={{ flex: 1 }}>
-                        <label htmlFor="category">카테고리</label>
-                        <select name="category" value={formData.category} onChange={handleChange}>
-                            <option value="보관">보관</option>
-                            <option value="배송">배송</option>
-                            <option value="결제">결제</option>
-                            <option value="기타">기타</option>
-                        </select>
+        <div className="main-content">
+            <div className="event-header">새 이벤트 등록</div>
+            <div className="event-card">
+                <form onSubmit={handleSubmit} className="form">
+                    <div className="form-group">
+                        <label>제목</label>
+                        <input type="text" name="title" value={formData.title} onChange={handleChange} required />
                     </div>
 
-                    <div className="form-group" style={{ flex: 1 }}>
-                        <label htmlFor="question">질문</label>
-                        <input type="text" name="question" value={formData.question} onChange={handleChange} />
+                    <div className="form-group">
+                        <label>날짜</label>
+                        <input type="date" name="date" value={formData.date} onChange={handleChange} required />
                     </div>
 
-                    <div className="form-group" style={{ flex: 1 }}>
-                        <label htmlFor="answer">답변</label>
-                        <textarea name="answer" rows="6" value={formData.answer} onChange={handleChange} />
+                    <div className="form-group">
+                        <label>유튜브 링크</label>
+                        <input type="text" name="link_url" value={formData.link_url} onChange={handleChange} required />
+                    </div>
+
+                    <div className="form-group">
+                        <label>이미지 첨부</label>
+                        <input type="file" accept="image/*" onChange={handleFileChange} />
+                        {previewUrl && (
+                            <div className="event-image-preview">
+                                <img src={previewUrl} alt="미리보기" />
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="form-group custom-select">
+                        <label>상태</label>
+                        <div className="custom-select-wrapper">
+                            <select name="status" value={formData.status} onChange={handleChange}>
+                                <option value="이벤트 진행중">이벤트 진행중</option>
+                                <option value="이벤트 종료">이벤트 종료</option>
+                            </select>
+                            <FontAwesomeIcon icon={faArrowDown} className="select-icon" />
+                        </div>
                     </div>
 
                     <div className="form-button-wrapper">
-                        <button type="button" className="btn btn-back" onClick={() => navigate('/faq/list')}>뒤로가기</button>
-                        <button type="submit" className="btn btn-add-register">등록</button>
+                        <button type="button" className="btn-standard btn-back" onClick={() => navigate(-1)}>
+                            뒤로가기
+                        </button>
+                        <button type="submit" className="btn-standard btn-add">
+                            등록하기
+                        </button>
                     </div>
                 </form>
             </div>
@@ -66,4 +115,4 @@ function FAQAdd() {
     );
 }
 
-export default FAQAdd;
+export default EventAdd;

@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox, Switch } from 'antd';
-import supabase from '../lib/supabase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faChevronUp, faChevronDown,
     faAnglesLeft, faAnglesRight,
     faChevronLeft, faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
+
+import supabase from '../lib/supabase';
+
+import '../css/ui.css';
+import '../css/layout.css';
+import '../css/review.css';
 
 function ReviewTable({ filterType, statusFilter, searchKeyword }) {
     const [reviews, setReviews] = useState([]);
@@ -109,72 +114,51 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
     const startPage = currentGroup * groupSize + 1;
     const endPage = Math.min(startPage + groupSize - 1, totalPages);
 
-    const goToFirstGroup = () => setCurrentPage(1);
-    const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
-    const goToNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-    const goToNextGroup = () => setCurrentPage(endPage + 1);
-    const goToPrevGroup = () => setCurrentPage(startPage - groupSize);
-
     return (
         <div>
-            <table>
+            <table className="review-table">
                 <thead>
                 <tr>
-                    <th className="col-select">
+                    <th className="review-col-select">
                         <Checkbox
                             onChange={(e) => handleSelectAll(e.target.checked)}
                             checked={selectedIds.length === currentItems.length && currentItems.length > 0}
                         />
                     </th>
-                    <th className="col-title" onClick={() => handleSort('title')} style={{ cursor: 'pointer' }}>
-                        제목{' '}
-                        {sortField === 'title' && (
-                            <FontAwesomeIcon icon={sortOrder === 'asc' ? faChevronUp : faChevronDown} />
-                        )}
+                    <th className="review-col-title" onClick={() => handleSort('title')}>
+                        제목 <FontAwesomeIcon icon={sortField === 'title' && sortOrder === 'asc' ? faChevronUp : faChevronDown} />
                     </th>
-                    <th className="col-content">내용</th>
-                    <th className="col-writer" onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>
-                        작성자{' '}
-                        {sortField === 'name' && (
-                            <FontAwesomeIcon icon={sortOrder === 'asc' ? faChevronUp : faChevronDown} />
-                        )}
+                    <th className="review-col-content">내용</th>
+                    <th className="review-col-writer" onClick={() => handleSort('name')}>
+                        작성자 <FontAwesomeIcon icon={sortField === 'name' && sortOrder === 'asc' ? faChevronUp : faChevronDown} />
                     </th>
-                    <th className="col-type">구분</th>
-                    <th className="col-date" onClick={() => handleSort('created_at')} style={{ cursor: 'pointer' }}>
-                        등록일{' '}
-                        {sortField === 'created_at' && (
-                            <FontAwesomeIcon icon={sortOrder === 'asc' ? faChevronUp : faChevronDown} />
-                        )}
+                    <th className="review-col-type">구분</th>
+                    <th className="review-col-date" onClick={() => handleSort('created_at')}>
+                        등록일 <FontAwesomeIcon icon={sortField === 'created_at' && sortOrder === 'asc' ? faChevronUp : faChevronDown} />
                     </th>
-                    <th className="col-visible">공개여부</th>
-                    <th className="col-status">베스트리뷰등록</th>
-                    <th className="col-actions">관리</th>
+                    <th className="review-col-visible">공개여부</th>
+                    <th className="review-col-status">베스트리뷰등록</th>
+                    <th className="review-col-actions">관리</th>
                 </tr>
                 </thead>
                 <tbody>
                 {currentItems.map((r) => (
                     <tr key={r.review_num} className={r.is_best ? 'review-best' : ''}>
-                        <td className="col-select">
+                        <td className="review-col-select">
                             <Checkbox
                                 onChange={(e) => handleSelect(e.target.checked, r.review_num)}
                                 checked={selectedIds.includes(r.review_num)}
                             />
                         </td>
-                        <td className="col-title">{r.title || '(제목 없음)'}</td>
-                        <td className="col-content single-line" style={{ textAlign: 'left' }}>
-                            {r.review_txt || '(내용 없음)'}
+                        <td className="review-col-title">{r.title || '(제목 없음)'}</td>
+                        <td className="review-col-content single-line">{r.review_txt || '(내용 없음)'}</td>
+                        <td className="review-col-writer">{r.name || '익명'}</td>
+                        <td className="review-col-type">{r.type || '없음'}</td>
+                        <td className="review-col-date">{r.created_at ? formatDate(r.created_at) : '날짜 없음'}</td>
+                        <td className="review-col-visible">
+                            <Switch checked={r.status === '공개'} onChange={(checked) => toggleStatus(r.review_num, checked)} />
                         </td>
-                        <td className="col-writer">{r.name || '익명'}</td>
-                        <td className="col-type">{r.type || '없음'}</td>
-                        <td className="col-date">{r.created_at ? formatDate(r.created_at) : '날짜 없음'}</td>
-                        <td className="col-visible">
-                            <Switch
-                                checked={r.status === '공개'}
-                                onChange={(checked) => toggleStatus(r.review_num, checked)}
-
-                            />
-                        </td>
-                        <td className="col-status">
+                        <td className="review-col-status">
                             <button
                                 className={`btn btn-best ${r.is_best ? 'pink' : 'blue'}`}
                                 onClick={() => toggleBest(r.review_num, r.is_best)}
@@ -182,11 +166,8 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                                 {r.is_best ? '해제' : '등록'}
                             </button>
                         </td>
-                        <td className="col-actions">
-                            <button
-                                className="btn btn-edit"
-                                onClick={() => navigate(`/review-edit/${r.review_num}`)}
-                            >
+                        <td className="review-col-actions">
+                            <button className="btn btn-edit" onClick={() => navigate(`/review-edit/${r.review_num}`)}>
                                 수정
                             </button>
                         </td>
@@ -196,12 +177,9 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                 <tfoot>
                 <tr>
                     <td colSpan="9">
-                        <div className="add-button-wrapper">
+                        <div className="table-footer">
                             {selectedIds.length > 0 && (
-                                <button
-                                    className="btn btn-delete btn-standard"
-                                    onClick={handleDeleteSelected}
-                                >
+                                <button className="btn btn-delete" onClick={handleDeleteSelected}>
                                     선택 삭제 ({selectedIds.length})
                                 </button>
                             )}
@@ -212,10 +190,10 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
             </table>
 
             <div className="pagination">
-                <button className="group-btn" onClick={goToFirstGroup} disabled={currentGroup === 0}>
+                <button className="group-btn" onClick={() => setCurrentPage(1)} disabled={currentGroup === 0}>
                     <FontAwesomeIcon icon={faAnglesLeft} />
                 </button>
-                <button className="arrow-btn" onClick={goToPrevPage} disabled={currentPage === 1}>
+                <button className="arrow-btn" onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
                     <FontAwesomeIcon icon={faChevronLeft} />
                 </button>
 
@@ -234,10 +212,10 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                     })}
                 </div>
 
-                <button className="arrow-btn" onClick={goToNextPage} disabled={currentPage === totalPages}>
+                <button className="arrow-btn" onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
                     <FontAwesomeIcon icon={faChevronRight} />
                 </button>
-                <button className="group-btn" onClick={goToNextGroup} disabled={endPage === totalPages}>
+                <button className="group-btn" onClick={() => setCurrentPage(endPage + 1)} disabled={endPage === totalPages}>
                     <FontAwesomeIcon icon={faAnglesRight} />
                 </button>
             </div>

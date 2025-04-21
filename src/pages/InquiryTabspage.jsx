@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Radio, Input } from 'antd';
-import ReviewTable from './ReviewTable';
-import '../css/Review.css';
+import InquiryList from './InquiryList';
+import '../css/inquiry.css';
 import '../css/layout.css';
 import '../css/ui.css';
 
-const ReviewTabs = () => {
+const InquiryTabspage = () => {
     const [filterType, setFilterType] = useState('');
     const [inputValue, setInputValue] = useState('');
     const [searchValue, setSearchValue] = useState('');
@@ -19,18 +19,17 @@ const ReviewTabs = () => {
     };
 
     return (
-        <div className="review-wrapper">
-            <div className="review-main">
-                <div className="review-header">이용후기 관리</div>
-                <div className="review-card">
-                    <div className="review-top-bar">
-                        <div className="review-title">이용후기 리스트</div>
-                        <div className="review-tab-and-search">
+        <div className="wrapper">
+            <div className="main">
+                <div className="header">1:1 문의 관리</div>
+                <div className="card">
+                    <div className="top-bar">
+                        <h3>문의 리스트</h3>
+                        <div className="tab-and-search">
                             <Radio.Group
                                 defaultValue=""
                                 buttonStyle="solid"
                                 onChange={handleFilterChange}
-                                className="review-radio-group"
                             >
                                 <Radio.Button value="">전체</Radio.Button>
                                 <Radio.Button value="보관">보관</Radio.Button>
@@ -38,7 +37,7 @@ const ReviewTabs = () => {
                             </Radio.Group>
 
                             <Input.Search
-                                placeholder="리뷰 검색"
+                                placeholder="질문 검색"
                                 allowClear
                                 size="middle"
                                 value={inputValue}
@@ -48,7 +47,7 @@ const ReviewTabs = () => {
                             />
                         </div>
                     </div>
-                    <ReviewTable
+                    <InquiryList
                         filterType={filterType}
                         searchKeyword={searchValue}
                     />
@@ -58,4 +57,4 @@ const ReviewTabs = () => {
     );
 };
 
-export default ReviewTabs;
+export default InquiryTabspage;
