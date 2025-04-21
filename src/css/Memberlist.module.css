@@ -75,11 +75,11 @@ tr {
     transform: translateY(-2px);
   }
   
-  .page_btn2.active {
-    background-color: #0066cc;
-    color: #fff;
+  .page_btn2_active {
+    background-color: #0066cc !important;
+    color: #fff !important;
     font-weight: bold;
-    border-color: #0066cc;
+    border-color: #0066cc !important;
   }
   
   .arrow2_btn {

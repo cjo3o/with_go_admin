@@ -610,7 +610,7 @@ function Admin() {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`${AdminStyle.page_btn} ${currentPage === page ? "active" : ""}`}
+                  className={`${AdminStyle.page_btn} ${currentPage === page ? AdminStyle.page_btn_active : ""}`}
                 >
                   {page}
                 </button>

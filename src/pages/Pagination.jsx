@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesLeft, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 function Pagination({ currentPage2, totalPages2, setCurrentPage2 }) {
+  console.log(MemberStyle);
   const goToFirstGroup2 = () => setCurrentPage2(1);
   const goToPrevPage2 = () => setCurrentPage2((prev) => Math.max(prev - 1, 1));
   const goToNextPage2 = () => setCurrentPage2((prev) => Math.min(prev + 1, totalPages2));
@@ -22,8 +23,10 @@ function Pagination({ currentPage2, totalPages2, setCurrentPage2 }) {
         <button
           key={page}
           onClick={() => setCurrentPage2(page)}
-          className={`${MemberStyle.page_btn2} ${currentPage2 === page ? "active" : ""}`}
+          className={`${MemberStyle.page_btn2} ${currentPage2 === page ? MemberStyle.page_btn2_active : ""
+            }`}
         >
+
           {page}
         </button>
       ))}
