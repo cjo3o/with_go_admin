@@ -5,30 +5,30 @@
     font-family: 'KoPub Dotum', sans-serif;
 }
 
-.main{
+.main_R{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-.submain {
+.submain_R {
     /*border-top: 1px solid #c1c1c1;*/
     border-bottom: 1px solid #c1c1c1;
 }
-.header{
+.header_R{
     width: 100%;
     color: #434343;
     padding-top: 20px;
     padding-left: 45px;
 }
 
-.subheader{
+.subheader_R{
     width: 100%;
     margin: 20px 0;
     padding-left: 45px;
 }
 
-.content{
+.content_R{
     width: 95%;
     margin: 0 auto;
     /*position: relative;*/

@@ -98,7 +98,7 @@ function NewReservationAddPage() {
             <Select
                 className="select"
                 defaultValue="배송지"
-                style={{width: 125}}
+                style={{width: 120}}
                 onChange={handleChange}
                 options={[
                     {
@@ -129,8 +129,8 @@ function NewReservationAddPage() {
                         renderExtraFooter={() => 'extra footer'}
                         showTime
                         placeholder={['PICK UP', 'DROP OFF']}
-                        style={{marginTop: '5px', marginBottom: '5px'}}
-                    /><App/><Cascader/>
+                        style={{width: '350px', marginTop: '5px', marginBottom: '5px'}}
+                    /><App/><Cascader style={{width: '200px'}}></Cascader>
                 </div>
                 {isReturnTrip && (
                     <RangePicker
@@ -272,145 +272,146 @@ function NewReservationAddPage() {
     }
 
 
-    return (<Content>
-        <div className="main">
-            <div className="submain">
-                <div className="header">
-                    <h3>예약관리</h3>
+    return (
+        <Content>
+            <div className="main_R">
+                <div className="submain_R">
+                    <div className="header_R">
+                        <h3>예약관리</h3>
+                    </div>
+                </div>
+                <div className="subheader_R">
+                    <p style={{fontSize: "17px", fontWeight: "bold", color: "#434343"}}>금일배송 / 보관 관리</p>
                 </div>
             </div>
-            <div className="subheader">
-                <p style={{fontSize: "17px", fontWeight: "bold", color: "#434343"}}>금일배송 / 보관 관리</p>
+            <div className="aa">
+                <h1 style={{fontSize: '1.5rem'}}>신규예약등록</h1>
+                <button className="customerList">목록</button>
             </div>
-        </div>
-        <div className="aa">
-            <h1 style={{fontSize: '1.5rem'}}>신규예약등록</h1>
-            <button className="customerList">목록</button>
-        </div>
 
-        <Row gutter={[16, 16]}>
-            <Col span={24}>
-                <Card hoverable
-                      style={{
-                          // width: '500px',
-                          margin: '10px 2rem',
-                          height: '500px',
-                          backgroundColor: '#F9F9F9',
-                          // padding: '1rem',
-                          // display: 'inline-flex',
-                          // alignItems: 'center'
-                      }}>
-                    <Form.Item
-                        label="구분"
-                        colon={false}
-                        className="separated-form-item"
-                    >
-                        <App/>
-                    </Form.Item>
-                    <Form.Item
-                        label="예약일자"
-                        colon={false}
-                        className="separated-form-item"
-                    >
-                        <DatePick/>
-                    </Form.Item>
-                    <Form.Item
-                        className="separated-form-item"
-                    >
-                        <LuggageForm/>
-                    </Form.Item>
-                </Card>
-            </Col>
-        </Row>
-
-        <Row gutter={[16, 16]}>
-            <Col span={24}>
-                <Card hoverable
-                      style={{
-                          // width: '500px',
-                          margin: '10px 2rem',
-                          height: '250px',
-                          backgroundColor: '#F9F9F9',
-                          // padding: '1rem',
-                          // display: 'inline-flex',
-                          // alignItems: 'center'
-                      }}>
-                    <Form
-                        // layout="vertical"
-                        onFinish={onFinish}
-                        initialValues={{
-                            name: '홍길동',
-                            email: 'test@example.com',
-                            age: 25,
-                            phone: '010-1234-5678',
-                            password: '1234'
-                        }}
-                        style={{width: '450px'}}>
-
-                        <Form.Item label="예약자명"
-                                   name="name"
-                                   rules={[{required: true, message: '이름을 입력해주세요'}]}
-                            // labelCol={{style: {width: '120px'}}} // label 너비 고정
-                            // wrapperCol={{span: 16}}
-                                   className="separated-form-item"
-                        >
-                            <Input/>
-                        </Form.Item>
-                        <Form.Item label="이메일" name="email"
-                                   rules={[{required: true, type: 'email', message: '올바른 이메일을 입력해주세요'}]}
-                            // labelCol={{style: {width: '120px'}}} // label 너비 고정
-                            // wrapperCol={{span: 16}}
-                                   className="separated-form-item"
-                        >
-                            <Input/>
-                        </Form.Item>
-                        {/*<Form.Item label="나이" name="age" rules={[{required: true, message: '나이를 입력해주세요'}]}>*/}
-                        {/*    <Input type="number"/>*/}
-                        {/*</Form.Item>*/}
+            <Row gutter={[16, 16]}>
+                <Col span={24}>
+                    <Card hoverable
+                          style={{
+                              // width: '500px',
+                              margin: '10px 2rem',
+                              height: '500px',
+                              backgroundColor: '#F9F9F9',
+                              // padding: '1rem',
+                              // display: 'inline-flex',
+                              // alignItems: 'center'
+                          }}>
                         <Form.Item
-                            label="연락처"
-                            name="phone"
-                            rules={[{required: true, message: '전화번호를 입력해주세요 예시 010-1234-1234'}, {
-                                pattern: /^01[016789]-\d{3,4}-\d{4}$/, // 하이픈 없는 형태: 010-1234-5678
-                                message: '유효한 전화번호 형식이 아닙니다'
-                            }]}
-                            // labelCol={{style: {width: '120px'}}} // label 너비 고정
-                            // wrapperCol={{span: 16}}
+                            label="구분"
+                            colon={false}
                             className="separated-form-item"
                         >
-                            <Input placeholder="010-1234-5678"/>
+                            <App/>
                         </Form.Item>
-                        <Form.Item label="비밀번호"
-                                   name="password"
-                                   rules={[{required: false, message: '비밀번호를 입력해주세요'}
-                                       // {pattern: //, message: '비밀번호를 입력해주세요'}
-                                   ]}
-                            // labelCol={{style: {width: '120px'}}} // label 너비 고정
-                            // wrapperCol={{span: 16}}
-                                   className="separated-form-item"
+                        <Form.Item
+                            label="예약일자"
+                            colon={false}
+                            className="separated-form-item"
                         >
-                            <Input.Password/>
+                            <DatePick/>
                         </Form.Item>
-                        <Form.Item>
+                        <Form.Item
+                            className="separated-form-item"
+                        >
+                            <LuggageForm/>
                         </Form.Item>
-                    </Form>
-                </Card>
-            </Col>
-        </Row>
-        <div style={{textAlign: 'center'}}>
-            <Button type="primary"
-                    htmlType="submit"
-                    loading={loading} block
-                    style={{
-                        width: '100px',
-                        height: '35px',
-                        margin: '20px 0',
-                    }}
-            >
-                등록
-            </Button>
-        </div>
-    </Content>);
+                    </Card>
+                </Col>
+            </Row>
+
+            <Row gutter={[16, 16]}>
+                <Col span={24}>
+                    <Card hoverable
+                          style={{
+                              // width: '500px',
+                              margin: '10px 2rem',
+                              height: '250px',
+                              backgroundColor: '#F9F9F9',
+                              // padding: '1rem',
+                              // display: 'inline-flex',
+                              // alignItems: 'center'
+                          }}>
+                        <Form
+                            // layout="vertical"
+                            onFinish={onFinish}
+                            initialValues={{
+                                name: '홍길동',
+                                email: 'test@example.com',
+                                age: 25,
+                                phone: '010-1234-5678',
+                                password: '1234'
+                            }}
+                            style={{width: '450px'}}>
+
+                            <Form.Item label="예약자명"
+                                       name="name"
+                                       rules={[{required: true, message: '이름을 입력해주세요'}]}
+                                // labelCol={{style: {width: '120px'}}} // label 너비 고정
+                                // wrapperCol={{span: 16}}
+                                       className="separated-form-item"
+                            >
+                                <Input/>
+                            </Form.Item>
+                            <Form.Item label="이메일" name="email"
+                                       rules={[{required: true, type: 'email', message: '올바른 이메일을 입력해주세요'}]}
+                                // labelCol={{style: {width: '120px'}}} // label 너비 고정
+                                // wrapperCol={{span: 16}}
+                                       className="separated-form-item"
+                            >
+                                <Input/>
+                            </Form.Item>
+                            {/*<Form.Item label="나이" name="age" rules={[{required: true, message: '나이를 입력해주세요'}]}>*/}
+                            {/*    <Input type="number"/>*/}
+                            {/*</Form.Item>*/}
+                            <Form.Item
+                                label="연락처"
+                                name="phone"
+                                rules={[{required: true, message: '전화번호를 입력해주세요 예시 010-1234-1234'}, {
+                                    pattern: /^01[016789]-\d{3,4}-\d{4}$/, // 하이픈 없는 형태: 010-1234-5678
+                                    message: '유효한 전화번호 형식이 아닙니다'
+                                }]}
+                                // labelCol={{style: {width: '120px'}}} // label 너비 고정
+                                // wrapperCol={{span: 16}}
+                                className="separated-form-item"
+                            >
+                                <Input placeholder="010-1234-5678"/>
+                            </Form.Item>
+                            <Form.Item label="비밀번호"
+                                       name="password"
+                                       rules={[{required: false, message: '비밀번호를 입력해주세요'}
+                                           // {pattern: //, message: '비밀번호를 입력해주세요'}
+                                       ]}
+                                // labelCol={{style: {width: '120px'}}} // label 너비 고정
+                                // wrapperCol={{span: 16}}
+                                       className="separated-form-item"
+                            >
+                                <Input.Password/>
+                            </Form.Item>
+                            <Form.Item>
+                            </Form.Item>
+                        </Form>
+                    </Card>
+                </Col>
+            </Row>
+            <div style={{textAlign: 'center'}}>
+                <Button type="primary"
+                        htmlType="submit"
+                        loading={loading} block
+                        style={{
+                            width: '100px',
+                            height: '35px',
+                            margin: '20px 0',
+                        }}
+                >
+                    등록
+                </Button>
+            </div>
+        </Content>);
 }
 
 export default NewReservationAddPage;

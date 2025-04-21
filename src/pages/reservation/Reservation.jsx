@@ -45,17 +45,19 @@ function Reservation() {
         getDate();
     }, [date])
 
-    return (<div className="main">
-            <div className="submain">
-                <div className="header">
+    return (
+        <div className="main_R">
+            <div className="submain_R">
+                <div className="header_R">
                     <h3>예약관리</h3>
                 </div>
             </div>
-            <div className="subheader">
+            <div className="subheader_R">
                 <p style={{fontSize: "17px", fontWeight: "bold", color: "#434343"}}>금일배송 / 보관 관리</p>
             </div>
-            <div className="content">
-                <div className="content_first">
+            <div className="content_R">
+                <div className="content_first"
+                     style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
                     <button onClick={handlePrevDate} style={{marginRight: "10px"}}><FontAwesomeIcon
                         icon={faChevronLeft}/></button>
                     <h2>{date}</h2>
@@ -66,7 +68,7 @@ function Reservation() {
                     </div>
                 </div>
             </div>
-            <div className="content">
+            <div className="content_R">
                 <div className="content_second">
                     <h3>전체 예약건수</h3>
                     <h1>17 건</h1>
@@ -99,7 +101,7 @@ function Reservation() {
                     </div>
                 </div>
             </div>
-            <div className="content">
+            <div className="content_R">
                 <div className="content_third">
                     <Select/>
                     <input type="text"/>

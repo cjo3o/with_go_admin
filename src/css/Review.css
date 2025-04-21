@@ -1,0 +1,287 @@
+
+body {
+    font-size: 16px !important;
+    margin: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f4f6f9;
+}
+
+.sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background-color: var(--sidebar-bg, #013f83);
+    color: white;
+}
+
+.main {
+    flex-grow: 1;
+    min-width: 0;
+    padding: 70px 60px 0;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: rgb(0, 102, 204);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    position: relative;
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    font-size: 15px;
+}
+
+th {
+    background-color: #f0f2f5;
+    font-weight: bold;
+}
+
+.col-select { width: 5%; }
+.col-title { width: 18%; text-align: left; padding-left: 30px; }
+.col-content { width: 28%; text-align: left; padding-left: 16px; }
+.col-writer { width: 10%; }
+.col-date { width: 13%; }
+.col-type { width: 7%; }
+.col-status { width: 12%; }
+.col-actions {
+    width: 8%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+.btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 0 4px;
+}
+
+.btn-edit {
+    background-color: rgb(79, 23, 135);
+    color: white;
+    display: inline-block;
+}
+.btn-edit:hover {
+    background-color: rgb(24, 1, 97);
+}
+
+.btn-delete {
+    background-color: rgb(158, 158, 158);
+    color: white;
+}
+.btn-delete:hover {
+    background-color: rgb(247, 55, 79);
+}
+
+.btn-add {
+    background-color: transparent;
+    color: rgb(0, 102, 204);
+    border: 2px solid rgb(0, 102, 204);
+}
+.btn-add:hover {
+    background-color: rgb(0, 102, 204);
+    color: white;
+}
+
+.btn-best {
+    background-color: transparent;
+    border: 1px solid;
+    border-radius: 20px;
+    font-weight: bold;
+}
+.btn-best.blue {
+    color: rgb(0, 102, 204);
+    border-color: rgb(0, 102, 204);
+}
+.btn-best.blue:hover {
+    background-color: rgb(0, 102, 204);
+    color: white;
+}
+.btn-best.pink {
+    color: white;
+    background-color: #ff9900;;
+}
+.btn-best.pink:hover {
+    background-color: #fab34a;;
+    color: white;
+}
+
+
+.review-best {
+    background-color: #fff7d6;
+    font-weight: bold;
+    color: #ff9900;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+    margin-top: 10px;
+}
+.pagination button {
+    padding: 6px 11px;
+    border-radius: 3px;
+    background-color: #fffefe;
+    color: #5e5e5e;
+    border: 1px solid #f4f4f4;
+    cursor: pointer;
+}
+.pagination button.active {
+    background-color: rgb(0, 102, 204);
+    color: white;
+    font-weight: bold;
+}
+.pagination i {
+    font-size: 14px;
+}
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+input[type='checkbox'] {
+    margin-left: 4px;
+}
+.single-line {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.review-radio-group .ant-radio-button-wrapper {
+    padding: 4px 16px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 0;
+}
+.review-radio-group .ant-radio-button-wrapper-checked {
+    background-color: rgb(0, 102, 204);
+    color: white;
+    border-color: rgb(0, 102, 204);
+    font-weight: bold;
+}
+.review-radio-group .ant-radio-button-wrapper:not(:first-child)::before {
+    display: none;
+}
+
+
+.page-btn, .group-btn, .arrow-btn {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    min-width: 32px;
+    min-height: 32px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-btn.active {
+    background-color: #0066cc;
+    color: #fff;
+    font-weight: bold;
+    border-color: #0066cc;
+}
+
+.page-btn:hover,
+.group-btn:hover,
+.arrow-btn:hover {
+    background-color: #0056b3;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.page-btn:disabled,
+.group-btn:disabled,
+.arrow-btn:disabled {
+    background-color: #f0f0f0;
+    color: #aaa;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.arrow-btn i,
+.group-btn i {
+    font-size: 16px;
+}
+
+.page-btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.tab-and-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+}
+
+.review-search-input {
+    width: 200px;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.add-button-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+    gap: 8px;
+    padding-right: 0;
+}
+
+.col-visible {
+    width: 90px;
+    text-align: center;
+}

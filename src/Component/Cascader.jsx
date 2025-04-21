@@ -1,20 +1,29 @@
 import React from 'react';
-import { Cascader } from 'antd';
+import {Cascader} from 'antd';
+
 const options = [
     {
-        value: 'zhejiang',
-        label: 'Zhejiang',
+        value: 'Daegu',
+        label: <span>대구</span>,
         children: [
             {
-                value: 'hangzhou',
-                label: 'Hangzhou',
-                children: [
-                    {
-                        value: 'xihu',
-                        label: 'West Lake',
-                    },
-                ],
+                value: 'Daego-center',
+                label: '중구',
             },
+            {
+                value: 'Daego-All',
+                label: '동구',
+            },
+            {
+                value: 'Daego-All',
+                label: '서구'
+            },
+            // children: [
+            //     {
+            //         value: '',
+            //         label: 'West Lake',
+            //     },
+            // ],
         ],
     },
     {
@@ -37,8 +46,14 @@ const options = [
 const onChange = value => {
     console.log(value);
 };
-const App = () => <Cascader
-    options={options}
-    onChange={onChange}
-    placeholder="Please select" />;
+// Just show the latest item.
+const displayRender = labels => labels[labels.length - 1];
+const App = () => (
+    <Cascader
+        options={options}
+        expandTrigger="hover"
+        displayRender={displayRender}
+        onChange={onChange}
+    />
+);
 export default App;

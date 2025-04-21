@@ -1,0 +1,159 @@
+.faq-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 10px;
+}
+
+.faq-table th,
+.faq-table td {
+    vertical-align: middle;
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 64px;
+}
+
+.faq-table th {
+    background-color: #f0f2f5;
+    font-weight: bold;
+}
+
+
+.col-select { width: 5%; }
+.col-category { width: 12%; }
+.col-title {
+    width: 30%;
+    text-align: left;
+    padding-left: 10px;
+}
+.col-content {
+    width: 35%;
+    text-align: left;
+    padding-left: 10px;
+}
+.col-visible { width: 10%; }
+.col-date {
+    width: 13%;
+    cursor: pointer;
+}
+.col-actions { width: 10%; }
+
+
+.faq-table td.col-title,
+.faq-table td.col-content {
+    display: table-cell;
+    vertical-align: middle !important;
+    line-height: 1.4;
+}
+
+
+.faq-toggle-box {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5;
+    max-height: 3em;
+    cursor: pointer;
+    text-align: left;
+    white-space: pre-line;
+    transition: max-height 0.3s ease;
+}
+
+.faq-toggle-box.open {
+    -webkit-line-clamp: unset;
+    max-height: 500px;
+}
+
+
+.single-line {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: 8px;
+    font-weight: bold;
+    border: none;
+}
+
+.btn-add {
+    background-color: transparent;
+    color: rgb(0, 102, 204);
+    border: 2px solid rgb(0, 102, 204);
+}
+.btn-add:hover {
+    background-color: rgb(0, 102, 204);
+    color: white;
+}
+
+.btn-delete {
+    background-color: #aaa;
+    color: white;
+}
+.btn-delete:hover {
+    background-color: rgb(247, 55, 79);
+}
+
+.btn-edit {
+    background-color: rgb(79, 23, 135);
+    color: white;
+}
+.btn-edit:hover {
+    background-color: rgb(24, 1, 97);
+}
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
+}
+.page-btn,
+.arrow-btn {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.page-btn.active {
+    background-color: rgb(0, 102, 204);
+    color: white;
+    font-weight: bold;
+    border-color: rgb(0, 102, 204);
+}
+.arrow-btn:disabled,
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+input[type='checkbox'] {
+    margin-left: 4px;
+}
+
+
+.bulk-action-bar {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: flex-end;
+    background: #f9f9f9;
+}
