@@ -10,7 +10,7 @@ function LookupSearch({ onSearch }) {
   };
 
   return (
-    <div className="lookup-search">
+    <div className="lookup_search">
       <Lookup
         onSearch={handleSearch2}
         placeholder="검색어를 입력하세요"

@@ -1,4 +1,5 @@
 import React from "react";
+import MemberStyle from "../css/Memberlist.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesLeft, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
@@ -9,11 +10,11 @@ function Pagination({ currentPage2, totalPages2, setCurrentPage2 }) {
   const pageNumbers2 = Array.from({ length: totalPages2 }, (_, i) => i + 1);
 
   return (
-    <div className="pagination2">
-      <button className="arrow-btn2" onClick={goToFirstGroup2} disabled={currentPage2 === 1}>
+    <div className={MemberStyle.pagination2}>
+      <button className={MemberStyle.arrow_btn2} onClick={goToFirstGroup2} disabled={currentPage2 === 1}>
         <FontAwesomeIcon icon={faAnglesLeft} />
       </button>
-      <button className="arrow-btn2" onClick={goToPrevPage2} disabled={currentPage2 === 1}>
+      <button className={MemberStyle.arrow_btn2} onClick={goToPrevPage2} disabled={currentPage2 === 1}>
         <FontAwesomeIcon icon={faChevronLeft} />
       </button>
 
@@ -21,13 +22,13 @@ function Pagination({ currentPage2, totalPages2, setCurrentPage2 }) {
         <button
           key={page}
           onClick={() => setCurrentPage2(page)}
-          className={`page-btn2 ${currentPage2 === page ? "active" : ""}`}
+          className={`${MemberStyle.page_btn2} ${currentPage2 === page ? "active" : ""}`}
         >
           {page}
         </button>
       ))}
 
-      <button className="arrow-btn2" onClick={goToNextPage2} disabled={currentPage2 === totalPages2}>
+      <button className={MemberStyle.arrow_btn2} onClick={goToNextPage2} disabled={currentPage2 === totalPages2}>
         <FontAwesomeIcon icon={faChevronRight} />
       </button>
     </div>

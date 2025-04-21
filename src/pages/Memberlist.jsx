@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { MemberlistUser } from "../pages/MemberlistUser";
-import "../css/Memberlist.css";
+import MemberStyle from "../css/Memberlist.module.css";
 import Pagination from "./pagination.jsx";
 import LookupSearch from "./LookupSearch.jsx";
 import UserList from "./UserList.jsx";
@@ -99,12 +99,12 @@ function Memberlist() {
 
   return (
     <>
-      <div className="content2">
-        <div className="Memberlist_top">
+      <div className={MemberStyle.content2}>
+        <div className={MemberStyle.Memberlist_top}>
           <h1>회원 목록</h1>
         </div>
-        <div className="Memberlist_content card">
-          <div className="Memberlist_search">
+        <div className={`${MemberStyle.Memberlist_content} card`}>
+          <div className={MemberStyle.Memberlist_search}>
             <LookupSearch
               onSearch={handleSearch2}
               placeholder="검색어를 입력하세요"
@@ -122,7 +122,7 @@ function Memberlist() {
             </colgroup>
             <thead>
               <tr>
-                <th className="th_first">
+                <th className={MemberStyle.th_first}>
                   <Checkbox
                     onChange={(e) => checkbox(e.target.checked)}
                     checked={
@@ -158,10 +158,10 @@ function Memberlist() {
             <tfoot>
               <tr>
                 <td colSpan="7">
-                  <div className="foot_btn">
+                  <div className={MemberStyle.foot_btn}>
                     {selectedIds.length > 0 && (
                       <button
-                        className="btn_delete"
+                        className={MemberStyle.btn_delete}
                         onClick={DeleteSelected}
                       >
                         선택 삭제 ({selectedIds.length})
