@@ -37,18 +37,18 @@ function Admin() {
   const [todayDeliveryCount, setTodayDeliveryCount] = useState(0);
   const [todayStorageCount, setTodayStorageCount] = useState(0);
 
-
   const today = new Date();
-  const formatter = new Intl.DateTimeFormat('ko-KR', {
-    timeZone: 'Asia/Seoul',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
+  const formatter = new Intl.DateTimeFormat("ko-KR", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
   });
 
   const parts = formatter.formatToParts(today);
-  const todayStr = `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value}`;
-
+  const todayStr = `${parts.find((p) => p.type === "year").value}-${
+    parts.find((p) => p.type === "month").value
+  }-${parts.find((p) => p.type === "day").value}`;
 
   const [openRow, setOpenRow] = useState(null);
 
@@ -160,13 +160,13 @@ function Admin() {
       const completeCount = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-          todayStr && item.situation === "완료"
+            todayStr && item.situation === "완료"
       ).length;
 
       const cancelCount = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-          todayStr && item.situation === "취소"
+            todayStr && item.situation === "취소"
       ).length;
 
       const totalPrice = AllData.filter(
@@ -178,7 +178,7 @@ function Admin() {
       const canceledPrice = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-          todayStr && item.situation === "취소"
+            todayStr && item.situation === "취소"
       ).reduce((sum, item) => sum + (item.price || 0), 0);
 
       setTotalPrice(totalPrice);
@@ -267,33 +267,54 @@ function Admin() {
       console.error("상태 변경 로그 저장 실패", logStatusError);
     }
 
+    // 상태 변경 로그 추가 후 새로 가져오기
+    const { data: updatedLogs, error: updatedLogsError } = await supabase
+      .from("status_logs")
+      .select("*")
+      .eq("key_value", keyValue)
+      .order("updated_at", { ascending: true });
+
+    if (updatedLogsError) {
+      console.error("업데이트된 로그 가져오기 실패", updatedLogsError);
+    } else {
+      // 현재 openRow의 인덱스 찾기
+      const openIndex = twoData.findIndex((i) => i[keyColumn] === keyValue);
+      setStatusLogs((prev) => ({ ...prev, [openIndex]: updatedLogs }));
+    }
+
     settwoData((prevData) =>
       prevData.map((i) =>
         i[keyColumn] === keyValue
           ? {
-            ...i,
-            situation: status,
-            status_updated_at: new Date().toISOString(),
-            success_time: status === "완료" ? new Date().toISOString() : null,
-          }
+              ...i,
+              situation: status,
+              status_updated_at: new Date().toISOString(),
+              success_time: status === "완료" ? new Date().toISOString() : null,
+            }
           : i
       )
     );
   };
 
   // 🎯 오늘 + 검색 + 필터까지 다 적용한 상태에서 페이징 기준
-  const filteredData = twoData.filter((item) => {
-    const dateStr = (item.reservation_time || item.reserve_time)?.slice(0, 10);
-    const isToday = dateStr === todayStr;
+  const filteredData = twoData.filter(
+    (item) => {
+      const dateStr = (item.reservation_time || item.reserve_time)?.slice(
+        0,
+        10
+      );
+      const isToday = dateStr === todayStr;
 
-    const phoneClean = item.phone.replace(/-/g, "");
-    const isTypeMatch = filterType === "" || item.type === filterType;
-    const searchLower = searchTerm.toLowerCase();
-    const nameMatch = item.name.toLowerCase().includes(searchLower);
-    const phoneMatch = phoneClean.includes(searchLower);
+      const phoneClean = item.phone.replace(/-/g, "");
+      const isTypeMatch = filterType === "" || item.type === filterType;
+      const searchLower = searchTerm.toLowerCase();
+      const nameMatch = item.name.toLowerCase().includes(searchLower);
+      const phoneMatch = phoneClean.includes(searchLower);
 
-    return isToday && isTypeMatch && (nameMatch || phoneMatch);
-  }, [twoData, searchTerm, filterType, todayStr]);
+      return isToday && isTypeMatch && (nameMatch || phoneMatch);
+    },
+    [twoData, searchTerm, filterType, todayStr]
+  );
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -306,7 +327,8 @@ function Admin() {
   const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const goToNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const pageNumbers =
+    totalPages > 0 ? Array.from({ length: totalPages }, (_, i) => i + 1) : [1];
 
   return (
     <>
@@ -454,17 +476,20 @@ function Admin() {
                         sizes.length > 0
                           ? sizes.join(", ")
                           : inches.length > 0
-                            ? inches.join(", ")
-                            : "입력된 수량이 없습니다.";
+                          ? inches.join(", ")
+                          : "입력된 수량이 없습니다.";
 
                       return (
                         <React.Fragment key={index}>
-                          <tr className={AdminStyle.trpointer} onClick={() => toggleRow(index, item)}>
+                          <tr
+                            className={AdminStyle.trpointer}
+                            onClick={() => toggleRow(index, item)}
+                          >
                             <td>
                               {item.reservation_time || item.reserve_time
                                 ? (item.reservation_time || item.reserve_time)
-                                  .slice(0, 10)
-                                  .replaceAll("-", ".")
+                                    .slice(0, 10)
+                                    .replaceAll("-", ".")
                                 : "-"}
                             </td>
                             <td>{item.type}</td>
@@ -473,24 +498,24 @@ function Admin() {
                             <td>
                               {item.storage_start_date && item.storage_end_date
                                 ? `${item.storage_start_date.replaceAll(
-                                  "-",
-                                  "."
-                                )} ~ ${item.storage_end_date.replaceAll(
-                                  "-",
-                                  "."
-                                )}`
+                                    "-",
+                                    "."
+                                  )} ~ ${item.storage_end_date.replaceAll(
+                                    "-",
+                                    "."
+                                  )}`
                                 : item.delivery_date
-                                  ? item.delivery_date.replaceAll("-", ".")
-                                  : "-"}
+                                ? item.delivery_date.replaceAll("-", ".")
+                                : "-"}
                             </td>
                             <td>{luggageInfo}</td>
                             <td>{`${item.price.toLocaleString()}원`}</td>
                             <td>
                               {item.situation === "완료" && item.success_time
                                 ? item.success_time
-                                  .slice(0, 16)
-                                  .replace("T", " ")
-                                  .replaceAll("-", ".")
+                                    .slice(0, 16)
+                                    .replace("T", " ")
+                                    .replaceAll("-", ".")
                                 : "-"}
                             </td>
                             <td>
@@ -557,7 +582,11 @@ function Admin() {
                     })
                 ) : (
                   <tr>
-                    <td colSpan="9">{searchTerm ? "검색 결과가 없습니다." : "접수된 이력이 없습니다."}</td>
+                    <td colSpan="9">
+                      {searchTerm
+                        ? "검색 결과가 없습니다."
+                        : "접수된 이력이 없습니다."}
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -591,7 +620,7 @@ function Admin() {
               <button
                 className="arrow-btn"
                 onClick={goToNextPage}
-                disabled={currentPage === totalPages}
+                disabled={currentPage === totalPages || totalPages === 0}
               >
                 <FontAwesomeIcon icon={faChevronRight} />
               </button>
