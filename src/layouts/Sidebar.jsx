@@ -1,7 +1,7 @@
 import React, {use, useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 
-// import '../css/Sidebar.css';
+import '../css/Sidebar.css';
 
 import logoWithgo from '../assets/Icon/logo_withgo.png';
 import homeIcon from '../assets/Icon/home.png';
@@ -50,24 +50,30 @@ function Sidebar(props) {
                 </li>
 
                 <li>
-                    <div onClick={() => toggleMenu('reservation')} className="menu-toggle">예약관리</div>
+                    <div onClick={() => toggleMenu('reservation')}
+                         className="menu-toggle">
+                        <Link to="/Reservation"
+                              style={{fontSize:"16px",color:"white"}}
+                        >
+                            예약관리
+                        </Link></div>
                     {openMenu === 'reservation' && (
                         <div className="sub-menu">
                             <ul>
                                 <li
                                     onClick={() => setSidebarOpen(false)}
                                 >
-                                    <Link to="">배송/보관관리</Link>
+                                    <Link to="/Reservation">배송/보관관리</Link>
                                 </li>
                                 <li
                                     onClick={() => setSidebarOpen(false)}
                                 >
-                                    <Link to="">예약신청목록</Link>
+                                    <Link to="/ApplicationList">예약신청목록</Link>
                                 </li>
                                 <li
                                     onClick={() => setSidebarOpen(false)}
                                 >
-                                    <Link to="">신규예약등록</Link>
+                                    <Link to="/NewReservationAddPage">신규예약등록</Link>
                                 </li>
                             </ul>
                         </div>
