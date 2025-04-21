@@ -1,0 +1,7 @@
+.trpointer {
+  cursor: pointer !important;
+}
+
+.noPointer {
+  cursor: auto !important;
+}

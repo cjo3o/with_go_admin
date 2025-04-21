@@ -30,7 +30,7 @@ function Sidebar(props) {
                 </div>
             </div>
             <ul>
-                <li className="no-underline"><Link to="">관리자 메인</Link></li>
+                <li className="no-underline"><Link to="/admin">관리자 메인</Link></li>
 
                 <li>
                     <div onClick={() => toggleMenu('reservation')} className="menu-toggle">예약관리</div>
@@ -50,7 +50,7 @@ function Sidebar(props) {
                     {openMenu === 'user' && (
                         <div className="sub-menu">
                             <ul>
-                                <li><Link to="">회원목록</Link></li>
+                                <li><Link to="/Memberlist">회원목록</Link></li>
                             </ul>
                         </div>
                     )}
