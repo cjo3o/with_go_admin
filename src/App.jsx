@@ -33,7 +33,7 @@ import FAQEdit from './pages/FAQEdit';
 import FAQAdd from "./pages/FAQAdd.jsx";
 import Memberlist from "./pages/Memberlist.jsx";
 import DriverList from "./pages/DriverList.jsx";
-import DriverRegistration from "./pages/Driverregistration.jsx";
+import DriverRegistration from "./pages/DriverRegistration.jsx";
 
 function App() {
     const [count, setCount] = useState(0);
