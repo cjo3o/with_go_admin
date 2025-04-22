@@ -5,7 +5,7 @@ import "../css/Admin.css";
 import AdminStyle from "../css/Admin.module.css";
 import supabase from "../lib/supabase.js";
 
-import Lookup from "../../src/layouts/Lookup.jsx";
+import Lookup from "../layouts/Lookup.jsx";
 import { Radio } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

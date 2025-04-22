@@ -1,0 +1,142 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+input[type="text"],
+input[type="date"],
+textarea,
+select {
+    padding: 10px 14px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+textarea {
+    min-height: 160px;
+    resize: vertical;
+}
+
+.btn-standard {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-add-event {
+    background-color: rgb(158, 158, 158) !important;
+}
+.btn-add-event:hover {
+    background-color: rgb(0, 102, 204) !important;
+}
+
+.btn-edit,
+.btn-edit-confirm {
+    background-color: rgb(79, 23, 135);
+    color: white;
+}
+.btn-edit:hover,
+.btn-edit-confirm:hover {
+    background-color: rgb(24, 1, 97);
+}
+
+.btn-edit-confirm2 {
+    background-color: rgb(158, 158, 158);
+}
+.btn-edit-confirm2:hover {
+    background-color: rgb(0, 102, 204);
+}
+
+.btn-delete {
+    background-color: rgb(158, 158, 158);
+    color: white;
+}
+.btn-delete:hover {
+    background-color: rgb(247, 55, 79);
+}
+
+.btn-back {
+    background-color: rgb(92, 92, 92);
+    color: white;
+    margin-right: 10px;
+}
+.btn-back:hover {
+    background-color: #373737;
+}
+
+.btn-add-confirm {
+    background-color: rgb(158, 158, 158) !important;
+    color: white;
+    transition: background-color 0.2s ease-in-out;
+}
+.btn-add-confirm:hover {
+    background-color: rgb(0, 102, 204) !important;
+}
+
+.custom-select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+.custom-select-wrapper select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 10px 40px 10px 14px;
+}
+.select-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: gray;
+}
+
+.form-button-wrapper,
+.notice-add-button-wrapper,
+.table-footer,
+.event-add-button-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    padding-right: 10px;
+    align-items: center;
+}
+
+tfoot td {
+    border-bottom: none !important;
+    padding-top: 16px;
+}
+
+tfoot td .notice-add-button-wrapper,
+tfoot td .table-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-right: 10px;
+    align-items: center;
+}
