@@ -16,6 +16,9 @@ function Sidebar(props) {
     const toggleMenu = (menu) => {
         setOpenMenu(openMenu === menu ? null : menu);
     };
+    const boolSidebar = () => {
+        !screens.md ? setSidebarOpen(false) : setSidebarOpen(true);
+    }
 
     useEffect(() => {
         if (screens.md) {
@@ -33,7 +36,7 @@ function Sidebar(props) {
             <div className="sidebar-title">
                 <h2 className="menu-title">관리자 메뉴</h2>
                 <div className="menu-icons">
-                    <Link to="/" className="icon-link" onClick={() => setSidebarOpen(false)}>
+                    <Link to="/" className="icon-link" onClick={boolSidebar}>
                         <img src={homeIcon} alt="홈으로" className="menu-icon"/>
                     </Link>
                     <a href="https://cjo3o.github.io/with_go/index.html" className="icon-link">
@@ -44,7 +47,7 @@ function Sidebar(props) {
             </div>
             <ul>
                 <li className="no-underline"
-                    onClick={() => setSidebarOpen(false)}
+                    onClick={boolSidebar}
                 >
                     <Link to="/admin">관리자 메인</Link>
                 </li>
@@ -55,17 +58,17 @@ function Sidebar(props) {
                         <div className="sub-menu">
                             <ul>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="">배송/보관관리</Link>
                                 </li>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="">예약신청목록</Link>
                                 </li>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="">신규예약등록</Link>
                                 </li>
@@ -80,7 +83,7 @@ function Sidebar(props) {
                         <div className="sub-menu">
                             <ul>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="/Memberlist">회원목록</Link>
                                 </li>
@@ -95,12 +98,12 @@ function Sidebar(props) {
                         <div className="sub-menu">
                             <ul>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="">기사목록</Link>
                                 </li>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="">기사등록</Link>
                                 </li>
@@ -115,12 +118,12 @@ function Sidebar(props) {
                         <div className="sub-menu">
                             <ul>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="/partner/list">제휴숙소목록</Link>
                                 </li>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="/partner/create">제휴숙소등록</Link>
                                 </li>
@@ -135,12 +138,12 @@ function Sidebar(props) {
                         <div className="sub-menu">
                             <ul>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="/storage/list">보관장소목록</Link>
                                 </li>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="/storage/create">보관장소등록</Link>
                                 </li>
@@ -155,27 +158,27 @@ function Sidebar(props) {
                         <div className="sub-menu">
                             <ul>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="/Event-promotion">이벤트/프로모션관리</Link>
                                 </li>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="/notice-promotion">공지사항관리</Link>
                                 </li>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="/review">이용후기관리</Link>
                                 </li>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="/faq/list">FAQ 관리</Link>
                                 </li>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="">1:1문의관리</Link>
                                 </li>
@@ -190,7 +193,7 @@ function Sidebar(props) {
                         <div className="sub-menu">
                             <ul>
                                 <li
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={boolSidebar}
                                 >
                                     <Link to="/employee-list">직원목록</Link>
                                 </li>
