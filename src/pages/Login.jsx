@@ -27,8 +27,9 @@ function Login(props) {
         }
 
         message.success('로그인 성공');
-        setLoginModal(false);
-        navigate("/");
+        sessionStorage.setItem("name",data.name);
+        sessionStorage.setItem("role",data.role);
+        navigate("/admin");
     }
     return (
         <>
@@ -49,7 +50,6 @@ function Login(props) {
                 >
                     <h1 style={{marginBottom: "1.5rem", fontWeight:"bold"}}>로그인</h1>
                     <Form
-                        style={{width:'15%'}}
                         layout="vertical"
                         form={form}
                         onFinish={onFinish}

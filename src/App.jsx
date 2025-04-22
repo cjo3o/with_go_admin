@@ -1,5 +1,5 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useState } from 'react';
+import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
+import {useEffect, useState} from 'react';
 
 import './App.css';
 import 'antd/dist/reset.css';
@@ -32,6 +32,7 @@ import FAQList from './pages/FAQList.jsx';
 import FAQEdit from './pages/FAQEdit';
 import FAQAdd from "./pages/FAQAdd.jsx";
 import Memberlist from "./pages/Memberlist.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 
 function App() {
     const [count, setCount] = useState(0);
@@ -43,7 +44,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
-                    <Route path="/Admin" element={<Admin/>}/>
+                    <Route path="/Admin" element={<PrivateRoute role={"관리자"}><Admin/></PrivateRoute>}/>
                     <Route path="/Memberlist" element={<Memberlist/>}/>
                     <Route path="/partner/list" element={<PartnerList/>}/>
                     <Route path="/partner/create" element={<PartnerCreate/>}/>
