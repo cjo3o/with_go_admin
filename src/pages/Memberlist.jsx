@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MemberlistUser } from "./MemberlistUser.jsx";
 import MemberStyle from "../css/Memberlist.module.css";
-import Pagination from "./pagination.jsx";
+import Pagination from "./Pagination.jsx";
 import LookupSearch from "./LookupSearch.jsx";
 import UserList from "./UserList.jsx";
 import { Checkbox } from "antd";
