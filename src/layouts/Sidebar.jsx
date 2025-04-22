@@ -61,8 +61,8 @@ function Sidebar(props) {
                     {openMenu === 'driver' && (
                         <div className="sub-menu">
                             <ul>
-                                <li><Link to="">기사목록</Link></li>
-                                <li><Link to="">기사등록</Link></li>
+                                <li><Link to="/DriverList">기사목록</Link></li>
+                                <li><Link to="/DriverRegistration">기사등록</Link></li>
                             </ul>
                         </div>
                     )}
