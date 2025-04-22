@@ -5,13 +5,13 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faArrowLeft, faCheck, faPlay, faCircleStop, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 library.add(faArrowLeft, faCheck, faPlay, faCircleStop, faArrowDown);
 
-import '/App.css';
+import './App.css';
 import 'antd/dist/reset.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import Home from "./pages/Home.jsx";
 import Sidebar from "./layouts/Sidebar.jsx";
-import Lookup from "./layouts/Lookup.jsx";
+// import Lookup from "./layouts/Lookup.jsx";
 
 import PartnerList from "./pages/PartnerList.jsx";
 import PartnerCreate from "./pages/PartnerCreate.jsx";
@@ -33,8 +33,8 @@ import FAQEdit from './pages/FAQEdit';
 import FAQAdd from "./pages/FAQAdd.jsx";
 import FAQTabspage from './pages/FAQTabspage.jsx';
 
-import InquiryTabs from './pages/InquiryTabspage.jsx';
-import Reservation from "./pages/Reservation.jsx";
+// import InquiryTabs from './pages/InquiryTabs.jsx';
+import Reservation from "./pages/reservation/Reservation.jsx";
 import NewReservationAddPage from "./pages/reservation/NewReservationAddPage.jsx";
 import ApplicationList from "./pages/reservation/ApplicationList.jsx";
 import EventList from "./pages/Event_promotion.jsx";
@@ -46,7 +46,7 @@ function App() {
         <div className="wrapper">
             <BrowserRouter>
                 <Sidebar />
-                <Lookup/>
+                {/*<Lookup/>*/}
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/reservation" element={<Reservation />} />
@@ -73,7 +73,7 @@ function App() {
                     <Route path="/faq-edit/:id" element={<FAQEdit />} />
                     <Route path="/faq-add" element={<FAQAdd />} />
 
-                    <Route path="/inquiry/list" element={<InquiryTabs />} />
+                    {/*<Route path="/inquiry/list" element={<InquiryTabs />} />*/}
                     <Route path="/inquiry-edit/:id" element={<div>준비 중입니다</div>} />
                 </Routes>
             </BrowserRouter>

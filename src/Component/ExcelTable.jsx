@@ -287,9 +287,9 @@
 
 import React, {useEffect, useState} from 'react';
 import {Form, Input, InputNumber, Popconfirm, Table, Typography, Checkbox, Button} from 'antd';
-import { DeleteOutlined, EditOutlined } from "@mui/icons-material";
+import {DeleteOutlined, EditOutlined} from "@mui/icons-material";
 
-const originData = Array.from({ length: 30 }).map((_, i) => ({
+const originData = Array.from({length: 30}).map((_, i) => ({
     key: i.toString(),
     number: `No. ${i + 1}`,
     division: 'A',
@@ -302,15 +302,15 @@ const originData = Array.from({ length: 30 }).map((_, i) => ({
     processingStatus: '대기',
 }));
 
-const EditableCell = ({ editing, dataIndex, title, inputType, record, index, children, ...restProps }) => {
-    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+const EditableCell = ({editing, dataIndex, title, inputType, record, index, children, ...restProps}) => {
+    const inputNode = inputType === 'number' ? <InputNumber/> : <Input/>;
     return (
         <td {...restProps}>
             {editing ? (
                 <Form.Item
                     name={dataIndex}
-                    style={{ margin: 0 }}
-                    rules={[{ required: true, message: `Please Input ${title}!` }]}
+                    style={{margin: 0}}
+                    rules={[{required: true, message: `Please Input ${title}!`}]}
                 >
                     {inputNode}
                 </Form.Item>
@@ -321,7 +321,7 @@ const EditableCell = ({ editing, dataIndex, title, inputType, record, index, chi
     );
 };
 
-const ExcelTable = ({ showCheckbox }) => {
+const ExcelTable = ({showCheckbox}) => {
     const [form] = Form.useForm();
     const [data, setData] = useState(originData);
     const [editingKey, setEditingKey] = useState('');
@@ -339,8 +339,13 @@ const ExcelTable = ({ showCheckbox }) => {
     }, [data, currentPage, pageSize, checkedRows, showCheckbox]);
 
     const isEditing = record => record.key === editingKey;
-    const edit = record => { form.setFieldsValue({ ...record }); setEditingKey(record.key); };
-    const cancel = () => { setEditingKey(''); };
+    const edit = record => {
+        form.setFieldsValue({...record});
+        setEditingKey(record.key);
+    };
+    const cancel = () => {
+        setEditingKey('');
+    };
     const save = async (key) => {
         try {
             const row = await form.validateFields();
@@ -348,7 +353,7 @@ const ExcelTable = ({ showCheckbox }) => {
             const index = newData.findIndex(item => key === item.key);
             if (index > -1) {
                 const item = newData[index];
-                newData.splice(index, 1, { ...item, ...row });
+                newData.splice(index, 1, {...item, ...row});
                 setData(newData);
                 setEditingKey('');
             } else {
@@ -360,7 +365,10 @@ const ExcelTable = ({ showCheckbox }) => {
             console.log('Validate Failed:', errInfo);
         }
     };
-    const handleDelete = key => { const newData = data.filter(item => item.key !== key); setData(newData); };
+    const handleDelete = key => {
+        const newData = data.filter(item => item.key !== key);
+        setData(newData);
+    };
 
     const onCheckboxChange = (e, record) => {
         setCheckedRows(prev => {
@@ -485,7 +493,7 @@ const ExcelTable = ({ showCheckbox }) => {
                 const editable = isEditing(record);
                 return editable ? (
                     <span>
-                        <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
+                        <Typography.Link onClick={() => save(record.key)} style={{marginRight: 8}}>
                             저장
                         </Typography.Link>
                         <Popconfirm title="취소하시겠습니까?" onConfirm={cancel}>
@@ -495,10 +503,10 @@ const ExcelTable = ({ showCheckbox }) => {
                 ) : (
                     <span>
                         <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                            <EditOutlined />
+                            <EditOutlined/>
                         </Typography.Link>
                         <Popconfirm title="삭제하시겠습니까?" onConfirm={() => handleDelete(record.key)}>
-                            <a style={{ marginLeft: 5 }}><DeleteOutlined /></a>
+                            <a style={{marginLeft: 5}}><DeleteOutlined/></a>
                         </Popconfirm>
                     </span>
                 );
@@ -524,40 +532,55 @@ const ExcelTable = ({ showCheckbox }) => {
 
     return (
         <Form form={form} component={false}>
-
             <Table
                 components={{
-                    body: { cell: EditableCell },
+                    body: {cell: EditableCell},
                 }}
                 bordered
                 dataSource={data}
                 columns={mergedColumns}
                 rowClassName="editable-row"
                 pagination={{
-                    pageSize: 10,
+                    pageSize: pageSize,
                     total: data.length,
                     showSizeChanger: false,
                     showTotal: false,
-                    style: { justifyContent: 'center' },
-                    onChange: (page, pageSize) => {
-                        console.log('현재 페이지:', page, '페이지 크기:', pageSize);
-                        cancel();
+                    style: {
+                        display: 'flex', // flex container로 설정
+                        justifyContent: 'flex-end', // 오른쪽 정렬
+                        alignItems: 'center', // 세로 중앙 정렬
+                        marginTop: 16,
+                    },
+                    itemRender: (_, type, originalElement) => {
+                        if (type === 'last') {
+                            return (
+                                <React.Fragment>
+                                    {originalElement}
+                                    {showCheckbox && (
+                                        <div style={{marginLeft: 16, display: 'flex', alignItems: 'center'}}>
+                                            <h3>체크한 게시물 {checkedRows.length}개를</h3>
+                                            <Button
+                                                type="danger"
+                                                onClick={handleDeleteSelected}
+                                                disabled={checkedRows.length === 0}
+                                                style={{marginLeft: 8}}
+                                            >
+                                                삭제
+                                            </Button>
+                                        </div>
+                                    )}
+                                </React.Fragment>
+                            );
+                        }
+                        return originalElement;
+                    },
+                    onChange: (page, newPageSize) => {
+                        setCurrentPage(page);
+                        setPageSize(newPageSize);
                     },
                 }}
                 onChange={handleTableChange}
             />
-            {showCheckbox && (
-                <div style={{ marginBottom: 16 }}>
-                    <h3>체크한 게시물 {checkedRows.length}개를</h3>
-                    <Button
-                        type="danger"
-                        onClick={handleDeleteSelected}
-                        disabled={checkedRows.length === 0}
-                    >
-                        삭제
-                    </Button>
-                </div>
-            )}
         </Form>
     );
 };
