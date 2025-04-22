@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MemberlistUser } from "../pages/MemberlistUser";
+import { MemberlistUser } from "MemberlistUser.jsx";
 import MemberStyle from "../css/Memberlist.module.css";
 import Pagination from "./pagination.jsx";
 import LookupSearch from "./LookupSearch.jsx";
