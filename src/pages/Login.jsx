@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Input, Button, Modal, Layout, message} from "antd";
+import {Form, Input, Button, Modal, Layout, message, Flex} from "antd";
 import supabase from "../lib/supabase.js";
 import bcrypt from "bcryptjs";
 import {useNavigate} from "react-router-dom";
@@ -8,7 +8,7 @@ function Login(props) {
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [loginModal, setLoginModal] = React.useState(true);
-    const onFinish = async ({email,password}) => {
+    const onFinish = async ({email, password}) => {
         const {data, error} = await supabase
             .from("employees")
             .select("*")
@@ -16,7 +16,7 @@ function Login(props) {
             .single();
 
         if (error || !data) {
-            message.error('이메일 또는 비밀번호가 일치하지 않습니다.');
+            message.error('이메일을 확인해주세요.');
             return;
         }
         const isValid = await bcrypt.compare(password, data.password); // 해시 비교
@@ -32,46 +32,58 @@ function Login(props) {
     }
     return (
         <>
-            <Modal
-                width="25%"
-                title="로그인"
-                open={loginModal}
-                onOk={() => form.submit()}
-                closable={false}
-                footer={[
-                    <Button key="submit" type="primary" onClick={() => form.submit()}>
-                        로그인
-                    </Button>
-                ]
-                }>
-                <Form
-                    layout="vertical"
-                    form={form}
-                    onFinish={onFinish}
+            {/*<Modal*/}
+            {/*    width={'25%'}*/}
+            {/*    open={loginModal}*/}
+            {/*    closable={false}*/}
+            {/*    footer={null}*/}
+            {/*    >*/}
+            <div className="main" style={{fontWeight:"bold"}}>
+                <Flex
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100%',
+                    }}
+                    vertical
                 >
-                    <Form.Item
-                        label="이메일"
-                        name="email"
-                        rules={[{
-                            required: true,
-                            type: "email",
-                            message: ('이메일을 확인해주세요.')
-                        }]}
+                    <h1 style={{marginBottom: "1.5rem", fontWeight:"bold"}}>로그인</h1>
+                    <Form
+                        style={{width:'15%'}}
+                        layout="vertical"
+                        form={form}
+                        onFinish={onFinish}
                     >
-                        <Input/>
-                    </Form.Item>
-                    <Form.Item
-                        label="패스워드"
-                        name="password"
-                        rules={[{
-                            required: true,
-                            message: ('패스워드를 확인해주세요.')
-                        }]}
-                    >
-                        <Input.Password/>
-                    </Form.Item>
-                </Form>
-            </Modal>
+                        <Form.Item
+                            label="이메일"
+                            name="email"
+                            rules={[{
+                                required: true,
+                                type: "email",
+                                message: ('이메일을 확인해주세요.')
+                            }]}
+                        >
+                            <Input/>
+                        </Form.Item>
+                        <Form.Item
+                            label="패스워드"
+                            name="password"
+                            rules={[{
+                                required: true,
+                                message: ('패스워드를 확인해주세요.')
+                            }]}
+                        >
+                            <Input.Password/>
+                        </Form.Item>
+                        <Button
+                            style={{fontWeight:"bold"}}
+                            type="primary" htmlType="submit" block>
+                            로그인
+                        </Button>
+                    </Form>
+                </Flex>
+            </div>
+            {/*</Modal>*/}
         </>
     );
 }
