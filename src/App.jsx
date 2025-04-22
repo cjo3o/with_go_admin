@@ -14,6 +14,9 @@ import StorageList from "./pages/StorageList.jsx";
 import StorageCreate from "./pages/StorageCreate.jsx";
 
 import EventList from "./pages/Event_promotion.jsx";
+import Admin from "./pages/Admin.jsx";
+
+
 import EmployeeList from "./pages/EmployeeList.jsx";
 import EventAdd from "./pages/Event_add.jsx";
 import EventEdit from "./pages/Eventedit.jsx";
@@ -28,6 +31,7 @@ import ReviewEdit from './pages/ReviewEdit.jsx';
 import FAQList from './pages/FAQList.jsx';
 import FAQEdit from './pages/FAQEdit';
 import FAQAdd from "./pages/FAQAdd.jsx";
+import Memberlist from "./pages/Memberlist.jsx";
 
 function App() {
     const [count, setCount] = useState(0);
@@ -39,6 +43,8 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
+                    <Route path="/Admin" element={<Admin/>}/>
+                    <Route path="/Memberlist" element={<Memberlist/>}/>
                     <Route path="/partner/list" element={<PartnerList/>}/>
                     <Route path="/partner/create" element={<PartnerCreate/>}/>
                     <Route path="/partner/create/:partner_id" element={<PartnerCreate />} />
