@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
     Card,
     Col,
-    Form,
+    Form, // Form 컴포넌트 import 유지
     Input,
     Layout,
     Row,
@@ -16,7 +16,7 @@ import {
     Select,
     Cascader,
     Flex,
-    Radio
+    Radio,
 } from "antd";
 import supabase from "../../SupabaseClient_evpro.js";
 import bcrypt from 'bcryptjs';
@@ -29,21 +29,12 @@ const { Content } = Layout;
 const Counter = ({ initialCount = 0, onCountChange }) => {
     const [count, setCount] = useState(initialCount);
 
-    const increment = () => {
-        setCount(prevCount => {
-            const newCount = prevCount + 1;
-            onCountChange(newCount);
-            return newCount;
-        });
-    };
+    useEffect(() => {
+        onCountChange(count);
+    }, [count]);
 
-    const decrement = () => {
-        setCount(prevCount => {
-            const newCount = Math.max(0, prevCount - 1);
-            onCountChange(newCount);
-            return newCount;
-        });
-    };
+    const increment = () => setCount((c) => c + 1);
+    const decrement = () => setCount((c) => Math.max(0, c - 1));
 
     return (
         <div style={{
@@ -92,61 +83,8 @@ const Counter = ({ initialCount = 0, onCountChange }) => {
     );
 };
 
-const PaymentDisplay = ({ amount }) => {
-    const formattedAmount = amount.toLocaleString();
-    return <span style={{ fontSize: '30px', fontWeight: "bold", color: '#1e83f1' }}>{formattedAmount} 원</span>;
-};
-
-// // const LuggageForm = () => {
-// //     const [largeCount, setLargeCount] = useState(0);
-// //     const [middleCount, setMiddleCount] = useState(0);
-// //     const [smallCount, setSmallCount] = useState(0);
-// //     const [totalPayment, setTotalPayment] = useState(0);
-// //
-// //     const largePrice = 5000;
-// //     const middlePrice = 3000;
-// //     const smallPrice = 1000;
-// //
-// //     const handleLargeCountChange = (count) => {
-// //         setLargeCount(count);
-// //     };
-// //
-// //     const handleMiddleCountChange = (count) => {
-// //         setMiddleCount(count);
-// //     };
-// //
-// //     const handleSmallCountChange = (count) => {
-// //         setSmallCount(count);
-// //     };
-// //
-// //     useEffect(() => {
-// //         const total = (largeCount * largePrice) + (middleCount * middlePrice) + (smallCount * smallPrice);
-// //         setTotalPayment(total);
-// //     }, [largeCount, middleCount, smallCount, largePrice, middlePrice, smallPrice]);
-//
-//     return (
-//         <Form layout="horizontal">
-//             <Form.Item
-//                 label="짐갯수"
-//                 colon={false}
-//                 className="separated-form-item"
-//             >
-//                 <div id="large" style={{ display: "flex", alignItems: "center" }}>대(30인치 이상)<Counter onCountChange={handleLargeCountChange} /></div>
-//                 <div id="middle" style={{ display: "flex", alignItems: "center" }}>중(21 ~ 29인치)<Counter onCountChange={handleMiddleCountChange} /></div>
-//                 <div id="small" style={{ display: "flex", alignItems: "center" }}>소(20인치 이하)<Counter onCountChange={handleSmallCountChange} /></div>
-//             </Form.Item>
-//             <Form.Item
-//                 label="결제금액"
-//                 colon={false}
-//                 className="separated-form-item"
-//             >
-//                 <PaymentDisplay amount={totalPayment} />
-//             </Form.Item>
-//         </Form>
-//     );
-// }
-
 function NewReservationAddPage() {
+    const [form] = Form.useForm(); // useForm 훅 올바르게 사용
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [serviceType, setServiceType] = useState('delivery');
@@ -155,6 +93,21 @@ function NewReservationAddPage() {
     const [middleCount, setMiddleCount] = useState(0);
     const [smallCount, setSmallCount] = useState(0);
     const [totalPayment, setTotalPayment] = useState(0);
+    const [storageDates, setStorageDates] = useState(null);  // 보관 기간 상태 선언 (추가)
+
+    const locationOptions = [
+        {
+            label: 'location',
+            title: 'manager',
+            options: [
+                { label: '동대구역', value: 'eastDaeguStation' },
+                { label: '대구역', value: 'DaeguStation' },
+                { label: '경주역', value: 'GyeongjuStation' },
+            ],
+        },
+    ];
+
+    const [storageLocation, setStorageLocation] = useState(locationOptions?.[0]?.options?.[0]?.value || '');
     const { RangePicker } = DatePicker;
 
     const largePrice = 5000;
@@ -180,7 +133,47 @@ function NewReservationAddPage() {
 
 
     const onFinish = async (values) => {
-        // ... (기존 onFinish 함수 - 필요에 따라 보관 관련 데이터 처리 추가)
+        const { name, email, phone} = values;
+        setLoading(true);
+        try {
+            const reservationData = {
+                name: name,
+                mail: email, // 'mail'로 수정
+                phone: phone,
+                small: smallCount,
+                medium: middleCount,
+                large: largeCount,
+                price: totalPayment,
+                // service_type: serviceType,
+                location: serviceType === 'storage' ? storageLocation : null,
+                // location_options: serviceType === 'storage' ? JSON.stringify(locationOptions) : null,
+                reservation_country: 'Korea',
+                storage_start_date: serviceType === 'storage' && storageDates ? storageDates[0]?.format('YYYY-MM-DD') : null,
+                storage_end_date: serviceType === 'storage' && storageDates ? storageDates[1]?.format('YYYY-MM-DD') : null,
+            };
+
+            // if (serviceType === 'storage' && storageDates && locationOptions) {
+            //     reservationData.storage_start_date = storageDates[0]?.toISOString().split('T')[0];
+            //     reservationData.storage_end_date = storageDates[1]?.toISOString().split('T')[0];
+            //     reservationData.location = locationOptions; // 보관 장소 추가
+            // }
+
+            const { error } = await supabase.from('storage')
+                .insert([reservationData]);
+            if (error) {
+                message.error("회원 추가 실패하였습니다.");
+                console.error("회원 추가 에러:", error);
+            } else {
+                message.success('성공적으로 회원 추가 하였습니다.');
+                notification.success({ message: '회원 등록 완료', description: '성공적으로 등록되었습니다.' });
+                Modal.success({ title: '성공!', content: '작업이 완료되었습니다.', onOk: () => navigate('/ApplicationList') });
+            }
+        } catch (err) {
+            message.error(`오류 발생: ${err.message}`);
+            console.error("회원 추가 중 오류:", err);
+        } finally {
+            setLoading(false);
+        }
     }
 
     const handleServiceTypeChange = (e) => {
@@ -194,20 +187,11 @@ function NewReservationAddPage() {
 
     const handleLocationChange = value => {
         console.log(`selected ${value}`);
+        setStorageLocation(value)
         // 선택된 위치에 따른 상태 업데이트 또는 로직 처리
     };
 
-    const locationOptions = [
-        {
-            label: <span>location</span>,
-            title: 'manager',
-            options: [
-                { label: <span>동대구역</span>, value: 'eastDaeguStation' },
-                { label: <span>대구역</span>, value: 'DaeguStation' },
-                { label: <span>경주역</span>, value: 'GyeongjuStation' },
-            ],
-        },
-    ];
+
 
     const PaymentDisplay = ({ amount }) => {
         const formattedAmount = amount.toLocaleString();
@@ -219,7 +203,7 @@ function NewReservationAddPage() {
     };
 
     const ReservationDatePicker = () => (
-        <Space direction="horizontal" size={12} style={{ marginTop: '5px' }}>
+        <Space direction="vertical" size={12} style={{ marginTop: '5px' }}>
             {serviceType === 'delivery' && (
                 <Checkbox onChange={handleReturnTripChange}>왕복
                     <span className="speech-bubble">왕복 배송시 체크 해주세요</span>
@@ -229,8 +213,13 @@ function NewReservationAddPage() {
                 <RangePicker
                     renderExtraFooter={() => 'extra footer'}
                     showTime
-                    placeholder={[serviceType === 'delivery' ? 'PICK UP' : '보관 시작', serviceType === 'delivery' ? 'DROP OFF' : '보관 종료']}
+                    value={storageDates}
+                    placeholder={[serviceType === 'delivery' ? 'PICK UP' : '보관 시작',
+                        serviceType === 'delivery' ? 'DROP OFF' : '보관 종료'
+                    ]}
                     style={{ width: '350px', marginTop: '5px', marginBottom: '5px' }}
+                    onChange={(dates) => setStorageDates(dates)}
+                    // onOk={(dates) => setStorageDates(dates)}
                 />
                 <Select
                     className="select"
@@ -295,9 +284,23 @@ function NewReservationAddPage() {
                                 <ReservationDatePicker />
                             </Form.Item>
                             <Form.Item
+                                label="짐갯수"
+                                colon={false}
                                 className="separated-form-item"
                             >
-                                <LuggageForm />
+                                <div id="large" style={{display: "flex", alignItems: "center"}}>대(30인치 이상)<Counter
+                                    onCountChange={handleLargeCountChange}/></div>
+                                <div id="middle" style={{display: "flex", alignItems: "center"}}>중(21 ~ 29인치)<Counter
+                                    onCountChange={handleMiddleCountChange}/></div>
+                                <div id="small" style={{display: "flex", alignItems: "center"}}>소(20인치 이하)<Counter
+                                    onCountChange={handleSmallCountChange}/></div>
+                            </Form.Item>
+                            <Form.Item
+                                label="결제금액"
+                                colon={false}
+                                className="separated-form-item"
+                            >
+                                <PaymentDisplay amount={totalPayment}/>
                             </Form.Item>
                         </Form>
                     </Card>
@@ -309,7 +312,7 @@ function NewReservationAddPage() {
                     <Card hoverable
                           style={{
                               margin: '10px 2rem',
-                              height: 'auto',
+                              height: '220px',
                               backgroundColor: '#F9F9F9',
                           }}>
                         <Form
@@ -350,33 +353,16 @@ function NewReservationAddPage() {
                             >
                                 <Input placeholder="010-1234-5678" />
                             </Form.Item>
-                            <Form.Item
-                                label="비밀번호"
-                                name="password"
-                                rules={[{ required: true, message: '비밀번호를 입력해주세요' }, { min: 6, message: '비밀번호는 최소 6자 이상이어야 합니다.' }]}
-                                className="separated-form-item"
-                            >
-                                <Input.Password />
-                            </Form.Item>
-                            <Form.Item>
-                            </Form.Item>
+            <Form.Item style={{textAlign: 'center', marginTop: 70}}>
+                <Button type="primary" htmlType="submit" loading={loading} style={{width: '100px', height: '35px'}}>
+                    등록
+                </Button>
+            </Form.Item>
                         </Form>
                     </Card>
                 </Col>
             </Row>
             <div style={{ textAlign: 'center' }}>
-                <Button
-                    type="primary"
-                    htmlType="submit"
-                    loading={loading}
-                    style={{
-                        width: '100px',
-                        height: '35px',
-                        margin: '20px 0',
-                    }}
-                >
-                    등록
-                </Button>
             </div>
         </Content>
     );
