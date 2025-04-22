@@ -1,4 +1,3 @@
-/* 공통 버튼 스타일 */
 .btn {
     padding: 8px 16px;
     font-size: 14px;
@@ -8,10 +7,8 @@
     color: white;
     transition: background-color 0.2s ease;
     white-space: nowrap;
-    font-weight: 500;
 }
 
-/* 수정 버튼 (보라색) */
 .btn-edit {
     background-color: rgb(79, 23, 135);
 }
@@ -19,7 +16,6 @@
     background-color: rgb(24, 1, 97);
 }
 
-/* 삭제 버튼 (회색 → 빨강 hover) */
 .btn-delete {
     background-color: rgb(158, 158, 158);
 }
@@ -27,7 +23,6 @@
     background-color: rgb(247, 55, 79);
 }
 
-/* 새 이벤트 등록 버튼 (회색) */
 .btn-add-event {
     background-color: rgb(158, 158, 158);
 }
@@ -35,7 +30,6 @@
     background-color: rgb(0, 102, 204);
 }
 
-/* 등록 완료 버튼 (회색) */
 .btn-add-confirm {
     background-color: rgb(158, 158, 158);
 }
@@ -43,7 +37,6 @@
     background-color: rgb(0, 102, 204);
 }
 
-/* 기타 추가 버튼 */
 .btn-edit-confirm2 {
     background-color: rgb(158, 158, 158);
 }
@@ -51,7 +44,6 @@
     background-color: rgb(0, 102, 204);
 }
 
-/* 뒤로가기 버튼 (짙은 회색) */
 .btn-back {
     background-color: rgb(92, 92, 92);
 }
@@ -60,7 +52,6 @@
     color: white;
 }
 
-/* --- Form Style --- */
 
 .form {
     display: flex;
@@ -96,7 +87,6 @@ textarea {
     resize: vertical;
 }
 
-/* 셀렉트 아이콘 */
 .custom-select-wrapper {
     position: relative;
     display: inline-block;
@@ -117,7 +107,6 @@ textarea {
     color: gray;
 }
 
-/* 버튼 박스 정렬용 */
 .form-button-wrapper,
 .notice-add-button-wrapper,
 .table-footer,
@@ -131,7 +120,6 @@ textarea {
     padding-right: 10px;
 }
 
-/* 테이블 하단 버튼 칸 정렬 */
 tfoot td {
     border-bottom: none !important;
     padding-top: 16px;
@@ -145,4 +133,24 @@ tfoot td .table-footer {
     height: 56px;
     padding: 0 10px;
     align-items: center;
+}
+
+.bottom-right-btn {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding-right: 35px;
+    margin-top: 16px;
+}
+
+.default-style .ant-btn-primary {
+    background-color: #fff;
+    color: #7a7a7a;
+    border: 1px solid #d9d9d9;
+}
+
+.default-style .ant-btn-primary:hover {
+    background-color: #f5f5f5;
+    border-color: #bfbfbf;
+    color: #656565;
 }

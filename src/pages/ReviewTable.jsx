@@ -18,11 +18,10 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
     const [reviews, setReviews] = useState([]);
     const [selectedIds, setSelectedIds] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [expanded, setExpanded] = useState(null); // ✅ 내용 토글 상태
-    const navigate = useNavigate();
+    const [expanded, setExpanded] = useState(null);
     const [sortField, setSortField] = useState('created_at');
     const [sortOrder, setSortOrder] = useState('desc');
-
+    const navigate = useNavigate();
     const itemsPerPage = 7;
 
     useEffect(() => {
@@ -34,10 +33,7 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
             .from('review')
             .select('*')
             .not('review_num', 'is', null)
-            .not('title', 'is', null)
-            .not('created_at', 'is', null)
             .order(sortField, { ascending: sortOrder === 'asc' });
-
         if (!error) setReviews(data);
     };
 
@@ -49,6 +45,10 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
         );
     };
 
+    const handleSelectAll = (checked) => {
+        if (checked) setSelectedIds(currentItems.map((r) => r.review_num));
+        else setSelectedIds([]);
+    };
 
     const handleDeleteSelected = async () => {
         if (!window.confirm('선택한 후기를 삭제하시겠습니까?')) return;
@@ -82,9 +82,8 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
     };
 
     const handleSort = (field) => {
-        if (sortField === field) {
-            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-        } else {
+        if (sortField === field) setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        else {
             setSortField(field);
             setSortOrder('asc');
         }
@@ -107,17 +106,13 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = filteredReviews.slice(indexOfFirstItem, indexOfLastItem);
 
-    const handleSelectAll = (checked) => {
-        if (checked) setSelectedIds(currentItems.map((r) => r.review_num));
-        else setSelectedIds([]);
-    };
     const groupSize = 7;
     const currentGroup = Math.floor((currentPage - 1) / groupSize);
     const startPage = currentGroup * groupSize + 1;
     const endPage = Math.min(startPage + groupSize - 1, totalPages);
 
     return (
-        <div>
+        <>
             <table className="review-table">
                 <thead>
                 <tr>
@@ -139,11 +134,10 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                         등록일 <FontAwesomeIcon icon={sortField === 'created_at' && sortOrder === 'asc' ? faChevronUp : faChevronDown} />
                     </th>
                     <th className="review-col-visible">공개여부</th>
-                    <th className="review-col-status">베스트리뷰등록</th>
+                    <th className="review-col-status">베스트리뷰</th>
                     <th className="review-col-actions">관리</th>
                 </tr>
                 </thead>
-
                 <tbody>
                 {currentItems.map((r) => (
                     <tr key={r.review_num} className={r.is_best ? 'review-best' : ''}>
@@ -153,9 +147,7 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                                 checked={selectedIds.includes(r.review_num)}
                             />
                         </td>
-
                         <td className="review-col-title">{r.title || '(제목 없음)'}</td>
-
                         <td className="review-col-content">
                             <div
                                 className={`review-toggle-box ${expanded === r.review_num ? 'open' : ''}`}
@@ -166,18 +158,15 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                                     : (r.review_txt || '').slice(0, 40) + (r.review_txt?.length > 40 ? '...' : '')}
                             </div>
                         </td>
-
                         <td className="review-col-writer">{r.name || '익명'}</td>
                         <td className="review-col-type">{r.type || '없음'}</td>
                         <td className="review-col-date">{r.created_at ? formatDate(r.created_at) : '날짜 없음'}</td>
-
                         <td className="review-col-visible">
                             <Switch
                                 checked={r.status === '공개'}
                                 onChange={(checked) => toggleStatus(r.review_num, checked)}
                             />
                         </td>
-
                         <td className="review-col-status">
                             <button
                                 className={`btn-best ${r.is_best ? 'orange' : 'blue'}`}
@@ -186,24 +175,27 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                                 {r.is_best ? '해제' : '등록'}
                             </button>
                         </td>
-
                         <td className="review-col-actions">
-                            <button className="btn btn-edit" onClick={() => navigate(`/review-edit/${r.review_num}`)}>
+                            <button
+                                className="btn btn-edit"
+                                onClick={() => navigate(`/review-edit/${r.review_num}`)}
+                            >
                                 수정
                             </button>
                         </td>
                     </tr>
                 ))}
                 </tbody>
-
                 <tfoot>
                 <tr>
                     <td colSpan="9">
                         <div className="table-footer">
                             {selectedIds.length > 0 && (
-                                <button className="btn btn-delete" onClick={handleDeleteSelected}>
-                                    선택 삭제 ({selectedIds.length})
-                                </button>
+                                <div className="review-delete-btn-box">
+                                    <button className="btn btn-delete" onClick={handleDeleteSelected}>
+                                        선택 삭제 ({selectedIds.length})
+                                    </button>
+                                </div>
                             )}
                         </div>
                     </td>
@@ -218,7 +210,6 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                 <button className="arrow-btn" onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
                     <FontAwesomeIcon icon={faChevronLeft} />
                 </button>
-
                 <div className="page-btns">
                     {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
                         const pageNum = startPage + i;
@@ -233,7 +224,6 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                         );
                     })}
                 </div>
-
                 <button className="arrow-btn" onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
                     <FontAwesomeIcon icon={faChevronRight} />
                 </button>
@@ -241,7 +231,7 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                     <FontAwesomeIcon icon={faAnglesRight} />
                 </button>
             </div>
-        </div>
+        </>
     );
 }
 

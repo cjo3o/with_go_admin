@@ -1,108 +1,67 @@
-/* === FAQ 레이아웃 === */
-.faq-tabs-wrapper {
-    flex-grow: 1;
-    padding: 50px 60px 0;
-    font-size: 16px;
-}
-
-.faq-header {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: rgb(0, 102, 204);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.faq-card {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-    position: relative;
-}
-
-/* === 상단 탭 & 검색 === */
-.faq-tab-search {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-}
-
-.faq-search-input {
-    width: 200px;
-}
-
-/* === 테이블 === */
 .common-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
+  width: 100%;
+  min-width: 1100px;
+  table-layout: fixed;
+  border-collapse: collapse;
 }
 
 .common-table th,
 .common-table td {
-    vertical-align: middle;
-    padding: 16px;
-    font-size: 15px;
-    border-bottom: 1px solid #ddd;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: center;
+  padding: 16px;
+  font-size: 15px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* === 컬럼별 너비 & 정렬 조정 === */
-.faq-col-select { width: 5%; }
-.faq-col-type { width: 12%; }
-.faq-col-title {
-    width: 30%;
-    text-align: left !important;     /* ← 우선순위 높이기 */
-    padding-left: 20px;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-}
-
+.faq-col-title,
 .faq-col-content {
-    width: 38%;
-    text-align: left !important;
-    padding-right: 12px;
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: unset !important;
-    word-break: break-word !important;
+  text-align: left !important;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
-.faq-col-status { width: 7%; }
-.faq-col-date { width: 6%; }
-.faq-col-actions { width: 4%; }
 
-/* === 답변 토글 (열림/닫힘) === */
+.faq-col-select  { width: 4%; }
+.faq-col-type    { width: 4%; }
+.faq-col-title   { width: 26%; }
+.faq-col-content { width: 30%; }
+.faq-col-status  { width: 7%; }
+.faq-col-date    { width: 7%; }
+.faq-col-actions { width: 10%; }
+
 .answer-toggle {
-    cursor: pointer;
-    max-height: 32px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    transition: max-height 0.3s ease;
-    line-height: 1.5;
+  cursor: pointer;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: max-height 0.3s ease;
+  max-height: 32px;
+  line-height: 1.5;
 }
 
 .answer-toggle.open {
-    max-height: 1000px;
-    white-space: normal;
-    overflow: visible;
-    word-break: break-word;
-    text-overflow: unset;
-    line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 500px;
+  overflow: auto;
+  line-height: 1.6;
 }
 
-/* === 하단 버튼 박스 === */
-.table-footer-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 12px 0;
+.table-footer.bottom-right-btn {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  padding-right: 35px;
+  margin-top: 16px;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
 }

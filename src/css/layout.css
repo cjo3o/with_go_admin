@@ -33,7 +33,7 @@
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+    margin-bottom: 80px;
     position: relative;
 }
 
@@ -76,7 +76,7 @@ th {
 .title {
     font-size: 18px;
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
     color: #333;
 }
 
@@ -90,7 +90,6 @@ th {
     display: flex;
     justify-content: center;
     gap: 6px;
-    margin-top: 20px;
 }
 
 .page-btns {

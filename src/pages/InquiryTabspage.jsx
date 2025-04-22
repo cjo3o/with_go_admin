@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Radio, Input } from 'antd';
+import { SearchOutlined } from '@ant-design/icons'; // ✅ 돋보기 아이콘 직접 가져옴
 import InquiryList from './InquiryList';
-import '../css/inquiry.css';
 import '../css/layout.css';
 import '../css/ui.css';
+import '../css/inquiry.css';
 
 const InquiryTabspage = () => {
     const [filterType, setFilterType] = useState('');
@@ -20,16 +21,18 @@ const InquiryTabspage = () => {
 
     return (
         <div className="wrapper">
-            <div className="main">
+            <div className="main-content">
                 <div className="header">1:1 문의 관리</div>
-                <div className="card">
+
+                <div className="card inquiry-card">
                     <div className="top-bar">
-                        <h3>문의 리스트</h3>
+                        <div className="title">문의 리스트</div>
+
                         <div className="tab-and-search">
                             <Radio.Group
-                                defaultValue=""
-                                buttonStyle="solid"
+                                value={filterType}
                                 onChange={handleFilterChange}
+                                buttonStyle="solid"
                             >
                                 <Radio.Button value="">전체</Radio.Button>
                                 <Radio.Button value="보관">보관</Radio.Button>
@@ -39,14 +42,20 @@ const InquiryTabspage = () => {
                             <Input.Search
                                 placeholder="질문 검색"
                                 allowClear
-                                size="middle"
+                                enterButton={
+                                    <span>
+                    <SearchOutlined style={{ marginRight: 4 }} />
+                    검색
+                  </span>
+                                }
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
                                 onSearch={handleSearch}
-                                className="review-search-input"
+                                className="search-input default-style"
                             />
                         </div>
                     </div>
+
                     <InquiryList
                         filterType={filterType}
                         searchKeyword={searchValue}

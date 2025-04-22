@@ -21,11 +21,11 @@ import EventList from "./pages/EventList.jsx";
 import EventAdd from "./pages/Event_add.jsx";
 import EventEdit from "./pages/Eventedit.jsx";
 
-import NoticeList from "./pages/Notice_promotion.jsx";
+import NoticeList from "./pages/NoticeList.jsx";
 import NoticeAdd from './pages/NoticeAdd.jsx';
 import NoticeEdit from './pages/NoticeEdit.jsx';
 
-import ReviewTabs from './pages/ReviewTabs.jsx';
+import ReviewTabspage from './pages/ReviewTabspage.jsx';
 import ReviewEdit from './pages/ReviewEdit.jsx';
 
 import FAQEdit from './pages/FAQEdit';
@@ -33,6 +33,7 @@ import FAQAdd from "./pages/FAQAdd.jsx";
 import FAQTabspage from './pages/FAQTabspage.jsx';
 
 import InquiryTabs from './pages/InquiryTabspage.jsx';
+import InquiryEdit from './pages/InquiryEdit.jsx';
 
 function App() {
     const [count, setCount] = useState(0);
@@ -57,7 +58,7 @@ function App() {
                     <Route path="/notice-add" element={<NoticeAdd />} />
                     <Route path="/notice-edit/:id" element={<NoticeEdit />} />
 
-                    <Route path="/review" element={<ReviewTabs />} />
+                    <Route path="/review" element={<ReviewTabspage />} />
                     <Route path="/review-edit/:id" element={<ReviewEdit />} />
 
                     <Route path="/faq/list" element={<FAQTabspage />} />
@@ -65,7 +66,7 @@ function App() {
                     <Route path="/faq-add" element={<FAQAdd />} />
 
                     <Route path="/inquiry/list" element={<InquiryTabs />} />
-                    <Route path="/inquiry-edit/:id" element={<div>준비 중입니다</div>} />
+                    <Route path="/inquiry-edit/:id" element={<InquiryEdit />} />
                 </Routes>
             </BrowserRouter>
         </div>
