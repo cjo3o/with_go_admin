@@ -1,18 +1,15 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox, Switch } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faAnglesLeft,
-    faAnglesRight,
-    faChevronLeft,
-    faChevronRight,
-    faChevronDown,
-    faChevronUp
+    faAnglesLeft, faAnglesRight, faChevronLeft, faChevronRight,
+    faChevronDown, faChevronUp
 } from '@fortawesome/free-solid-svg-icons';
 import supabase from '../lib/supabase';
-import '../css/FAQ.css';
+import '../css/layout.css';
+import '../css/ui.css';
+import '../css/faq.css';
 
 const FAQList = ({ filterType = '', searchKeyword = '' }) => {
     const [faqs, setFaqs] = useState([]);
@@ -79,31 +76,33 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
 
     return (
         <div className="faq-list-page">
-            <table className="faq-table">
+            <table className="common-table">
                 <thead>
                 <tr>
-                    <th className="col-select">
+                    <th className="faq-col-select">
                         <Checkbox onChange={toggleAll} checked={selectedIds.length === currentItems.length} />
                     </th>
-                    <th className="col-category">카테고리</th>
-                    <th className="col-title">질문</th>
-                    <th className="col-content">답변</th>
-                    <th className="col-visible">공개</th>
-                    <th className="col-date" onClick={toggleSortOrder}>
+                    <th className="faq-col-type">카테고리</th>
+                    <th className="faq-col-title">질문</th>
+                    <th className="faq-col-content">답변</th>
+                    <th className="faq-col-status">공개</th>
+                    <th className="faq-col-date" onClick={toggleSortOrder}>
                         등록일 <FontAwesomeIcon icon={sortOrder === 'asc' ? faChevronUp : faChevronDown} />
                     </th>
-                    <th className="col-actions">관리</th>
+                    <th className="faq-col-actions">관리</th>
                 </tr>
                 </thead>
                 <tbody>
                 {currentItems.map((faq) => (
                     <tr key={faq.id}>
-                        <td><Checkbox onChange={() => toggleSelect(faq.id)} checked={selectedIds.includes(faq.id)} /></td>
-                        <td>{faq.category}</td>
-                        <td className="col-title">{faq.question}</td>
-                        <td className="col-content">
+                        <td className="faq-col-select">
+                            <Checkbox onChange={() => toggleSelect(faq.id)} checked={selectedIds.includes(faq.id)} />
+                        </td>
+                        <td className="faq-col-type">{faq.category}</td>
+                        <td className="faq-col-title">{faq.question}</td>
+                        <td className="faq-col-content">
                             <div
-                                className={`faq-toggle-box ${expanded === faq.id ? 'open' : ''}`}
+                                className={`answer-toggle ${expanded === faq.id ? 'open' : ''}`}
                                 onClick={() => setExpanded(expanded === faq.id ? null : faq.id)}
                                 dangerouslySetInnerHTML={{
                                     __html: expanded === faq.id
@@ -111,13 +110,12 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
                                         : faq.answer.replace(/<br\s*\/?>/gi, ' ')
                                 }}
                             ></div>
-
                         </td>
-                        <td>
+                        <td className="faq-col-status">
                             <Switch checked={faq.status === '공개'} onChange={(checked) => handleStatusToggle(faq.id, checked)} />
                         </td>
-                        <td>{faq.created_at?.split('T')[0]}</td>
-                        <td>
+                        <td className="faq-col-date">{faq.created_at?.split('T')[0]}</td>
+                        <td className="faq-col-actions">
                             <button className="btn btn-edit" onClick={() => navigate(`/faq-edit/${faq.id}`)}>수정</button>
                         </td>
                     </tr>
@@ -126,13 +124,13 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
                 <tfoot>
                 <tr>
                     <td colSpan="7">
-                        <div className="add-button-wrapper">
+                        <div className="table-footer-buttons">
                             {selectedIds.length > 0 && (
-                                <button className="btn btn-delete btn-standard" onClick={handleDeleteSelected}>
+                                <button className="btn btn-delete" onClick={handleDeleteSelected}>
                                     선택 삭제 ({selectedIds.length})
                                 </button>
                             )}
-                            <button className="btn btn-add-event btn-standard" onClick={() => navigate('/faq-add')}>
+                            <button className="btn btn-add-event" onClick={() => navigate('/faq-add')}>
                                 새 FAQ 등록
                             </button>
                         </div>

@@ -32,7 +32,6 @@ function ReviewEdit() {
                 return;
             }
 
-            console.log('이미지 URL:', data.file_url);
             setFormData(data);
             setPreviewUrl(data.file_url);
         };
@@ -84,7 +83,7 @@ function ReviewEdit() {
             .update({
                 title: formData.title,
                 review_txt: formData.review_txt,
-                file_url: updatedImageUrl // ✅ 컬럼명 반영
+                file_url: updatedImageUrl
             })
             .eq('review_num', id);
 
@@ -98,7 +97,7 @@ function ReviewEdit() {
     };
 
     return (
-        <div className="main">
+        <div className="main-content">
             <div className="header">이용후기 수정</div>
             <div className="card">
                 <form onSubmit={handleSubmit} className="form">
@@ -124,22 +123,22 @@ function ReviewEdit() {
                         ></textarea>
                     </div>
 
-                    {previewUrl && previewUrl !== '' && (
-                        <div style={{ marginTop: '20px' }}>
-                            <label>현재 이미지 미리보기</label>
+                    <div className="form-group">
+                        <label>현재 이미지 미리보기</label>
+                        {previewUrl && (
                             <div style={{ marginTop: '10px' }}>
                                 <img
                                     src={previewUrl}
                                     alt="리뷰 이미지"
-                                    style={{ maxWidth: '300px', borderRadius: '8px' }}
+                                    style={{ maxWidth: '200px', borderRadius: '6px' }}
                                     onError={(e) => {
                                         e.target.style.display = 'none';
                                         console.warn('이미지 로드 실패:', previewUrl);
                                     }}
                                 />
                             </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
 
                     <div className="form-group">
                         <label>이미지 변경 (선택)</label>
@@ -147,17 +146,10 @@ function ReviewEdit() {
                     </div>
 
                     <div className="form-button-wrapper">
-                        <button
-                            type="button"
-                            className="btn btn-back btn-standard"
-                            onClick={() => navigate(-1)}
-                        >
+                        <button type="button" className="btn btn-back" onClick={() => navigate(-1)}>
                             뒤로가기
                         </button>
-                        <button
-                            type="submit"
-                            className="btn btn-edit-save btn-standard"
-                        >
+                        <button type="submit" className="btn btn-add-confirm">
                             수정 완료
                         </button>
                     </div>

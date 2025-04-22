@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Radio, Input } from 'antd';
 import FAQList from './FAQList';
-import '../css/faq.css';
+import '../css/layout.css';
+import '../css/ui.css';
+import '../css/faq.css'; // 이건 FAQ 전용 스타일만! (충돌주의)
 
 const FAQTabspage = () => {
     const [filterType, setFilterType] = useState('');
@@ -17,13 +19,13 @@ const FAQTabspage = () => {
     };
 
     return (
-        <div className="faq-tabs-wrapper">
-            <div className="faq-main">
-                <div className="faq-header">FAQ 관리</div>
-                <div className="faq-card">
-                    <div className="faq-top-bar">
-                        <h3>FAQ 리스트</h3>
-                        <div className="faq-tab-search">
+        <div className="wrapper">
+            <div className="main-content">
+                <div className="header">FAQ 관리</div>
+                <div className="card">
+                    <div className="top-bar">
+                        <div className="title">FAQ 리스트</div>
+                        <div className="tab-and-search">
                             <Radio.Group
                                 defaultValue=""
                                 buttonStyle="solid"
@@ -42,10 +44,11 @@ const FAQTabspage = () => {
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
                                 onSearch={handleSearch}
-                                className="faq-search-input"
+                                className="search-input"
                             />
                         </div>
                     </div>
+
                     <FAQList filterType={filterType} searchKeyword={searchValue} />
                 </div>
             </div>

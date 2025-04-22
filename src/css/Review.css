@@ -33,6 +33,12 @@
 }
 .review-col-content {
     width: 35%;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-align: left;
+    padding-right: 16px;
+    word-break: break-word;
+    box-sizing: border-box;
 }
 .review-col-select { width: 5%; }
 .review-col-writer { width: 10%; }
@@ -44,6 +50,15 @@
     width: 8%;
     text-align: center;
     vertical-align: middle;
+}
+
+.review-expanded-row td {
+    background: none;
+    text-align: left;
+    padding: 16px 16px 16px 46px;
+    font-size: 15px;
+    line-height: 1.6;
+    border-top: 1px solid #eee;
 }
 
 .review-radio-group .ant-radio-button-wrapper {
@@ -82,35 +97,59 @@
     color: #ff9900;
 }
 
-.review-btn-best {
-    background-color: transparent;
+.btn-best {
     border: 1px solid;
     border-radius: 20px;
     font-weight: bold;
-    padding: 6px 10px;
-    font-size: 13px;
+    padding: 4px 14px;
+    font-size: 14px;
+    min-width: 56px;
+    text-align: center;
+    transition: all 0.2s ease;
+    background-color: #fff;
+    cursor: pointer;
 }
 
-.review-btn-best.blue {
+
+.btn-best.blue {
     color: rgb(0, 102, 204);
     border-color: rgb(0, 102, 204);
+    background-color: #fff;
 }
-.review-btn-best.blue:hover {
+.btn-best.blue:hover {
     background-color: rgb(0, 102, 204);
     color: white;
 }
 
-.review-btn-best.pink {
-    color: white;
+
+.btn-best.orange {
     background-color: #ff9900;
+    color: white;
+    border-color: #ff9900;
 }
-.review-btn-best.pink:hover {
+.btn-best.orange:hover {
     background-color: #fab34a;
     color: white;
 }
+
 
 .single-line {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.review-toggle-box {
+    cursor: pointer;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.review-toggle-box.open {
+    white-space: pre-wrap;
+    border-radius: 4px;
+    line-height: 1.5;
 }

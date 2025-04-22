@@ -18,10 +18,12 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
     const [reviews, setReviews] = useState([]);
     const [selectedIds, setSelectedIds] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 7;
+    const [expanded, setExpanded] = useState(null); // ✅ 내용 토글 상태
     const navigate = useNavigate();
     const [sortField, setSortField] = useState('created_at');
     const [sortOrder, setSortOrder] = useState('desc');
+
+    const itemsPerPage = 7;
 
     useEffect(() => {
         fetchReviews();
@@ -47,10 +49,6 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
         );
     };
 
-    const handleSelectAll = (checked) => {
-        if (checked) setSelectedIds(currentItems.map((r) => r.review_num));
-        else setSelectedIds([]);
-    };
 
     const handleDeleteSelected = async () => {
         if (!window.confirm('선택한 후기를 삭제하시겠습니까?')) return;
@@ -109,6 +107,10 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = filteredReviews.slice(indexOfFirstItem, indexOfLastItem);
 
+    const handleSelectAll = (checked) => {
+        if (checked) setSelectedIds(currentItems.map((r) => r.review_num));
+        else setSelectedIds([]);
+    };
     const groupSize = 7;
     const currentGroup = Math.floor((currentPage - 1) / groupSize);
     const startPage = currentGroup * groupSize + 1;
@@ -141,6 +143,7 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                     <th className="review-col-actions">관리</th>
                 </tr>
                 </thead>
+
                 <tbody>
                 {currentItems.map((r) => (
                     <tr key={r.review_num} className={r.is_best ? 'review-best' : ''}>
@@ -150,22 +153,40 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                                 checked={selectedIds.includes(r.review_num)}
                             />
                         </td>
+
                         <td className="review-col-title">{r.title || '(제목 없음)'}</td>
-                        <td className="review-col-content single-line">{r.review_txt || '(내용 없음)'}</td>
+
+                        <td className="review-col-content">
+                            <div
+                                className={`review-toggle-box ${expanded === r.review_num ? 'open' : ''}`}
+                                onClick={() => setExpanded(expanded === r.review_num ? null : r.review_num)}
+                            >
+                                {expanded === r.review_num
+                                    ? r.review_txt || '(내용 없음)'
+                                    : (r.review_txt || '').slice(0, 40) + (r.review_txt?.length > 40 ? '...' : '')}
+                            </div>
+                        </td>
+
                         <td className="review-col-writer">{r.name || '익명'}</td>
                         <td className="review-col-type">{r.type || '없음'}</td>
                         <td className="review-col-date">{r.created_at ? formatDate(r.created_at) : '날짜 없음'}</td>
+
                         <td className="review-col-visible">
-                            <Switch checked={r.status === '공개'} onChange={(checked) => toggleStatus(r.review_num, checked)} />
+                            <Switch
+                                checked={r.status === '공개'}
+                                onChange={(checked) => toggleStatus(r.review_num, checked)}
+                            />
                         </td>
+
                         <td className="review-col-status">
                             <button
-                                className={`btn btn-best ${r.is_best ? 'pink' : 'blue'}`}
+                                className={`btn-best ${r.is_best ? 'orange' : 'blue'}`}
                                 onClick={() => toggleBest(r.review_num, r.is_best)}
                             >
                                 {r.is_best ? '해제' : '등록'}
                             </button>
                         </td>
+
                         <td className="review-col-actions">
                             <button className="btn btn-edit" onClick={() => navigate(`/review-edit/${r.review_num}`)}>
                                 수정
@@ -174,6 +195,7 @@ function ReviewTable({ filterType, statusFilter, searchKeyword }) {
                     </tr>
                 ))}
                 </tbody>
+
                 <tfoot>
                 <tr>
                     <td colSpan="9">

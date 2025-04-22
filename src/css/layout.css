@@ -1,4 +1,3 @@
-
 .admin-wrapper {
     display: flex;
     min-height: 100vh;
@@ -19,6 +18,24 @@
     min-width: 0;
 }
 
+.header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: rgb(0, 102, 204);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    position: relative;
+}
 
 table {
     width: 100%;
@@ -42,6 +59,32 @@ th {
     font-weight: bold;
 }
 
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.tab-and-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.search-input {
+    width: 200px;
+    font-size: 14px;
+    flex-shrink: 0;
+}
 
 .pagination {
     display: flex;

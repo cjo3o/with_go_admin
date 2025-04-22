@@ -105,3 +105,26 @@ a {
 a:hover {
     color: rgb(0, 102, 204);
 }
+
+.notice-toggle-box {
+    cursor: pointer;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.notice-toggle-box.open {
+    white-space: pre-wrap;
+    border-radius: 4px;
+    line-height: 1.5;
+}
+
+.notice-col-content {
+    text-align: left;
+    white-space: normal !important;
+    overflow: visible !important;
+    padding-right: 16px;
+    word-break: break-word;
+}

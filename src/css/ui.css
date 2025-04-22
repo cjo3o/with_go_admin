@@ -1,3 +1,67 @@
+/* 공통 버튼 스타일 */
+.btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+/* 수정 버튼 (보라색) */
+.btn-edit {
+    background-color: rgb(79, 23, 135);
+}
+.btn-edit:hover {
+    background-color: rgb(24, 1, 97);
+}
+
+/* 삭제 버튼 (회색 → 빨강 hover) */
+.btn-delete {
+    background-color: rgb(158, 158, 158);
+}
+.btn-delete:hover {
+    background-color: rgb(247, 55, 79);
+}
+
+/* 새 이벤트 등록 버튼 (회색) */
+.btn-add-event {
+    background-color: rgb(158, 158, 158);
+}
+.btn-add-event:hover {
+    background-color: rgb(0, 102, 204);
+}
+
+/* 등록 완료 버튼 (회색) */
+.btn-add-confirm {
+    background-color: rgb(158, 158, 158);
+}
+.btn-add-confirm:hover {
+    background-color: rgb(0, 102, 204);
+}
+
+/* 기타 추가 버튼 */
+.btn-edit-confirm2 {
+    background-color: rgb(158, 158, 158);
+}
+.btn-edit-confirm2:hover {
+    background-color: rgb(0, 102, 204);
+}
+
+/* 뒤로가기 버튼 (짙은 회색) */
+.btn-back {
+    background-color: rgb(92, 92, 92);
+}
+.btn-back:hover {
+    background-color: #373737;
+    color: white;
+}
+
+/* --- Form Style --- */
+
 .form {
     display: flex;
     flex-direction: column;
@@ -32,67 +96,7 @@ textarea {
     resize: vertical;
 }
 
-.btn-standard {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    color: white;
-    transition: background-color 0.2s ease;
-    white-space: nowrap;
-}
-
-.btn-add-event {
-    background-color: rgb(158, 158, 158) !important;
-}
-.btn-add-event:hover {
-    background-color: rgb(0, 102, 204) !important;
-}
-
-.btn-edit,
-.btn-edit-confirm {
-    background-color: rgb(79, 23, 135);
-    color: white;
-}
-.btn-edit:hover,
-.btn-edit-confirm:hover {
-    background-color: rgb(24, 1, 97);
-}
-
-.btn-edit-confirm2 {
-    background-color: rgb(158, 158, 158);
-}
-.btn-edit-confirm2:hover {
-    background-color: rgb(0, 102, 204);
-}
-
-.btn-delete {
-    background-color: rgb(158, 158, 158);
-    color: white;
-}
-.btn-delete:hover {
-    background-color: rgb(247, 55, 79);
-}
-
-.btn-back {
-    background-color: rgb(92, 92, 92);
-    color: white;
-    margin-right: 10px;
-}
-.btn-back:hover {
-    background-color: #373737;
-}
-
-.btn-add-confirm {
-    background-color: rgb(158, 158, 158) !important;
-    color: white;
-    transition: background-color 0.2s ease-in-out;
-}
-.btn-add-confirm:hover {
-    background-color: rgb(0, 102, 204) !important;
-}
-
+/* 셀렉트 아이콘 */
 .custom-select-wrapper {
     position: relative;
     display: inline-block;
@@ -113,30 +117,32 @@ textarea {
     color: gray;
 }
 
+/* 버튼 박스 정렬용 */
 .form-button-wrapper,
 .notice-add-button-wrapper,
 .table-footer,
 .event-add-button-wrapper {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    align-items: center;
+    gap: 8px;
     margin-top: 24px;
     flex-wrap: wrap;
     padding-right: 10px;
-    align-items: center;
 }
 
+/* 테이블 하단 버튼 칸 정렬 */
 tfoot td {
     border-bottom: none !important;
     padding-top: 16px;
 }
-
 tfoot td .notice-add-button-wrapper,
 tfoot td .table-footer {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-    padding-right: 10px;
+    gap: 8px;
+    margin-top: 0;
+    height: 56px;
+    padding: 0 10px;
     align-items: center;
 }
