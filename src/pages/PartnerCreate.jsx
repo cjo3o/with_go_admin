@@ -182,6 +182,7 @@ function PartnerCreate() {
                         <input
                             type="text"
                             name="address"
+                            autoComplete="off"
                             value={form.address}
                             onChange={handleChange}
                         />
@@ -191,6 +192,7 @@ function PartnerCreate() {
                         <input
                             type="text"
                             name="phone"
+                            autoComplete="off"
                             value={form.phone}
                             onChange={handleChange}
                         />
@@ -200,6 +202,7 @@ function PartnerCreate() {
                         <input
                             type="text"
                             name="map_url"
+                            autoComplete="off"
                             value={form.map_url}
                             onChange={handleChange}
                         />
@@ -209,6 +212,7 @@ function PartnerCreate() {
                         <input
                             type="file"
                             accept="image/*"
+                            autoComplete="off"
                             onChange={handleFileChange}
                             ref={fileInputRef}
                         />
