@@ -52,13 +52,13 @@ function Sidebar(props) {
                         </div>
                     </div>
                     <ul>
-                        {/*{role === "관리자" && (*/}
+                        {role === "관리자" && (
                             <li className="no-underline"
                                 onClick={boolSidebar}
                             >
                                 <Link to="/admin">관리자 메인</Link>
                             </li>
-                        {/*)}*/}
+                        )}
 
                         <li>
                             <div onClick={() => toggleMenu('reservation')} className="menu-toggle">예약관리</div>

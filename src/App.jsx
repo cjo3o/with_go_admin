@@ -44,7 +44,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
-                    <Route path="/Admin" element={<PrivateRoute role={"관리자"}><Admin/></PrivateRoute>}/>
+                    <Route path="/Admin" element={<Admin/>}/>
                     <Route path="/Memberlist" element={<Memberlist/>}/>
                     <Route path="/partner/list" element={<PartnerList/>}/>
                     <Route path="/partner/create" element={<PartnerCreate/>}/>
