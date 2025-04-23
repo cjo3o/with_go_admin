@@ -332,9 +332,7 @@ function Admin() {
   return (
     <>
       <div className={AdminStyle.content}>
-        <div className={AdminStyle.Admin_top}>
-          관리자 메인
-        </div>
+        <div className={AdminStyle.Admin_top}>관리자 메인</div>
         <div className={AdminStyle.Admin_content}>
           <div className={AdminStyle.top}>
             <div className={AdminStyle.left}>
@@ -392,7 +390,7 @@ function Admin() {
           </div>
         </div>
         <div className={AdminStyle.Admin_list}>
-        <div className={`${AdminStyle.list} card`}>
+          <div className={`${AdminStyle.list} card`}>
             <div className={AdminStyle.list_up}>
               <h3>실시간 예약현황</h3>
               <div className={AdminStyle.admin_search}>
@@ -402,13 +400,22 @@ function Admin() {
                   onChange={(e) => setFilterType(e.target.value)}
                   style={{ marginRight: "16px" }}
                 >
-                  <Radio.Button value="" className={AdminStyle.custom_radio_button}>
+                  <Radio.Button
+                    value=""
+                    className={AdminStyle.custom_radio_button}
+                  >
                     전체
                   </Radio.Button>
-                  <Radio.Button value="보관" className={AdminStyle.custom_radio_button}>
+                  <Radio.Button
+                    value="보관"
+                    className={AdminStyle.custom_radio_button}
+                  >
                     보관
                   </Radio.Button>
-                  <Radio.Button value="배송" className={AdminStyle.custom_radio_button}>
+                  <Radio.Button
+                    value="배송"
+                    className={AdminStyle.custom_radio_button}
+                  >
                     배송
                   </Radio.Button>
                 </Radio.Group>
@@ -418,178 +425,181 @@ function Admin() {
                 />
               </div>
             </div>
-            <table>
-              <colgroup>
-                <col style={{ width: "3%" }} />
-                <col style={{ width: "3%" }} />
-                <col style={{ width: "4%" }} />
-                <col style={{ width: "6%" }} />
-                <col style={{ width: "9%" }} />
-                <col style={{ width: "11%" }} />
-                <col style={{ width: "4%" }} />
-                <col style={{ width: "7%" }} />
-                <col style={{ width: "6%" }} />
-              </colgroup>
-              <thead>
-                <tr className={AdminStyle.noPointer}>
-                  <th>신청일</th>
-                  <th>구분</th>
-                  <th>예약자명</th>
-                  <th>연락처</th>
-                  <th>예약기간</th>
-                  <th>짐갯수</th>
-                  <th>결제금액</th>
-                  <th>완료일</th>
-                  <th>진행상태</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentItems.length > 0 ? (
-                  currentItems
-                    .filter((item) => {
-                      const dateStr = (
-                        item.reservation_time || item.reserve_time
-                      )?.slice(0, 10);
-                      const isToday = dateStr === todayStr;
-                      const isTypeMatch =
-                        filterType === "" || item.type === filterType;
-                      return isToday && isTypeMatch;
-                    })
-                    .map((item, index) => {
-                      const sizes = [
-                        Number(item.small) > 0 ? `S ${item.small}개` : null,
-                        Number(item.medium) > 0 ? `M ${item.medium}개` : null,
-                        Number(item.large) > 0 ? `L ${item.large}개` : null,
-                      ].filter(Boolean);
+            <div className={AdminStyle.table_over}>
+              <table>
+                <colgroup>
+                  <col style={{ width: "4%" }} />
+                  <col style={{ width: "3%" }} />
+                  <col style={{ width: "4%" }} />
+                  <col style={{ width: "6%" }} />
+                  <col style={{ width: "9%" }} />
+                  <col style={{ width: "11%" }} />
+                  <col style={{ width: "4%" }} />
+                  <col style={{ width: "7%" }} />
+                  <col style={{ width: "6%" }} />
+                </colgroup>
+                <thead>
+                  <tr className={AdminStyle.noPointer}>
+                    <th>신청일</th>
+                    <th>구분</th>
+                    <th>예약자명</th>
+                    <th>연락처</th>
+                    <th>예약기간</th>
+                    <th>짐갯수</th>
+                    <th>결제금액</th>
+                    <th>완료일</th>
+                    <th>진행상태</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentItems.length > 0 ? (
+                    currentItems
+                      .filter((item) => {
+                        const dateStr = (
+                          item.reservation_time || item.reserve_time
+                        )?.slice(0, 10);
+                        const isToday = dateStr === todayStr;
+                        const isTypeMatch =
+                          filterType === "" || item.type === filterType;
+                        return isToday && isTypeMatch;
+                      })
+                      .map((item, index) => {
+                        const sizes = [
+                          Number(item.small) > 0 ? `S ${item.small}개` : null,
+                          Number(item.medium) > 0 ? `M ${item.medium}개` : null,
+                          Number(item.large) > 0 ? `L ${item.large}개` : null,
+                        ].filter(Boolean);
 
-                      const inches = [
-                        Number(item.under) > 0
-                          ? `26"이하 : ${item.under}개`
-                          : null,
-                        Number(item.over) > 0
-                          ? `26"이상 : ${item.over}개`
-                          : null,
-                      ].filter(Boolean);
+                        const inches = [
+                          Number(item.under) > 0
+                            ? `26"이하 : ${item.under}개`
+                            : null,
+                          Number(item.over) > 0
+                            ? `26"이상 : ${item.over}개`
+                            : null,
+                        ].filter(Boolean);
 
-                      const luggageInfo =
-                        sizes.length > 0
-                          ? sizes.join(", ")
-                          : inches.length > 0
-                          ? inches.join(", ")
-                          : "입력된 수량이 없습니다.";
+                        const luggageInfo =
+                          sizes.length > 0
+                            ? sizes.join(", ")
+                            : inches.length > 0
+                            ? inches.join(", ")
+                            : "입력된 수량이 없습니다.";
 
-                      return (
-                        <React.Fragment key={index}>
-                          <tr
-                            className={AdminStyle.trpointer}
-                            onClick={() => toggleRow(index, item)}
-                          >
-                            <td>
-                              {item.reservation_time || item.reserve_time
-                                ? (item.reservation_time || item.reserve_time)
-                                    .slice(0, 10)
-                                    .replaceAll("-", ".")
-                                : "-"}
-                            </td>
-                            <td>{item.type}</td>
-                            <td>{item.name}</td>
-                            <td>{item.phone}</td>
-                            <td>
-                              {item.storage_start_date && item.storage_end_date
-                                ? `${item.storage_start_date.replaceAll(
-                                    "-",
-                                    "."
-                                  )} ~ ${item.storage_end_date.replaceAll(
-                                    "-",
-                                    "."
-                                  )}`
-                                : item.delivery_date
-                                ? item.delivery_date.replaceAll("-", ".")
-                                : "-"}
-                            </td>
-                            <td>{luggageInfo}</td>
-                            <td>{`${item.price.toLocaleString()}원`}</td>
-                            <td>
-                              {item.situation === "완료" && item.success_time
-                                ? item.success_time
-                                    .slice(0, 16)
-                                    .replace("T", " ")
-                                    .replaceAll("-", ".")
-                                : "-"}
-                            </td>
-                            <td>
-                              <select
-                                className={AdminStyle.select}
-                                value={item.situation || "접수"}
-                                onChange={(e) => eChange(e, item)}
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                {selectOptions[item.type].map((status) => (
-                                  <option key={status} value={status}>
-                                    {status}
-                                  </option>
-                                ))}
-                              </select>
-                            </td>
-                          </tr>
-
-                          {openRow === index && (
-                            <tr>
-                              <td colSpan="9">
-                                <div className={AdminStyle.status_details}>
-                                  <div className={AdminStyle.status_log_list}>
-                                    {statusLogs[index]?.length > 0 ? (
-                                      <table className={AdminStyle.log_table}>
-                                        <colgroup>
-                                          <col style={{ width: "3%" }} />
-                                          <col style={{ width: "3%" }} />
-                                          <col style={{ width: "4%" }} />
-                                        </colgroup>
-                                        <thead>
-                                          <tr>
-                                            <th>변경시간</th>
-                                            <th>이전상태</th>
-                                            <th>변경상태</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          {statusLogs[index].map(
-                                            (log, logIndex) => (
-                                              <tr key={logIndex}>
-                                                <td>
-                                                  {new Date(
-                                                    log.updated_at
-                                                  ).toLocaleString()}
-                                                </td>
-                                                <td>{log.prev_status}</td>
-                                                <td>{log.new_status}</td>
-                                              </tr>
-                                            )
-                                          )}
-                                        </tbody>
-                                      </table>
-                                    ) : (
-                                      <p>변경 이력이 없습니다.</p>
-                                    )}
-                                  </div>
-                                </div>
+                        return (
+                          <React.Fragment key={index}>
+                            <tr
+                              className={AdminStyle.trpointer}
+                              onClick={() => toggleRow(index, item)}
+                            >
+                              <td>
+                                {item.reservation_time || item.reserve_time
+                                  ? (item.reservation_time || item.reserve_time)
+                                      .slice(0, 10)
+                                      .replaceAll("-", ".")
+                                  : "-"}
+                              </td>
+                              <td>{item.type}</td>
+                              <td>{item.name}</td>
+                              <td>{item.phone}</td>
+                              <td>
+                                {item.storage_start_date &&
+                                item.storage_end_date
+                                  ? `${item.storage_start_date.replaceAll(
+                                      "-",
+                                      "."
+                                    )} ~ ${item.storage_end_date.replaceAll(
+                                      "-",
+                                      "."
+                                    )}`
+                                  : item.delivery_date
+                                  ? item.delivery_date.replaceAll("-", ".")
+                                  : "-"}
+                              </td>
+                              <td>{luggageInfo}</td>
+                              <td>{`${item.price.toLocaleString()}원`}</td>
+                              <td>
+                                {item.situation === "완료" && item.success_time
+                                  ? item.success_time
+                                      .slice(0, 16)
+                                      .replace("T", " ")
+                                      .replaceAll("-", ".")
+                                  : "-"}
+                              </td>
+                              <td>
+                                <select
+                                  className={AdminStyle.select}
+                                  value={item.situation || "접수"}
+                                  onChange={(e) => eChange(e, item)}
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  {selectOptions[item.type].map((status) => (
+                                    <option key={status} value={status}>
+                                      {status}
+                                    </option>
+                                  ))}
+                                </select>
                               </td>
                             </tr>
-                          )}
-                        </React.Fragment>
-                      );
-                    })
-                ) : (
-                  <tr>
-                    <td colSpan="9">
-                      {searchTerm
-                        ? "일치하는 접수건이 없습니다."
-                        : "접수된 이력이 없습니다."}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+
+                            {openRow === index && (
+                              <tr>
+                                <td colSpan="9">
+                                  <div className={AdminStyle.status_details}>
+                                    <div className={AdminStyle.status_log_list}>
+                                      {statusLogs[index]?.length > 0 ? (
+                                        <table className={AdminStyle.log_table}>
+                                          <colgroup>
+                                            <col style={{ width: "3%" }} />
+                                            <col style={{ width: "3%" }} />
+                                            <col style={{ width: "4%" }} />
+                                          </colgroup>
+                                          <thead>
+                                            <tr>
+                                              <th>변경시간</th>
+                                              <th>이전상태</th>
+                                              <th>변경상태</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {statusLogs[index].map(
+                                              (log, logIndex) => (
+                                                <tr key={logIndex}>
+                                                  <td>
+                                                    {new Date(
+                                                      log.updated_at
+                                                    ).toLocaleString()}
+                                                  </td>
+                                                  <td>{log.prev_status}</td>
+                                                  <td>{log.new_status}</td>
+                                                </tr>
+                                              )
+                                            )}
+                                          </tbody>
+                                        </table>
+                                      ) : (
+                                        <p>변경 이력이 없습니다.</p>
+                                      )}
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            )}
+                          </React.Fragment>
+                        );
+                      })
+                  ) : (
+                    <tr>
+                      <td colSpan="9">
+                        {searchTerm
+                          ? "일치하는 접수건이 없습니다."
+                          : "접수된 이력이 없습니다."}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
             <div className={AdminStyle.pagination}>
               <button
                 className={AdminStyle.arrow_btn}
@@ -610,7 +620,9 @@ function Admin() {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`${AdminStyle.page_btn} ${currentPage === page ? AdminStyle.page_btn_active : ""}`}
+                  className={`${AdminStyle.page_btn} ${
+                    currentPage === page ? AdminStyle.page_btn_active : ""
+                  }`}
                 >
                   {page}
                 </button>

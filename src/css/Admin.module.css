@@ -353,7 +353,6 @@ tr {
   color: white;
 }
 
-
 .arrow_btn:disabled {
   background-color: #f0f0f0;
   color: #aaa;
@@ -371,4 +370,195 @@ tr {
 
 .noPointer {
   cursor: auto !important;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 60px 20px 0;
+  }
+
+  .Admin_content {
+    margin-top: 10px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .top,
+  .top2,
+  .top3 {
+    width: 90%;
+    height: auto;
+    margin: 10px 0;
+  }
+
+  .top h3 {
+    padding: 0;
+    padding-top: 20px;
+  }
+
+  .left {
+    height: 200px;
+  }
+  .left1 {
+    width: 100%;
+    text-align: center;
+  }
+
+  .left1 p {
+    margin-bottom: 3px;
+    font-size: 0.85rem;
+  }
+
+  .left2 {
+    width: 100%;
+    text-align: center;
+    padding: 0;
+  }
+
+  .left2_1 {
+    font-size: 2rem; /* 기존 4rem → 작게 조정 */
+  }
+
+  .left2_2 {
+    padding-left: 5px;
+    font-size: 0.9rem;
+  }
+
+  .left3 {
+    display: flex;
+    margin: 10px 15px 0 15px;
+    width: 95%;
+    height: 65px;
+    position: static;
+    margin-top: 10px;
+    padding: 0;
+  }
+
+  .left3_1 {
+    width: 100%;
+    height: 65px;
+    border-right: 1px dashed grey;
+  }
+
+  .left3_2 {
+    width: 100%;
+    height: 65px;
+    border-bottom: none;
+  }
+
+  .left3_1 p,
+  .left3_2 p {
+    display: none;
+  }
+
+  .left3_1 img,
+  .left3_2 img {
+    display: none;
+  }
+
+  .left3_1 h4,
+  .left3_2 h4 {
+    margin-top: 5px;
+    font-size: 1rem;
+  }
+
+  .left3_1 span,
+  .left3_2 span {
+    font-size: 1.3rem;
+  }
+
+  .top2 {
+    height: 200px;
+  }
+
+  .center1 {
+    height: 100px;
+  }
+
+  .center1 h3 {
+    padding: 0;
+    padding-top: 20px;
+  }
+
+  .center2_3 {
+    display: flex;
+  }
+
+  .center2 {
+    height: 100px;
+    width: 100%;
+    border-right: 1px dashed rgb(116, 116, 116);
+    border-radius: 0 0 0 10px;
+  }
+
+  .center2 h3 {
+    padding: 0;
+    padding-top: 25px;
+  }
+
+  .center3 {
+    height: 100px;
+    width: 100%;
+    border-radius: 0 0 10px 0;
+  }
+
+  .center3 h3 {
+    padding: 0;
+    padding-top: 25px;
+  }
+
+  .top3 {
+    height: 200px;
+    margin-bottom: 20px;
+  }
+
+  .right1 h3 {
+    margin: 0;
+    margin-bottom: 5px;
+    padding-top: 35px;
+  }
+
+  .right1 p {
+    margin-bottom: 15px;
+  }
+
+  /* .admin_search {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  } */
+   .admin_search {
+    margin-bottom: 20px;
+   }
+
+  .custom_radio_button {
+    display: none;
+  }
+
+  .table_over {
+    overflow:hidden;
+    overflow-x: scroll;
+    width: 100vw;
+  }
+
+  .table_over table {
+    min-width: 1800px;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .page_btn,
+  .arrow_btn {
+    padding: 6px 8px;
+    font-size: 14px;
+  }
+
+  th,
+  td {
+    font-size: 14px;
+    padding: 8px;
+  }
 }
