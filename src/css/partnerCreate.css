@@ -31,3 +31,7 @@
     border-color: #0066cc;
     outline: none;
 }
+
+input[type="file"] {
+    cursor: pointer;
+}

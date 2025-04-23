@@ -24,8 +24,8 @@ function PartnerCreate() {
         const fetchPartner = async () => {
             if (!isEditMode) return;
 
-            const { data, error } = await supabase
-                .from('partner')
+            const {data, error} = await supabase
+                .from('partner_place')
                 .select('*')
                 .eq('partner_id', numericPartnerId)
                 .single();
@@ -80,7 +80,7 @@ function PartnerCreate() {
         const {name, address, phone, map_url} = form;
 
         // 필수 입력 체크
-        if (!name || !address || !phone || !map_url || !imageFile) {
+        if (!name || !address || !phone || !map_url) {
             alert('모두 다 입력해야 합니다.');
             return;
         }
@@ -119,7 +119,7 @@ function PartnerCreate() {
             image = publicUrl.publicUrl;
         }
 
-        let query = supabase.from('partner');
+        let query = supabase.from('partner_place');
         let result;
 
         if (numericPartnerId) {
@@ -129,7 +129,7 @@ function PartnerCreate() {
                 address,
                 phone,
                 map_url: cleanMapUrl,
-                ...(image && { image }),
+                ...(image && {image}),
             }).eq('partner_id', numericPartnerId);
         } else {
             // 신규 등록
@@ -149,7 +149,7 @@ function PartnerCreate() {
             alert('저장 중 오류가 발생했습니다.');
         } else {
             alert(numericPartnerId ? '수정이 완료되었습니다!' : '등록이 완료되었습니다!');
-            setForm({ name: '', address: '', phone: '', map_url: '' });
+            setForm({name: '', address: '', phone: '', map_url: ''});
             setImageFile(null);
             setCurrentImage('');
             if (fileInputRef.current) fileInputRef.current.value = '';
@@ -207,16 +207,16 @@ function PartnerCreate() {
                             onChange={handleChange}
                         />
                     </div>
-                    <div className='group'>
-                        <label className='img'>숙소 이미지</label>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            autoComplete="off"
-                            onChange={handleFileChange}
-                            ref={fileInputRef}
-                        />
-                    </div>
+                        <div className='group'>
+                            <label className='img'>숙소 이미지</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                autoComplete="off"
+                                onChange={handleFileChange}
+                                ref={fileInputRef}
+                            />
+                        </div>
                     <div className='btn-container'>
                         <button
                             type="button"

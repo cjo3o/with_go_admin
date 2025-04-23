@@ -64,6 +64,7 @@ function App() {
                     <Route path="/partner/create/:partner_id" element={<PartnerCreate />} />
                     <Route path="/storage/list" element={<StorageList/>}/>
                     <Route path="/storage/create" element={<StorageCreate/>}/>
+                    <Route path="/storage/create/:storage_id" element={<StorageCreate />} />
 
                     <Route path="/event/list" element={<EventList />} />
                     <Route path="/event-add" element={<EventAdd />} />

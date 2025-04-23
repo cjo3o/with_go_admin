@@ -101,10 +101,10 @@ table {
 }
 
 .card-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); /* 반응형 1~4열 */
-    gap: 15px;
-    padding: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 27px; /* 카드 사이 간격 */
+    justify-content: flex-start; /* 왼쪽 정렬 */
 }
 
 .middle {
@@ -260,6 +260,11 @@ table {
 
 .delBtnMargin{
     margin-top: 10px !important;
+}
+
+.btn-delete:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 @keyframes fadeIn {

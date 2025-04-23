@@ -46,7 +46,7 @@ function PartnerList() {
     // 데이터 불러오기
     const fetchPartners = async () => {
         const {data, error} = await supabase
-            .from('partner')
+            .from('partner_place')
             .select('*')
             .order('created_at', {ascending: false});
 
@@ -104,7 +104,7 @@ function PartnerList() {
         if (!window.confirm('선택한 숙소를 삭제하시겠습니까?')) return;
 
         const {error} = await supabase
-            .from('partner')
+            .from('partner_place')
             .delete()
             .in('partner_id', selectedPartners);
 
@@ -145,11 +145,13 @@ function PartnerList() {
                         <div className='middle-right'>
                             <div className="middle-actions" style={{display: 'flex', alignContent: 'center', gap: '10px'}}>
                                 <div className={`add-button-wrapper delBtnMargin`}>
-                                    {selectedPartners.length > 0 && (
-                                        <button className="btn btn-delete" onClick={handleBulkDelete} style={{margin: '0'}}>
-                                            삭제 ({selectedPartners.length})
-                                        </button>
-                                    )}
+                                    <button
+                                        className="btn btn-delete"
+                                        disabled={selectedPartners.length === 0}
+                                        onClick={handleBulkDelete}
+                                    >
+                                        삭제 ({selectedPartners.length})
+                                    </button>
                                 </div>
                                 <div className='PartnerList_Search'>
                                     <Lookup onSearch={handleSearch}/>

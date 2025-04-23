@@ -145,11 +145,13 @@ function StorageList() {
                         <div className='middle-right'>
                             <div className="middle-actions" style={{display: 'flex', alignContent: 'center', gap: '10px'}}>
                                 <div className={`add-button-wrapper delBtnMargin`}>
-                                    {selectedStorages.length > 0 && (
-                                        <button className="btn btn-delete" onClick={handleBulkDelete} style={{margin: '0'}}>
-                                            삭제 ({selectedStorages.length})
-                                        </button>
-                                    )}
+                                    <button
+                                        className="btn btn-delete"
+                                        disabled={selectedStorages.length === 0}
+                                        onClick={handleBulkDelete}
+                                    >
+                                        삭제 ({selectedStorages.length})
+                                    </button>
                                 </div>
                                 <div className='StorageList_Search'>
                                     <Lookup onSearch={handleSearch}/>

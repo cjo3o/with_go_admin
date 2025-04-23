@@ -80,7 +80,7 @@ function StorageCreate() {
         const {name, address, phone, map_url} = form;
 
         // 필수 입력 체크
-        if (!name || !address || !phone || !map_url || !imageFile) {
+        if (!name || !address || !phone || !map_url) {
             alert('모두 다 입력해야 합니다.');
             return;
         }

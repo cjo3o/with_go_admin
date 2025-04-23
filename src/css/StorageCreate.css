@@ -31,3 +31,25 @@
     border-color: #0066cc;
     outline: none;
 }
+
+.btn-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    padding-right: 10px;
+}
+
+.btn-standard {
+    background-color: rgb(158, 158, 158);
+}
+
+.btn-standard:hover {
+    background-color: rgb(0, 102, 204);
+}
+
+input[type="file"] {
+    cursor: pointer;
+}
