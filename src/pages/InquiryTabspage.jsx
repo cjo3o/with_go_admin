@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Radio, Input } from 'antd';
-import ReviewTable from './ReviewTable';
-import '../css/Review.css';
+import { SearchOutlined } from '@ant-design/icons'; // ✅ 돋보기 아이콘 직접 가져옴
+import InquiryList from './InquiryList';
+import '../css/layout.css';
+import '../css/ui.css';
+import '../css/inquiry.css';
 
-const ReviewTabs = () => {
+const InquiryTabspage = () => {
     const [filterType, setFilterType] = useState('');
     const [inputValue, setInputValue] = useState('');
     const [searchValue, setSearchValue] = useState('');
@@ -12,26 +15,24 @@ const ReviewTabs = () => {
         setFilterType(e.target.value);
     };
 
-    const handleStatusChange = (e) => {
-        setStatusFilter(e.target.value);
-    };
-
     const handleSearch = (value) => {
         setSearchValue(value);
     };
 
     return (
         <div className="wrapper">
-            <div className="main">
-                <div className="header">이용후기 관리</div>
-                <div className="card">
+            <div className="main-content">
+                <div className="header">1:1 문의 관리</div>
+
+                <div className="card inquiry-card">
                     <div className="top-bar">
-                        <h3>이용후기 리스트</h3>
+                        <div className="title">문의 리스트</div>
+
                         <div className="tab-and-search">
                             <Radio.Group
-                                defaultValue=""
-                                buttonStyle="solid"
+                                value={filterType}
                                 onChange={handleFilterChange}
+                                buttonStyle="solid"
                             >
                                 <Radio.Button value="">전체</Radio.Button>
                                 <Radio.Button value="보관">보관</Radio.Button>
@@ -39,17 +40,23 @@ const ReviewTabs = () => {
                             </Radio.Group>
 
                             <Input.Search
-                                placeholder="리뷰 검색"
+                                placeholder="질문 검색"
                                 allowClear
-                                size="middle"
+                                enterButton={
+                                    <span>
+                    <SearchOutlined style={{ marginRight: 4 }} />
+                    검색
+                  </span>
+                                }
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
                                 onSearch={handleSearch}
-                                className="review-search-input"
+                                className="search-input default-style"
                             />
                         </div>
                     </div>
-                    <ReviewTable
+
+                    <InquiryList
                         filterType={filterType}
                         searchKeyword={searchValue}
                     />
@@ -59,4 +66,4 @@ const ReviewTabs = () => {
     );
 };
 
-export default ReviewTabs;
+export default InquiryTabspage;
