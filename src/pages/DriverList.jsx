@@ -5,7 +5,7 @@ import { Checkbox } from 'antd';
 import { supabase } from "../lib/supabase";
 import DriverListRow from './DriverListRow';
 import DriverListModal from './DriverListModal';
-import Pagination from "./pagination.jsx";
+import Pagination from "./Pagination.jsx";
 
 function DriverList() {
   const [drivers, setDrivers] = useState([]);
