@@ -157,7 +157,7 @@ table {
 }
 
 .modal-content {
-    background: white;
+    background: transparent;
     padding: 20px;
     border-radius: 8px;
     position: relative;
@@ -167,16 +167,21 @@ table {
     animation: fadeIn 0.3s ease;
 }
 
-.modal-close {
+.modal-content > .modal-close {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: #333;
+    background: #555;
     color: white;
     border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
     cursor: pointer;
+    border-radius: 50%;
+    width: 2vw;
+    aspect-ratio: 1;
+}
+
+.modal-close:hover {
+    background: #333;
 }
 
 .pagination {

@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import supabase from "../lib/supabase.js";
 import "../css/StorageList.css"
-import {Checkbox} from "antd";
+import {Checkbox, Image} from "antd";
 import {useNavigate} from 'react-router-dom';
 import Lookup from "../layouts/Lookup.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAnglesLeft, faAnglesRight, faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
+import {CloseOutlined} from "@ant-design/icons";
 
 function StorageList() {
     const [storages, setStorages] = useState([]);
@@ -201,24 +202,18 @@ function StorageList() {
 
                                     <div className="card-image">
                                         {storage.image ? (
-                                            <img
+                                            <Image
                                                 src={storage.image}
                                                 alt="장소 이미지"
-                                                onClick={() =>
-                                                    openModal(
-                                                        <img
-                                                            src={storage.image}
-                                                            alt="확대 이미지"
-                                                            style={{width: '100%', height: 'auto'}}
-                                                        />
-                                                    )
-                                                }
+                                                width="100%"
+                                                height={150}
+                                                style={{ objectFit: 'cover', borderRadius: '6px' }}
                                             />
                                         ) : (
                                             <img
                                                 src="/placeholder.jpg"
                                                 alt="이미지 없음"
-                                                style={{width: '100%', opacity: 0.3}}
+                                                style={{ width: '100%', height: 150, opacity: 0.3, objectFit: 'cover', borderRadius: '6px' }}
                                             />
                                         )}
                                     </div>
@@ -300,7 +295,7 @@ function StorageList() {
             {isModalOpen && (
                 <div className="modal-overlay" onClick={closeModal}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <button className="modal-close" onClick={closeModal}>X</button>
+                        <button className="modal-close" onClick={closeModal}><CloseOutlined /></button>
                         {modalContent}
                     </div>
                 </div>
