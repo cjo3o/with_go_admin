@@ -135,7 +135,8 @@ function DriverList() {
               <col style={{ width: "3%" }} />
               <col style={{ width: "3%" }} />
               <col style={{ width: "8%" }} />
-              <col style={{ width: "3%" }} />
+              <col style={{ width: "2%" }} />
+              <col style={{ width: "2%" }} />
             </colgroup>
             <thead>
               <tr>
@@ -153,6 +154,7 @@ function DriverList() {
                 <th>이메일</th>
                 <th>주소</th>
                 <th>첨부파일</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
