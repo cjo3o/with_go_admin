@@ -333,7 +333,7 @@ function Admin() {
     <>
       <div className={AdminStyle.content}>
         <div className={AdminStyle.Admin_top}>
-          <h1>관리자 메인</h1>
+          관리자 메인
         </div>
         <div className={AdminStyle.Admin_content}>
           <div className={AdminStyle.top}>

@@ -1,6 +1,7 @@
 import React from "react";
 import { Checkbox } from "antd";
 import DlStyle from "../css/DriverList.module.css";
+import { useNavigate } from "react-router-dom";
 
 function DriverListRow({
   driver,
@@ -9,6 +10,13 @@ function DriverListRow({
   onDriverCheck,
   onDriverClick,
 }) {
+  const navigate = useNavigate();
+
+  const handleEditClick2 = (e) => {
+    e.stopPropagation(); // 행의 클릭 이벤트 막기
+    navigate("/DriverRegistration", { state: { driver } });
+  };
+
   const handleCheckboxClick = (e) => {
     e.stopPropagation();
     onDriverCheck(e);
@@ -19,10 +27,25 @@ function DriverListRow({
   };
 
   const handleRowClick = (e) => {
-    if (e.target.closest('input[type="checkbox"]') || e.target.closest("a")) {
+    const ignoredTds = ["tdCenter", "noPointer"];
+    const targetTd = e.target.closest("td");
+
+    // 클릭된 <td>의 className이 무시 대상이라면 return
+    if (
+      targetTd &&
+      ignoredTds.some((className) =>
+        targetTd.classList.contains(DlStyle[className])
+      )
+    ) {
       return;
     }
-    onDriverClick();
+
+    // 체크박스와 링크는 기존대로 무시
+    if (e.target.closest('input[type="checkbox"]') || e.target.closest("a") || e.target.closest("button")) {
+      return;
+    }
+
+    onDriverClick(); // 모달 열기
   };
 
   return (
@@ -76,11 +99,10 @@ function DriverListRow({
           "없음"
         )}
       </td>
-      <td>
-          <button
-            className="btn btn-edit">
-            수정
-          </button>
+      <td className={DlStyle.noPointer}>
+        <button className="btn btn-edit" onClick={handleEditClick2}>
+          수정
+        </button>
       </td>
     </tr>
   );

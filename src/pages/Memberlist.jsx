@@ -101,10 +101,11 @@ function Memberlist() {
     <>
       <div className={MemberStyle.content2}>
         <div className={MemberStyle.Memberlist_top}>
-          <h1>회원 목록</h1>
+          회원 목록
         </div>
         <div className={`${MemberStyle.Memberlist_content} card`}>
           <div className={MemberStyle.Memberlist_search}>
+          <h3>회원 목록</h3>
             <LookupSearch
               onSearch={handleSearch2}
               placeholder="검색어를 입력하세요"
