@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import supabase from '../lib/supabase';
+import '../css/FAQ.css';
+import '../css/layout.css';
+import '../css/ui.css';
 import '../css/faq.css';
 
 function FAQAdd() {
@@ -37,11 +40,11 @@ function FAQAdd() {
     };
 
     return (
-        <div className="faq-main">
-            <div className="faq-header">새 FAQ 등록</div>
-            <div className="faq-card">
-                <form onSubmit={handleSubmit} className="faq-form">
-                    <div className="faq-form-group">
+        <div className="main-content">
+            <div className="header">새 FAQ 등록</div>
+            <div className="card">
+                <form onSubmit={handleSubmit} className="form">
+                    <div className="form-group">
                         <label>질문</label>
                         <input
                             type="text"
@@ -52,7 +55,7 @@ function FAQAdd() {
                         />
                     </div>
 
-                    <div className="faq-form-group">
+                    <div className="form-group">
                         <label>답변</label>
                         <textarea
                             name="answer"
@@ -63,9 +66,9 @@ function FAQAdd() {
                         ></textarea>
                     </div>
 
-                    <div className="faq-form-group">
+                    <div className="form-group">
                         <label>카테고리</label>
-                        <div className="custom-select">
+                        <div className="custom-select-wrapper">
                             <select
                                 name="category"
                                 value={formData.category}
@@ -80,9 +83,9 @@ function FAQAdd() {
                         </div>
                     </div>
 
-                    <div className="faq-form-group">
+                    <div className="form-group">
                         <label>공개 여부</label>
-                        <div className="custom-select">
+                        <div className="custom-select-wrapper">
                             <select
                                 name="status"
                                 value={formData.status}
@@ -95,17 +98,17 @@ function FAQAdd() {
                         </div>
                     </div>
 
-                    <div className="faq-form-button-wrapper">
+                    <div className="form-button-wrapper">
                         <button
                             type="button"
-                            className="btn btn-back btn-standard"
+                            className="btn btn-back"
                             onClick={() => navigate(-1)}
                         >
                             뒤로가기
                         </button>
                         <button
                             type="submit"
-                            className="btn btn-edit-save btn-standard"
+                            className="btn btn-add-confirm"
                         >
                             등록 완료
                         </button>

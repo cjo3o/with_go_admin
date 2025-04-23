@@ -1,6 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useState } from 'react';
 
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faArrowLeft, faCheck, faPlay, faCircleStop, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+library.add(faArrowLeft, faCheck, faPlay, faCircleStop, faArrowDown);
+
 import './App.css';
 import 'antd/dist/reset.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -13,7 +17,7 @@ import PartnerCreate from "./pages/PartnerCreate.jsx";
 import StorageList from "./pages/StorageList.jsx";
 import StorageCreate from "./pages/StorageCreate.jsx";
 
-import EventList from "./pages/Event_promotion.jsx";
+
 import Admin from "./pages/Admin.jsx";
 
 
@@ -21,19 +25,29 @@ import EmployeeList from "./pages/EmployeeList.jsx";
 import EventAdd from "./pages/Event_add.jsx";
 import EventEdit from "./pages/Eventedit.jsx";
 import Login from "./pages/Login.jsx";
-import NoticeList from "./pages/Notice_promotion.jsx";
+
+import EventList from "./pages/EventList.jsx";
+
+import NoticeList from "./pages/NoticeList.jsx";
+
 import NoticeAdd from './pages/NoticeAdd.jsx';
 import NoticeEdit from './pages/NoticeEdit.jsx';
 
-import ReviewTabs from './pages/ReviewTabs.jsx';
+import ReviewTabspage from './pages/ReviewTabspage.jsx';
 import ReviewEdit from './pages/ReviewEdit.jsx';
 
-import FAQList from './pages/FAQList.jsx';
 import FAQEdit from './pages/FAQEdit';
 import FAQAdd from "./pages/FAQAdd.jsx";
+
 import Memberlist from "./pages/Memberlist.jsx";
 import DriverList from "./pages/DriverList.jsx";
 import DriverRegistration from "./pages/DriverRegistration.jsx";
+
+import FAQTabspage from './pages/FAQTabspage.jsx';
+
+import InquiryTabs from './pages/InquiryTabspage.jsx';
+import InquiryEdit from './pages/InquiryEdit.jsx';
+
 
 function App() {
     const [count, setCount] = useState(0);
@@ -55,7 +69,7 @@ function App() {
                     <Route path="/storage/list" element={<StorageList/>}/>
                     <Route path="/storage/create" element={<StorageCreate/>}/>
 
-                    <Route path="/event-promotion" element={<EventList />} />
+                    <Route path="/event/list" element={<EventList />} />
                     <Route path="/event-add" element={<EventAdd />} />
                     <Route path="/event-edit/:id" element={<EventEdit />} />
                     <Route path="/employee-list" element={<EmployeeList />} />
@@ -64,12 +78,15 @@ function App() {
                     <Route path="/notice-add" element={<NoticeAdd />} />
                     <Route path="/notice-edit/:id" element={<NoticeEdit />} />
 
-                    <Route path="/review" element={<ReviewTabs />} />
+                    <Route path="/review" element={<ReviewTabspage />} />
                     <Route path="/review-edit/:id" element={<ReviewEdit />} />
 
-                    <Route path="/faq/list" element={<FAQList />} />
+                    <Route path="/faq/list" element={<FAQTabspage />} />
                     <Route path="/faq-edit/:id" element={<FAQEdit />} />
                     <Route path="/faq-add" element={<FAQAdd />} />
+
+                    <Route path="/inquiry/list" element={<InquiryTabs />} />
+                    <Route path="/inquiry-edit/:id" element={<InquiryEdit />} />
                 </Routes>
             </BrowserRouter>
         </div>
