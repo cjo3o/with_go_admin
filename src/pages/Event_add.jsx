@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import supabase from '../lib/supabase';
-import '../css/Evpro.css';
+import '../css/layout.css';
+import '../css/ui.css';
+import '../css/Event.css';
 
 function EventAdd() {
     const navigate = useNavigate();
@@ -11,86 +13,101 @@ function EventAdd() {
         title: '',
         date: '',
         link_url: '',
-        img_url: '',
-        status: '이벤트 진행중'
+        status: '이벤트 진행중',
+        img_url: ''
     });
+
     const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        setFile(selectedFile);
-        setPreviewUrl(URL.createObjectURL(selectedFile));
+        const newFile = e.target.files[0];
+        setFile(newFile);
+        setPreviewUrl(URL.createObjectURL(newFile));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        let imageUrl = '';
+        let uploadedUrl = '';
 
         if (file) {
             const fileName = `${Date.now()}_${file.name}`;
             const filePath = `event-images/${fileName}`;
 
-            const { data, error: uploadError } = await supabase
+            const { error: uploadError } = await supabase
                 .storage
                 .from('images')
                 .upload(filePath, file);
 
             if (uploadError) {
                 alert('이미지 업로드 실패');
-                console.error(uploadError);
                 return;
             }
 
-            const { data: publicData } = supabase
-                .storage
+            const { data: publicData } = supabase.storage
                 .from('images')
                 .getPublicUrl(filePath);
 
-            imageUrl = publicData.publicUrl;
+            uploadedUrl = publicData.publicUrl;
         }
 
-        const { error } = await supabase.from('withgo_event').insert([{
-            title: formData.title,
-            date: formData.date,
-            link_url: formData.link_url,
-            status: formData.status,
-            img_url: imageUrl
-        }]);
+        const { error } = await supabase.from('withgo_event').insert([
+            {
+                ...formData,
+                img_url: uploadedUrl
+            }
+        ]);
 
         if (error) {
-            alert('이벤트 등록에 실패했습니다');
-            console.error(error);
+            alert('이벤트 등록 실패');
         } else {
-            alert('이벤트 등록이 완료되었습니다');
-            navigate('/event-promotion');
+            alert('이벤트가 등록되었습니다!');
+            navigate('/event');
         }
     };
 
     return (
-        <div className="main">
-            <div className="header">새 이벤트 등록</div>
+        <div className="main-content">
+            <div className="header">이벤트 등록</div>
             <div className="card">
                 <form onSubmit={handleSubmit} className="form">
                     <div className="form-group">
                         <label>제목</label>
-                        <input type="text" name="title" value={formData.title} onChange={handleChange} required />
+                        <input
+                            type="text"
+                            name="title"
+                            value={formData.title}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
 
                     <div className="form-group">
                         <label>날짜</label>
-                        <input type="date" name="date" value={formData.date} onChange={handleChange} required />
+                        <input
+                            type="date"
+                            name="date"
+                            value={formData.date}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
 
                     <div className="form-group">
                         <label>유튜브 링크</label>
-                        <input type="text" name="link_url" value={formData.link_url} onChange={handleChange} required />
+                        <input
+                            type="text"
+                            name="link_url"
+                            value={formData.link_url}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
 
                     <div className="form-group">
@@ -98,37 +115,43 @@ function EventAdd() {
                         <input type="file" accept="image/*" onChange={handleFileChange} />
                         {previewUrl && (
                             <div style={{ marginTop: '10px' }}>
-                                <img src={previewUrl} alt="미리보기" style={{ maxWidth: '200px' }} />
+                                <img
+                                    src={previewUrl}
+                                    alt="미리보기"
+                                    style={{ maxWidth: '200px', borderRadius: '6px' }}
+                                />
                             </div>
                         )}
                     </div>
 
                     <div className="form-group">
                         <label>상태</label>
-                        <div className="custom-select">
+                        <div className="custom-select-wrapper">
                             <select
                                 name="status"
                                 value={formData.status}
                                 onChange={handleChange}
                             >
-                            <option value="이벤트 진행중">이벤트 진행중</option>
-                            <option value="이벤트 종료">이벤트 종료</option>
-                        </select>
+                                <option value="이벤트 진행중">이벤트 진행중</option>
+                                <option value="이벤트 종료">이벤트 종료</option>
+                            </select>
                             <FontAwesomeIcon icon={faArrowDown} className="select-icon" />
                         </div>
                     </div>
+
                     <div className="form-button-wrapper">
                         <button
                             type="button"
-                            className="btn btn-back btn-standard"
+                            className="btn btn-back"
                             onClick={() => navigate(-1)}
                         >
                             뒤로가기
                         </button>
-                        <button type="submit" className="btn btn-add btn-standard">등록하기</button>
+                        <button type="submit" className="btn btn-add-confirm">
+                            등록 완료
+                        </button>
                     </div>
                 </form>
-
             </div>
         </div>
     );
