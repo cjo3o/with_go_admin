@@ -55,7 +55,7 @@ function NoticePromotion() {
   };
 
   return (
-    <div className="main-content">
+    <div className="main">
       <div className="header">공지사항 관리</div>
       <div className="card">
         <div className="title">공지사항 리스트</div>

@@ -4,13 +4,6 @@
     background-color: #f4f6f9;
 }
 
-.sidebar {
-    width: 280px;
-    background-color: var(--sidebar-bg, #013f83);
-    color: white;
-    flex-shrink: 0;
-}
-
 .main-content {
     flex-grow: 1;
     padding: 50px 60px 0;
@@ -26,6 +19,12 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.main {
+    min-height: 100vh;
+    padding: 50px 60px;
+    margin-left: 250px;
 }
 
 .card {
@@ -139,4 +138,10 @@ th {
     cursor: not-allowed;
     pointer-events: none;
     opacity: 0.7;
+}
+
+@media (max-width: 767px) {
+    .main {
+        margin-left: 0;
+    }
 }

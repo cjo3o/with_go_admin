@@ -82,7 +82,7 @@ function NoticeEdit() {
     };
 
     return (
-        <div className="main-content">
+        <div className="main">
             <div className="header">공지사항 수정</div>
             <div className="card">
                 <form onSubmit={handleSubmit} className="form">

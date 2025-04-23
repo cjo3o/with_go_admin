@@ -21,8 +21,7 @@ const FAQTabspage = () => {
   };
 
   return (
-    <div className="wrapper"> {/* ✅ 중앙정렬을 위한 wrapper 추가 */}
-      <div className="main-content">
+      <div className="main">
         <div className="header">FAQ 관리</div>
 
           <div className="card">
@@ -59,7 +58,6 @@ const FAQTabspage = () => {
           <FAQList filterType={filterType} searchKeyword={searchValue} />
         </div>
       </div>
-    </div>
   );
 };
 

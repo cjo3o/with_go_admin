@@ -65,7 +65,7 @@ function NoticeAdd() {
     };
 
     return (
-        <div className="main-content">
+        <div className="main">
             <div className="header">공지사항 등록</div>
             <div className="card">
                 <form onSubmit={handleSubmit} className="form">

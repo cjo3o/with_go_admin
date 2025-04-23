@@ -29,7 +29,9 @@ function Login(props) {
         message.success('로그인 성공');
         sessionStorage.setItem("name",data.name);
         sessionStorage.setItem("role",data.role);
-        navigate("/admin");
+        setTimeout(() => {
+            window.location.replace("/");
+        }, 700);
     }
     return (
         <>
@@ -39,12 +41,12 @@ function Login(props) {
             {/*    closable={false}*/}
             {/*    footer={null}*/}
             {/*    >*/}
-            <div className="main" style={{fontWeight:"bold"}}>
+            <div className="main" style={{fontWeight:"bold", marginLeft:"auto", padding:"0"}}>
                 <Flex
                     style={{
                         justifyContent: 'center',
                         alignItems: 'center',
-                        height: '100%',
+                        height: '100vh',
                     }}
                     vertical
                 >

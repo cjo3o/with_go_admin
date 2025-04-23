@@ -20,8 +20,7 @@ const InquiryTabspage = () => {
     };
 
     return (
-        <div className="wrapper">
-            <div className="main-content">
+            <div className="main">
                 <div className="header">1:1 문의 관리</div>
 
                 <div className="card inquiry-card">
@@ -62,7 +61,6 @@ const InquiryTabspage = () => {
                     />
                 </div>
             </div>
-        </div>
     );
 };
 

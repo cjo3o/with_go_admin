@@ -40,7 +40,7 @@ function FAQAdd() {
     };
 
     return (
-        <div className="main-content">
+        <div className="main">
             <div className="header">새 FAQ 등록</div>
             <div className="card">
                 <form onSubmit={handleSubmit} className="form">

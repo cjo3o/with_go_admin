@@ -70,7 +70,7 @@ function FAQEdit() {
     };
 
     return (
-        <div className="main-content">
+        <div className="main">
             <div className="header">FAQ 수정</div>
             <div className="card">
                 <form onSubmit={handleSubmit} className="form">

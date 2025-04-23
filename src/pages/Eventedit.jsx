@@ -92,7 +92,7 @@ function EventEdit() {
     };
 
     return (
-        <div className="main-content">
+        <div className="main">
             <div className="header">이벤트 수정</div>
             <div className="card">
                 <form onSubmit={handleSubmit} className="form">

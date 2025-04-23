@@ -89,7 +89,7 @@ function ReviewEdit() {
     };
 
     return (
-        <div className="main-content">
+        <div className="main">
             <div className="header">이용후기 수정</div>
             <div className="card">
                 <form className="form" onSubmit={handleSubmit}>

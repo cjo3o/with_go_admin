@@ -49,7 +49,7 @@ function InquiryEdit() {
     };
 
     return (
-        <div className="main-content">
+        <div className="main">
             <div className="header">1:1 문의 답변</div>
             <div className="card">
                 <form className="form" onSubmit={handleSubmit}>

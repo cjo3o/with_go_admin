@@ -47,7 +47,6 @@ import FAQTabspage from './pages/FAQTabspage.jsx';
 import InquiryTabs from './pages/InquiryTabspage.jsx';
 import InquiryEdit from './pages/InquiryEdit.jsx';
 
-
 function App() {
     const [count, setCount] = useState(0);
 

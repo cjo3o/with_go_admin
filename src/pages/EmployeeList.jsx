@@ -172,9 +172,10 @@ function EmployeeList(props) {
             {contextHolder}
             <div className='main'>
                 <div className='header'>
-                    직원목록
+                    권한설정
                 </div>
                 <div className='card'>
+                    <div className="title">직원목록</div>
                     <Table dataSource={rowdata} columns={columns} rowKey="no">
                         {/*<thead>*/}
                         {/*<tr>*/}

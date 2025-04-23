@@ -12,7 +12,7 @@ import supabase from '../lib/supabase';
 
 import '../css/ui.css';
 import '../css/layout.css';
-import '../css/review.css';
+import '../css/Review.css';
 
 function ReviewTable({ filterType, statusFilter, searchKeyword }) {
     const [reviews, setReviews] = useState([]);

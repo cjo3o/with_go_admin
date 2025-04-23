@@ -58,7 +58,7 @@ function EventList() {
   };
 
   return (
-    <div className="main-content">
+    <div className="main">
       <div className="header">이벤트 · 프로모션 관리</div>
       <div className="card">
         <div className="title">이벤트 리스트</div>
