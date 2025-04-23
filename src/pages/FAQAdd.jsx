@@ -3,13 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import supabase from '../lib/supabase';
-<<<<<<< HEAD
 import '../css/FAQ.css';
-=======
 import '../css/layout.css';
 import '../css/ui.css';
 import '../css/faq.css';
->>>>>>> hem
 
 function FAQAdd() {
     const navigate = useNavigate();

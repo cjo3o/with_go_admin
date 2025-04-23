@@ -17,8 +17,7 @@ import PartnerCreate from "./pages/PartnerCreate.jsx";
 import StorageList from "./pages/StorageList.jsx";
 import StorageCreate from "./pages/StorageCreate.jsx";
 
-<<<<<<< HEAD
-import EventList from "./pages/Event_promotion.jsx";
+
 import Admin from "./pages/Admin.jsx";
 
 
@@ -26,14 +25,11 @@ import EmployeeList from "./pages/EmployeeList.jsx";
 import EventAdd from "./pages/Event_add.jsx";
 import EventEdit from "./pages/Eventedit.jsx";
 import Login from "./pages/Login.jsx";
-import NoticeList from "./pages/Notice_promotion.jsx";
-=======
+
 import EventList from "./pages/EventList.jsx";
-import EventAdd from "./pages/Event_add.jsx";
-import EventEdit from "./pages/Eventedit.jsx";
 
 import NoticeList from "./pages/NoticeList.jsx";
->>>>>>> hem
+
 import NoticeAdd from './pages/NoticeAdd.jsx';
 import NoticeEdit from './pages/NoticeEdit.jsx';
 
@@ -42,14 +38,14 @@ import ReviewEdit from './pages/ReviewEdit.jsx';
 
 import FAQEdit from './pages/FAQEdit';
 import FAQAdd from "./pages/FAQAdd.jsx";
-<<<<<<< HEAD
+
 import Memberlist from "./pages/Memberlist.jsx";
-=======
+
 import FAQTabspage from './pages/FAQTabspage.jsx';
 
 import InquiryTabs from './pages/InquiryTabspage.jsx';
 import InquiryEdit from './pages/InquiryEdit.jsx';
->>>>>>> hem
+
 
 function App() {
     const [count, setCount] = useState(0);
