@@ -53,12 +53,9 @@ tr {
     color: white;
     font-weight: bold;
   }
-  /* .pagination i {
-    font-size: 14px;
-  } */
+
   .pagination2 button:disabled {
     opacity: 0.5;
-    /* cursor: not-allowed; */
   }
   
   .page_btn2 {
@@ -75,11 +72,11 @@ tr {
     transform: translateY(-2px);
   }
   
-  .page_btn2.active {
-    background-color: #0066cc;
-    color: #fff;
+  .page_btn2_active {
+    background-color: #0066cc !important;
+    color: #fff !important;
     font-weight: bold;
-    border-color: #0066cc;
+    border-color: #0066cc !important;
   }
   
   .arrow2_btn {
@@ -112,8 +109,8 @@ tr {
 
   .foot_btn {
     display: flex;
-    justify-content: flex-end; /* 오른쪽 정렬 */
-    width: 100%;  /* 부모 컨테이너의 너비를 100%로 설정 */
+    justify-content: flex-end;
+    width: 100%;
     padding: 10px 0;
   }
   
@@ -133,7 +130,7 @@ tr {
   }
   
   tfoot td {
-    text-align: right;  /* 오른쪽 정렬 */
+    text-align: right;
   }
   
   .th_first {

@@ -328,11 +328,11 @@ tr {
   transform: translateY(-2px);
 }
 
-.page_btn.active {
-  background-color: #0066cc;
-  color: #fff;
+.page_btn_active {
+  background-color: #0066cc !important;
+  color: #fff !important;
   font-weight: bold;
-  border-color: #0066cc;
+  border-color: #0066cc !important;
 }
 
 .arrow_btn {

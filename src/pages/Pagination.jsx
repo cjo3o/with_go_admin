@@ -22,8 +22,10 @@ function Pagination({ currentPage2, totalPages2, setCurrentPage2 }) {
         <button
           key={page}
           onClick={() => setCurrentPage2(page)}
-          className={`${MemberStyle.page_btn2} ${currentPage2 === page ? "active" : ""}`}
+          className={`${MemberStyle.page_btn2} ${currentPage2 === page ? MemberStyle.page_btn2_active : ""
+            }`}
         >
+
           {page}
         </button>
       ))}

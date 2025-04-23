@@ -100,12 +100,12 @@ function Sidebar(props) {
                                 <li
                                     onClick={boolSidebar}
                                 >
-                                    <Link to="">기사목록</Link>
+                                    <Link to="/DriverList">기사목록</Link>
                                 </li>
                                 <li
                                     onClick={boolSidebar}
                                 >
-                                    <Link to="">기사등록</Link>
+                                    <Link to="/DriverRegistration">기사등록</Link>
                                 </li>
                             </ul>
                         </div>
