@@ -40,6 +40,8 @@ import FAQEdit from './pages/FAQEdit';
 import FAQAdd from "./pages/FAQAdd.jsx";
 
 import Memberlist from "./pages/Memberlist.jsx";
+import DriverList from "./pages/DriverList.jsx";
+import DriverRegistration from "./pages/DriverRegistration.jsx";
 
 import FAQTabspage from './pages/FAQTabspage.jsx';
 
@@ -59,6 +61,8 @@ function App() {
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/Admin" element={<Admin/>}/>
                     <Route path="/Memberlist" element={<Memberlist/>}/>
+                    <Route path="/DriverList" element={<DriverList/>}/>
+                    <Route path="/DriverRegistration" element={<DriverRegistration/>}></Route>
                     <Route path="/partner/list" element={<PartnerList/>}/>
                     <Route path="/partner/create" element={<PartnerCreate/>}/>
                     <Route path="/partner/create/:partner_id" element={<PartnerCreate />} />
