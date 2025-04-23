@@ -3,27 +3,24 @@ import Fab from '@mui/material/Fab';
 import Box from '@mui/material/Box';
 import Addicon from '@mui/icons-material/Add';
 
-const FloatingBtn = () => {
+const FloatingBtn = ({ onClick }) => {
     return (
-        <Box
-            sx={{
-                // float: 'right'
-                // right: 0
-                // borderRadius: '5px',
-            }}
-        >
+        <Box>
             <Fab
                 variant="extended"
                 color="primary"
-                style={{height: '40px',
+                onClick={onClick} // ✅ 클릭 시 다운로드 실행
+                style={{
+                    height: '40px',
                     borderRadius: '5px',
                     zIndex: 1,
-                }}>
-                <Addicon sx={{mr: 1}}/>
+                }}
+            >
+                <Addicon sx={{ mr: 1 }} />
                 Excel 다운로드
             </Fab>
         </Box>
     );
-}
+};
 
 export default FloatingBtn

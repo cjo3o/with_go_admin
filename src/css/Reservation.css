@@ -55,8 +55,7 @@
     justify-content: center;
     place-items: center;
 }
-
-button{
+.button{
     border: none;
     background: none;
     color: #1e83f1;
@@ -77,11 +76,11 @@ button{
 }
 
 .content_second > h3{
-    padding-top: 25px;
+    padding-top: 30px;
 }
 
 .content_second > h1{
-    padding-top: 25px;
+    padding-top: 10px;
 }
 
 .content_second_one{

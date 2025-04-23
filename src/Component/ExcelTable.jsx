@@ -34,7 +34,7 @@ const EditableCell = ({editing, dataIndex, title, inputType, record, index, chil
     );
 };
 
-const ExcelTable = ({showCheckbox}) => {
+const ExcelTable = ({showCheckbox, combinedSearchData}) => {
     const [form] = Form.useForm();
     const [combinedData, setCombinedData] = useState([]);
     // const [editingKey, setEditingKey] = useState('');
@@ -43,11 +43,17 @@ const ExcelTable = ({showCheckbox}) => {
     const [pageSize, setPageSize] = useState(10);
     const [selectAllChecked, setSelectAllChecked] = useState(false);
     const [currentData, setCurrentData] = useState([]);
-    const [sortOrder, setSortOrder] = useState(null);
-    const [sortField, setSortField] = useState(null);
+    // const [sortOrder, setSortOrder] = useState(null);
+    // const [sortField, setSortField] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingRecord, setEditingRecord] = useState(null);
 
+    useEffect(() => {
+        if (combinedSearchData?.length > 0) {
+            setCombinedData(combinedSearchData);
+            setCurrentPage(1);
+        }
+    }, [combinedSearchData]);
 
     const updateToSupabase = async (record) => {
         const table = record.division === '보관' ? 'storage' : 'delivery';
@@ -55,7 +61,7 @@ const ExcelTable = ({showCheckbox}) => {
         const updateFields = {
             name: record.reservationName,
             phone: record.reservationPhone,
-            location: record.section,
+            // location: record.section,
             reservation_time: record.reservationTime,
             situation: record.processingStatus
         };
@@ -67,6 +73,8 @@ const ExcelTable = ({showCheckbox}) => {
         } else {
             updateFields.delivery_date = record.date;
             updateFields.situation = record.processingStatus;
+            updateFields.delivery_start = record.section?.split(' → ')[0] || '';
+            updateFields.delivery_arrive = record.section?.split(' → ')[1] || '';
         }
 
         const {error} = await supabase
@@ -156,27 +164,13 @@ const ExcelTable = ({showCheckbox}) => {
     }, []);
 
     useEffect(() => {
-        let sorted = [...combinedData];
-
-        if (sortField) {
-            sorted.sort((a, b) => {
-                const valA = a[sortField];
-                const valB = b[sortField];
-
-                if (valA === valB) return 0;
-                if (sortOrder === 'ascend') return valA > valB ? 1 : -1;
-                if (sortOrder === 'descend') return valA < valB ? 1 : -1;
-                return 0;
-            });
-        }
-
         const startIndex = (currentPage - 1) * pageSize;
         const endIndex = startIndex + pageSize;
-        const sliced = sorted.slice(startIndex, endIndex);
+        const sliced = combinedData.slice(startIndex, endIndex);
 
         setCurrentData(sliced);
         setSelectAllChecked(sliced.every(item => checkedRows.includes(item.key)));
-    }, [combinedData, currentPage, pageSize, checkedRows, showCheckbox, sortOrder, sortField]);
+    }, [combinedData, currentPage, pageSize, checkedRows, showCheckbox]);
 
     const handleDelete = key => {
         const newData = combinedData.filter(item => item.key !== key);
@@ -222,12 +216,12 @@ const ExcelTable = ({showCheckbox}) => {
             ) : record.number
         },
         {title: '구분', dataIndex: 'division', align: 'center'},
-        {title: '예약시간', dataIndex: 'reservationTime', sorter: true, align: 'center'},
+        {title: '예약시간', dataIndex: 'reservationTime', align: 'center'},
         {title: '이용구간', dataIndex: 'section', align: 'center', width: 200},
-        {title: '짐갯수', dataIndex: 'luggageNumber', sorter: true, align: 'center',width: 200},
-        {title: '예약자명', dataIndex: 'reservationName', sorter: true, align: 'center', width: 100},
+        {title: '짐갯수', dataIndex: 'luggageNumber', align: 'center',width: 200},
+        {title: '예약자명', dataIndex: 'reservationName', align: 'center', width: 100},
         {title: '연락처', dataIndex: 'reservationPhone', align: 'center', width: 140},
-        {title: '신청일자', dataIndex: 'date', sorter: true, align: 'center'},
+        {title: '신청일자', dataIndex: 'date', align: 'center'},
         {title: '배정기사', dataIndex: 'driver', align: 'center', width: 100},
         {
             title: '처리현황',
@@ -280,11 +274,11 @@ const ExcelTable = ({showCheckbox}) => {
         },
     ];
 
-    const handleTableChange = (pagination, filters, sorter) => {
+    const handleTableChange = (pagination) => {
         setCurrentPage(pagination.current);
         setPageSize(pagination.pageSize);
-        setSortOrder(sorter.order);
-        setSortField(sorter.field);
+        // setSortOrder(sorter.order);
+        // setSortField(sorter.field);
     };
 
     return (
