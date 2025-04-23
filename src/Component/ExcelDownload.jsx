@@ -15,7 +15,10 @@ const FloatingBtn = () => {
             <Fab
                 variant="extended"
                 color="primary"
-                style={{height: '40px', borderRadius: '5px'}}>
+                style={{height: '40px',
+                    borderRadius: '5px',
+                    zIndex: 1,
+                }}>
                 <Addicon sx={{mr: 1}}/>
                 Excel 다운로드
             </Fab>

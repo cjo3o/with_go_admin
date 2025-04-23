@@ -164,9 +164,9 @@ function NewReservationAddPage() {
                 message.error("회원 추가 실패하였습니다.");
                 console.error("회원 추가 에러:", error);
             } else {
-                message.success('성공적으로 회원 추가 하였습니다.');
+                // message.success('성공적으로 회원 추가 하였습니다.');
                 notification.success({ message: '회원 등록 완료', description: '성공적으로 등록되었습니다.' });
-                Modal.success({ title: '성공!', content: '작업이 완료되었습니다.', onOk: () => navigate('/ApplicationList') });
+                // Modal.success({ title: '성공!', content: '작업이 완료되었습니다.', onOk: () => navigate('/ApplicationList') });
             }
         } catch (err) {
             message.error(`오류 발생: ${err.message}`);

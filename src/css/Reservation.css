@@ -5,6 +5,13 @@
     font-family: 'KoPub Dotum', sans-serif;
 }
 
+.main_R,
+.submain_R,
+.subheader_R,
+.content_middle {
+    width: 100%;
+}
+
 .main_R{
     margin: 0;
     padding: 0;
@@ -17,14 +24,12 @@
 }
 .header_R{
     margin: 0 auto;
-    width: 100%;
     color: #434343;
     padding-top: 20px;
     padding-left: 45px;
 }
 
 .subheader_R{
-    width: 100%;
     margin: 20px 0;
     padding-left: 45px;
 }
