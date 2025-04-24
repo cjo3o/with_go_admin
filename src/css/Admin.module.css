@@ -374,6 +374,7 @@ tr {
 
 @media (max-width: 768px) {
   .content {
+    width: 100%;
     padding: 60px 20px 0;
   }
 
@@ -527,6 +528,9 @@ tr {
     align-items: stretch;
     gap: 10px;
   } */
+   .list_up h3 {
+    font-size: 0.9rem;
+   }
    .admin_search {
     margin-bottom: 20px;
    }
@@ -538,11 +542,11 @@ tr {
   .table_over {
     overflow:hidden;
     overflow-x: scroll;
-    width: 100vw;
+    width: 100%;
   }
 
   .table_over table {
-    min-width: 1800px;
+    min-width: 1200px;
   }
 
   .pagination {

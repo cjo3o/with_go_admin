@@ -47,7 +47,7 @@ function Memberlist() {
       const sortedData2 = data.sort(
         (a, b) => new Date(b.created_at) - new Date(a.created_at)
       );
-  
+
       setUsers(sortedData2);
     };
 
@@ -71,7 +71,7 @@ function Memberlist() {
     }
   };
 
-   const deleteUser = async (userId) => {
+  const deleteUser = async (userId) => {
     const { error } = await supabaseRole.auth.admin.deleteUser(userId);
     if (error) {
       console.error("삭제 실패:", error);
@@ -81,7 +81,7 @@ function Memberlist() {
   };
 
   const DeleteSelected = async () => {
-    if (!window.confirm('선택한 회원을 삭제하시겠습니까?')) return;
+    if (!window.confirm("선택한 회원을 삭제하시겠습니까?")) return;
 
     try {
       for (const userId of selectedIds) {
@@ -90,89 +90,89 @@ function Memberlist() {
 
       setUsers(users.filter((user) => !selectedIds.includes(user.id)));
       setSelectedIds([]);
-      alert('삭제 완료되었습니다.');
+      alert("삭제 완료되었습니다.");
     } catch (err) {
       console.error(err);
-      alert('삭제 중 오류가 발생했습니다.');
+      alert("삭제 중 오류가 발생했습니다.");
     }
   };
 
   return (
     <>
       <div className={MemberStyle.content2}>
-        <div className={MemberStyle.Memberlist_top}>
-          회원 목록
-        </div>
+        <div className={MemberStyle.Memberlist_top}>회원 목록</div>
         <div className={`${MemberStyle.Memberlist_content} card`}>
           <div className={MemberStyle.Memberlist_search}>
-          <h3>회원 목록</h3>
+            <h3>회원 목록</h3>
             <LookupSearch
               onSearch={handleSearch2}
               placeholder="검색어를 입력하세요"
             />
           </div>
-          <table>
-            <colgroup>
-              <col style={{ width: "1%" }} />
-              <col style={{ width: "1%" }} />
-              <col style={{ width: "3%" }} />
-              <col style={{ width: "5%" }} />
-              <col style={{ width: "2%" }} />
-              <col style={{ width: "4%" }} />
-              <col style={{ width: "4%" }} />
-            </colgroup>
-            <thead>
-              <tr>
-                <th className={MemberStyle.th_first}>
-                  <Checkbox
-                    onChange={(e) => checkbox(e.target.checked)}
-                    checked={
-                      currentUsers2.length > 0 &&
-                      currentUsers2.every((user) =>
-                        selectedIds.includes(user.id)
-                      )
-                    }
+          <div className={MemberStyle.mtable}>
+            <table>
+              <colgroup>
+                <col style={{ width: "1%" }} />
+                <col style={{ width: "1%" }} />
+                <col style={{ width: "3%" }} />
+                <col style={{ width: "5%" }} />
+                <col style={{ width: "2%" }} />
+                <col style={{ width: "4%" }} />
+                <col style={{ width: "4%" }} />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th className={MemberStyle.th_first}>
+                    <Checkbox
+                      onChange={(e) => checkbox(e.target.checked)}
+                      checked={
+                        currentUsers2.length > 0 &&
+                        currentUsers2.every((user) =>
+                          selectedIds.includes(user.id)
+                        )
+                      }
+                    />
+                  </th>
+                  <th>순번</th>
+                  <th>성함</th>
+                  <th>Email</th>
+                  <th>회원 구분</th>
+                  <th>최초 가입일</th>
+                  <th>마지막 로그인</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentUsers2.map((user, index) => (
+                  <UserList
+                    key={user.id}
+                    user={user}
+                    index={index}
+                    indexOfFirstUser2={indexOfFirstUser2}
+                    selectedIds={selectedIds}
+                    setSelectedIds={setSelectedIds}
+                    totalUsers={users.length}
                   />
-                </th>
-                <th>순번</th>
-                <th>성함</th>
-                <th>Email</th>
-                <th>회원 구분</th>
-                <th>최초 가입일</th>
-                <th>마지막 로그인</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentUsers2.map((user, index) => (
-                <UserList
-                  key={user.id}
-                  user={user}
-                  index={index}
-                  indexOfFirstUser2={indexOfFirstUser2}
-                  selectedIds={selectedIds}
-                  setSelectedIds={setSelectedIds}
-                  totalUsers={users.length}
-                />
-              ))}
-              {noResultsMessage}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan="7">
-                  <div className={MemberStyle.foot_btn}>
-                    {selectedIds.length > 0 && (
-                      <button
-                        className={MemberStyle.btn_delete}
-                        onClick={DeleteSelected}
-                      >
-                        선택 삭제 ({selectedIds.length})
-                      </button>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+                ))}
+                {noResultsMessage}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan="7">
+                    <div className={MemberStyle.foot_btn}>
+                      {selectedIds.length > 0 && (
+                        <button
+                          className={MemberStyle.btn_delete}
+                          onClick={DeleteSelected}
+                        >
+                          선택 삭제 ({selectedIds.length})
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
           <Pagination
             currentPage2={currentPage2}
             totalPages2={totalPages2}
