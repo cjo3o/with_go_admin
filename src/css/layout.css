@@ -38,8 +38,14 @@
 
 table {
     width: 100%;
+    min-width: 800px;
     border-collapse: collapse;
     table-layout: fixed;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    width: 100%;
 }
 
 th, td {
@@ -63,13 +69,15 @@ th {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .tab-and-search {
     display: flex;
     align-items: center;
     gap: 12px;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
+
 }
 
 .title {
@@ -77,6 +85,7 @@ th {
     font-weight: 600;
     margin-bottom: 20px;
     color: #333;
+    flex-shrink: 0;
 }
 
 .search-input {
@@ -139,6 +148,7 @@ th {
     pointer-events: none;
     opacity: 0.7;
 }
+
 
 @media (max-width: 767px) {
     .main {

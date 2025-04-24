@@ -51,93 +51,92 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
     const endPage = Math.min(startPage + groupSize - 1, totalPages);
 
     return (
-        <table className="common-table">
-            <thead>
-            <tr>
-                <th className="faq-col-select"><Checkbox /></th>
-                <th className="faq-col-type">구분</th>
-                <th className="faq-col-title">질문</th>
-                <th className="faq-col-content">답변</th>
-                <th className="faq-col-status">공개여부</th>
-                <th className="faq-col-date">작성일</th>
-                <th className="faq-col-actions">관리</th>
-            </tr>
-            </thead>
-            <tbody>
-            {paginatedFaqs.map((item) => (
-                <tr key={item.id}>
-                    <td><Checkbox /></td>
-                    <td>{item.category}</td>
-                    <td className="faq-col-title">{item.question}</td>
-                    <td className="faq-col-content">
-              <span
-                  className={`answer-toggle ${expanded === item.id ? 'open' : ''}`}
-                  onClick={() => toggleExpand(item.id)}
-                  dangerouslySetInnerHTML={{
-                      __html:
-                          expanded === item.id
-                              ? item.answer
-                              : item.answer?.replace(/<br\s*\/?>/gi, ' ')
-                  }}
-              ></span>
-                    </td>
-                    <td><Switch checked={item.status === '공개'} /></td>
-                    <td>{item.created_at?.slice(0, 10)}</td>
-                    <td>
-                        <button
-                            className="btn btn-edit"
-                            onClick={() => navigate(`/faq-edit/${item.id}`)}
-                        >
-                            수정
-                        </button>
-                    </td>
-                </tr>
-            ))}
-            </tbody>
-            <tfoot>
-            <tr>
-                <td colSpan="7">
-                    <div className="table-footer bottom-right-btn">
-                        <button
-                            className="btn btn-add-event"
-                            onClick={() => navigate('/faq-add')}
-                        >
-                            새 FAQ 등록
-                        </button>
-                    </div>
+        <div className="faq-list-wrapper">
+            <div className="table-wrapper">
+                <table className="faq-table common-table">
+                    <thead>
+                    <tr>
+                        <th className="faq-col-select"><Checkbox /></th>
+                        <th className="faq-col-type">구분</th>
+                        <th className="faq-col-title">질문</th>
+                        <th className="faq-col-content">답변</th>
+                        <th className="faq-col-status">공개여부</th>
+                        <th className="faq-col-date">작성일</th>
+                        <th className="faq-col-actions">관리</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {paginatedFaqs.map((item) => (
+                        <tr key={item.id}>
+                            <td><Checkbox /></td>
+                            <td>{item.category}</td>
+                            <td className="faq-col-title">{item.question}</td>
+                            <td className="faq-col-content">
+                  <span
+                      className={`answer-toggle ${expanded === item.id ? 'open' : ''}`}
+                      onClick={() => toggleExpand(item.id)}
+                      dangerouslySetInnerHTML={{
+                          __html:
+                              expanded === item.id
+                                  ? item.answer
+                                  : item.answer?.replace(/<br\s*\/?>/gi, ' ')
+                      }}
+                  ></span>
+                            </td>
+                            <td><Switch checked={item.status === '공개'} /></td>
+                            <td>{item.created_at?.slice(0, 10)}</td>
+                            <td>
+                                <button
+                                    className="btn btn-edit"
+                                    onClick={() => navigate(`/faq-edit/${item.id}`)}
+                                >
+                                    수정
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
 
-                    <div className="pagination-wrapper">
-                        <div className="pagination">
-                            <button className="group-btn" onClick={() => setCurrentPage(1)} disabled={currentGroup === 0}>
-                                <FontAwesomeIcon icon={faAnglesLeft} />
+            <div className="table-footer bottom-right-btn">
+                <button
+                    className="btn btn-add-event"
+                    onClick={() => navigate('/faq-add')}
+                >
+                    새 FAQ 등록
+                </button>
+            </div>
+
+            <div className="pagination-wrapper">
+                <div className="pagination">
+                    <button className="group-btn" onClick={() => setCurrentPage(1)} disabled={currentGroup === 0}>
+                        <FontAwesomeIcon icon={faAnglesLeft} />
+                    </button>
+                    <button className="arrow-btn" onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                    </button>
+                    {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
+                        const pageNum = startPage + i;
+                        return (
+                            <button
+                                key={pageNum}
+                                className={`page-btn ${pageNum === currentPage ? 'active' : ''}`}
+                                onClick={() => setCurrentPage(pageNum)}
+                            >
+                                {pageNum}
                             </button>
-                            <button className="arrow-btn" onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
-                                <FontAwesomeIcon icon={faChevronLeft} />
-                            </button>
-                            {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
-                                const pageNum = startPage + i;
-                                return (
-                                    <button
-                                        key={pageNum}
-                                        className={`page-btn ${pageNum === currentPage ? 'active' : ''}`}
-                                        onClick={() => setCurrentPage(pageNum)}
-                                    >
-                                        {pageNum}
-                                    </button>
-                                );
-                            })}
-                            <button className="arrow-btn" onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
-                                <FontAwesomeIcon icon={faChevronRight} />
-                            </button>
-                            <button className="group-btn" onClick={() => setCurrentPage(endPage + 1)} disabled={endPage === totalPages}>
-                                <FontAwesomeIcon icon={faAnglesRight} />
-                            </button>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            </tfoot>
-        </table>
+                        );
+                    })}
+                    <button className="arrow-btn" onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
+                        <FontAwesomeIcon icon={faChevronRight} />
+                    </button>
+                    <button className="group-btn" onClick={() => setCurrentPage(endPage + 1)} disabled={endPage === totalPages}>
+                        <FontAwesomeIcon icon={faAnglesRight} />
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 };
 
