@@ -2,12 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
-// import Select from "../../Component/Select.jsx";
-import luggage2 from "../../images/luggage_02.png"
-import luggage1 from "../../images/luggage_01.png"
-import Select_1 from "../../Component/Select_1.jsx";
-import FloatingBtn from "../../Component/ExcelDownload.jsx";
-import ExcelTable from "../../Component/ExcelTable.jsx";
+import luggage2 from "../../assets/Images/luggage_02.png"
+import luggage1 from "../../assets/Images/luggage_01.png"
+import FloatingBtn from "../../Components/ExcelDownload.jsx";
+import ExcelTable from "../../Components/ExcelTable.jsx";
 import {Button, DatePicker, Select, Input, message} from "antd";
 import dayjs from 'dayjs';
 import supabase from "../../lib/supabase.js";

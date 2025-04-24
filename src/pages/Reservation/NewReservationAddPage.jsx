@@ -18,7 +18,7 @@ import {
     Flex,
     Radio,
 } from "antd";
-import supabase from "../../SupabaseClient_evpro.js";
+import supabase from "../../lib/supabase.js";
 import bcrypt from 'bcryptjs';
 import {useNavigate} from "react-router-dom";
 

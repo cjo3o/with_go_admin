@@ -72,9 +72,9 @@ function App() {
                     <Route path="/storage/list" element={<StorageList/>}/>
                     <Route path="/storage/create" element={<StorageCreate/>}/>
                     <Route path="/storage/create/:storage_id" element={<StorageCreate />} />
-                    <Route path="/Reservation/ApplicationList" element={<ApplicationList />} />
-                    <Route path="/Reservation/NewReservationAddPage" element={<NewReservationAddPage />} />
-                    <Route path="/Reservation/Reservation" element={<Reservation />} />
+                    <Route path="/ApplicationList" element={<ApplicationList />} />
+                    <Route path="/NewReservationAddPage" element={<NewReservationAddPage />} />
+                    <Route path="/Reservation" element={<Reservation />} />
 
                     <Route path="/event/list" element={<EventList />} />
                     <Route path="/event-add" element={<EventAdd />} />
