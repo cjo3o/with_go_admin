@@ -34,17 +34,16 @@ const EditableCell = ({editing, dataIndex, title, inputType, record, index, chil
     );
 };
 
-const ExcelTable = ({showCheckbox, combinedSearchData}) => {
+const ExcelTable = ({showCheckbox, combinedSearchData, filteredData}) => {
+    const dataToRender = filteredData || combinedSearchData || [];
+
     const [form] = Form.useForm();
     const [combinedData, setCombinedData] = useState([]);
-    // const [editingKey, setEditingKey] = useState('');
     const [checkedRows, setCheckedRows] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [selectAllChecked, setSelectAllChecked] = useState(false);
     const [currentData, setCurrentData] = useState([]);
-    // const [sortOrder, setSortOrder] = useState(null);
-    // const [sortField, setSortField] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingRecord, setEditingRecord] = useState(null);
 
@@ -164,13 +163,14 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
     }, []);
 
     useEffect(() => {
-        const startIndex = (currentPage - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
-        const sliced = combinedData.slice(startIndex, endIndex);
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+        const sliced = dataToRender.slice(start, end);
 
         setCurrentData(sliced);
         setSelectAllChecked(sliced.every(item => checkedRows.includes(item.key)));
-    }, [combinedData, currentPage, pageSize, checkedRows, showCheckbox]);
+    }, [dataToRender, currentPage, pageSize, checkedRows, showCheckbox]);
+
 
     const handleDelete = key => {
         const newData = combinedData.filter(item => item.key !== key);

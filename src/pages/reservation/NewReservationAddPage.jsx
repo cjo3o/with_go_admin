@@ -16,7 +16,7 @@ import {
     Select,
     Cascader,
     Flex,
-    Radio,
+    Radio, Divider,
 } from "antd";
 import supabase from "../../lib/supabase.js";
 import bcrypt from 'bcryptjs';
@@ -244,135 +244,152 @@ function NewReservationAddPage() {
 
     return (
         <Content>
-            <div className="main_R">
-                <div className="submain_R">
-                    <div className="header_R">
-                        <h3>예약관리</h3>
+            <div className="main">
+                <div className="header">
+                    <h3>예약관리</h3>
+                </div>
+                <div className="card">
+                    <div className="title"
+                         style={{display: "flex", justifyContent: "space-between"}}
+                    >신규예약등록
+                        <Button className="customerList"
+                                onClick={handleGoToList}>목록</Button>
                     </div>
-                </div>
-                <div className="subheader_R">
-                    <p style={{fontSize: "17px", fontWeight: "bold", color: "#434343"}}>금일배송 / 보관 관리</p>
-                </div>
-            </div>
-            <div className="aa">
-                <h1 style={{fontSize: '1.5rem'}}>신규예약등록</h1>
-                <Button className="customerList" onClick={handleGoToList}>목록</Button>
-            </div>
 
-            <Row gutter={[16, 16]}>
-                <Col span={24}>
-                    <Card hoverable
-                          style={{
-                              margin: '10px 2rem',
-                              height: 'auto',
-                              backgroundColor: '#F9F9F9',
-                          }}>
-                        <Form layout="horizontal">
-                            <Form.Item
-                                label="구분"
-                                colon={false}
-                                className="separated-form-item"
-                            >
-                                <Radio.Group defaultValue={serviceType} size="middle"
-                                             onChange={handleServiceTypeChange}>
-                                    <Radio.Button value="delivery">배송</Radio.Button>
-                                    <Radio.Button value="storage">보관</Radio.Button>
-                                </Radio.Group>
-                            </Form.Item>
-                            <Form.Item
-                                label={serviceType === 'delivery' ? '예약일자' : '보관기간'}
-                                colon={false}
-                                className="separated-form-item"
-                            >
-                                <ReservationDatePicker/>
-                            </Form.Item>
-                            <Form.Item label="짐갯수" colon={false} className="separated-form-item">
-                                {[
-                                    {label: '대(30인치 이상)', onChange: handleLargeCountChange},
-                                    {label: '중(21~29인치)', onChange: handleMiddleCountChange},
-                                    {label: '소(20인치 이하)', onChange: handleSmallCountChange}
-                                ].map((item, i) => (
-                                    <div key={i} style={{display: "flex", alignItems: "center", marginBottom: '8px'}}>
-                                        <span style={{width: '120px'}}>{item.label}</span>
-                                        <Counter onCountChange={item.onChange}/>
-                                    </div>
-                                ))}
-                            </Form.Item>
-                            <Form.Item
-                                label="결제금액"
-                                colon={false}
-                                className="separated-form-item"
-                            >
-                                <PaymentDisplay amount={totalPayment}/>
-                            </Form.Item>
-                        </Form>
-                    </Card>
-                </Col>
-            </Row>
-
-            <Row gutter={[16, 16]}>
-                <Col span={24}>
-                    <Card hoverable
-                          style={{
-                              margin: '10px 2rem',
-                              height: 'auto',
-                              backgroundColor: '#F9F9F9',
-                          }}>
-                        <Form
-                            layout="horizontal"
-                            onFinish={onFinish}
-                            initialValues={{
-                                name: '',
-                                email: '',
-                                phone: '',
-                                password: '',
+                    <Row gutter={[16, 16]}>
+                        <Col span={24}>
+                            <Card styles={{
+                                body: { padding: 0 , paddingTop: 20},
                             }}
-                            style={{width: '100%', maxWidth: '450px'}}>
+                                style={{
+                                    marginBottom: '2rem',
+                                    height: 'auto',
+                                    backgroundColor: '#F9F9F9',
+                                }}>
+                                <Form layout="horizontal">
+                                    <Form.Item
+                                        label="구분"
+                                        colon={false}
+                                        className="separated-form-item"
+                                    >
+                                        <Radio.Group defaultValue={serviceType} size="middle"
+                                                     onChange={handleServiceTypeChange}>
+                                            <Radio.Button value="delivery">배송</Radio.Button>
+                                            <Radio.Button value="storage">보관</Radio.Button>
+                                        </Radio.Group>
+                                    </Form.Item>
+                                    <Divider style={{margin: '12px 0', borderColor: '#d9d9d9'}}/>
+                                    <Form.Item
+                                        label={serviceType === 'delivery' ? '예약일자' : '보관기간'}
+                                        colon={false}
+                                        className="separated-form-item"
+                                    >
+                                        <ReservationDatePicker/>
+                                    </Form.Item>
+                                    <Divider style={{margin: '12px 0', borderColor: '#d9d9d9'}}/>
+                                    <Form.Item label="짐갯수" colon={false} className="separated-form-item">
+                                        {[
+                                            {label: '대(30인치 이상)', onChange: handleLargeCountChange},
+                                            {label: '중(21~29인치)', onChange: handleMiddleCountChange},
+                                            {label: '소(20인치 이하)', onChange: handleSmallCountChange}
+                                        ].map((item, i) => (
+                                            <div key={i}
+                                                 style={{display: "flex", alignItems: "center", marginBottom: '8px'}}>
+                                                <span style={{width: '120px'}}>{item.label}</span>
+                                                <Counter onCountChange={item.onChange}/>
+                                            </div>
+                                        ))}
+                                    </Form.Item>
+                                    <Divider style={{margin: '12px 0', borderColor: '#d9d9d9'}}/>
+                                    <Form.Item
+                                        label="결제금액"
+                                        colon={false}
+                                        className="separated-form-item"
+                                    >
+                                        <PaymentDisplay amount={totalPayment}/>
+                                    </Form.Item>
+                                </Form>
+                            </Card>
+                        </Col>
+                    </Row>
 
-                            <Form.Item
-                                label="예약자명"
-                                name="name"
-                                rules={[{required: true, message: '예약자명을 입력해주세요'}]}
-                                className="separated-form-item"
-                            >
-                                <Input/>
-                            </Form.Item>
-                            <Form.Item
-                                label="이메일"
-                                name="email"
-                                rules={[{required: true, type: 'email', message: '올바른 이메일을 입력해주세요'}]}
-                                className="separated-form-item"
-                            >
-                                <Input/>
-                            </Form.Item>
-                            <Form.Item
-                                label="연락처"
-                                name="phone"
-                                rules={[
-                                    {required: true, message: '전화번호를 입력해주세요 예시 010-1234-1234'},
-                                    {pattern: /^01[016789]-\d{3,4}-\d{4}$/, message: '유효한 전화번호 형식이 아닙니다'},
-                                ]}
-                                className="separated-form-item"
-                            >
-                                <Input placeholder="010-1234-5678"/>
-                            </Form.Item>
-                            {/*<Form.Item style={{ textAlign: 'center', marginTop: 40 }}>*/}
-                            {/*</Form.Item>*/}
-                        </Form>
-                    </Card>
-                    <Button type="primary"
-                            htmlType="submit"
-                            loading={loading}
-                            style={{width: '120px',
-                                height: '40px',
-                                marginTop: 10,
-                                marginBottom: 20,
-                                textAlign: 'center'}}>
-                        등록
-                    </Button>
-                </Col>
-            </Row>
-            <div style={{textAlign: 'center'}}>
+                    <Row gutter={[16, 16]}>
+                        <Col span={24}>
+                            <Card styles={{
+                                body: { padding: 0 , paddingTop: 20},
+                            }}
+                                style={{
+                                    marginBottom: '1rem',
+                                    height: 'auto',
+                                    backgroundColor: '#F9F9F9',
+                                }}>
+                                <Form
+                                    layout="horizontal"
+                                    onFinish={onFinish}
+                                    initialValues={{
+                                        name: '',
+                                        email: '',
+                                        phone: '',
+                                    }}
+                                    style={{width: '100%'}}>
+
+                                    <Form.Item
+                                        label="예약자명"
+                                        name="name"
+                                        rules={[{required: true, message: '예약자명을 입력해주세요'}]}
+                                        className="separated-form-item"
+                                    >
+                                        <Input/>
+                                    </Form.Item>
+                                    <Divider style={{ margin: '12px 0', borderColor: '#d9d9d9' }} />
+                                    <Form.Item
+                                        label="이메일"
+                                        name="email"
+                                        rules={[{required: true, type: 'email', message: '올바른 이메일을 입력해주세요'}]}
+                                        className="separated-form-item"
+                                    >
+                                        <Input/>
+                                    </Form.Item>
+                                    <Divider style={{
+                                        margin: '16px 0',
+                                        borderTop: '1px solid #d9d9d9',
+                                        width: '100%',
+                                    }} />
+                                    <Form.Item
+                                        label="연락처"
+                                        name="phone"
+                                        rules={[
+                                            {required: true, message: '전화번호를 입력해주세요 예시 010-1234-1234'},
+                                            {pattern: /^01[016789]-\d{3,4}-\d{4}$/, message: '유효한 전화번호 형식이 아닙니다'},
+                                        ]}
+                                        className="separated-form-item"
+                                    >
+                                        <Input placeholder="010-1234-5678"/>
+                                    </Form.Item>
+                                    {/*<Form.Item style={{ textAlign: 'center', marginTop: 40 }}>*/}
+                                    {/*</Form.Item>*/}
+                                </Form>
+                            </Card>
+                            <div style={{
+                                width: '100%',
+                                textAlign: 'center'
+                            }}>
+                                <Button type="primary"
+                                        htmlType="submit"
+                                        loading={loading}
+                                        style={{
+                                            width: '100px',
+                                            height: '40px',
+                                            // marginTop: 10,
+                                            // marginBottom: 20,
+                                            // textAlign: 'center'
+                                        }}>
+                                    등록
+                                </Button>
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
             </div>
         </Content>
     );

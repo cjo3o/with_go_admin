@@ -10,10 +10,24 @@ const FloatingBtn = ({ onClick }) => {
                 variant="extended"
                 color="primary"
                 onClick={onClick} // ✅ 클릭 시 다운로드 실행
-                style={{
+                sx={{
                     height: '40px',
+                    minHeight: '40px',
+                    lineHeight: '40px',
+                    padding: '0 16px',
                     borderRadius: '5px',
                     zIndex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    backgroundColor: '#1677ff', // 선택사항
+                    boxShadow: 'none !important',   // 💥 완전 강제
+                    '&:hover': {
+                        boxShadow: 'none !important', // 💥 호버 시에도 강제
+                        backgroundColor: '#1677ff',   // 호버 시 색 유지
+                    },
+                    '&.MuiFab-root': {
+                        boxShadow: 'none !important',
+                    },
                 }}
             >
                 <Addicon sx={{ mr: 1 }} />

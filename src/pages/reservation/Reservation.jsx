@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
-import luggage2 from "../../assets/Images/luggage_02.png"
-import luggage1 from "../../assets/Images/luggage_01.png"
+import luggage2 from "../../Images/luggage02.png"
+import luggage1 from "../../Images/luggage01.png"
 import FloatingBtn from "../../Components/ExcelDownload.jsx";
 import ExcelTable from "../../Components/ExcelTable.jsx";
 import {Button, DatePicker, Select, Input, message, Card} from "antd";
@@ -359,32 +359,32 @@ function Reservation() {
                 </div>
                 <div className="content_R">
                     <div className="content_second">
-                        <h3>전체 예약건수</h3>
+                        <h2>전체 예약건수</h2>
                         <h1>{storageCount + deliveryCount} 건</h1>
                     </div>
                     <div className="content_second_one">
                         <img src={luggage2} alt="배송캐리어" style={{marginLeft: "30px"}}/>
                         <div>
-                            <h3>배송예약</h3>
+                            <h2>배송예약</h2>
                             <h1>{deliveryCount}건</h1>
                         </div>
                         <img src={luggage1} alt="보관캐리어"/>
                         <div>
-                            <h3>보관예약</h3>
+                            <h2>보관예약</h2>
                             <h1>{storageCount}건</h1>
                         </div>
                         <div className="border-right"></div>
                         <div className="border-left">
-                            <div className="complete">
-                                <h3>처리완료</h3>
+                            <div>
+                                <h3 className="complete">처리완료</h3>
                                 <h1>{statusCount.처리완료}건</h1>
                             </div>
-                            <div className="cancel">
-                                <h3>취소</h3>
+                            <div>
+                                <h3 className="cancel">취소</h3>
                                 <h1>{statusCount.취소}건</h1>
                             </div>
-                            <div className="not-yet">
-                                <h3 style={{border: "3px solid red"}}>미배정</h3>
+                            <div>
+                                <h3 className="not-yet" style={{color: '#f60707'}}>미배정</h3>
                                 <h1>{statusCount.미배정}건</h1>
                             </div>
                         </div>
@@ -402,10 +402,10 @@ function Reservation() {
                             <Select.Option value="driver">배정기사명</Select.Option>
                         </Select>
                         <Input
+                            className="custom-search-input"
                             placeholder="검색어 입력"
                             value={searchKeyword}
                             onChange={(e) => setSearchKeyword(e.target.value)}
-                            style={{width: 200, marginRight: 8}}
                         />
                         <Button type="primary" onClick={handleSearch}>검색</Button>
                     </div>
@@ -417,7 +417,9 @@ function Reservation() {
                         </div>
                         <Select
                             defaultValue="recent"
-                            style={{width: 140, height: 40, marginRight: 10}}
+                            style={{width: 120,
+                                height: 40,
+                                marginRight: 8}}
                             onChange={(value) => setSortOption(value)}
                         >
                             <Select.Option value="recent">최근등록순</Select.Option>
