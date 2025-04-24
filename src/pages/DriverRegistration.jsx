@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import DrStyle from "../css/DriverRegistration.module.css";
 import { Button } from "antd";
 import { supabase } from "../lib/supabase";
@@ -31,6 +31,8 @@ function DriverRegistration() {
   const [attachFile2, setAttachFile2] = useState(null);
   const location = useLocation();
   const editDriver = location.state?.driver;
+  const nameInputRef = useRef(null);
+
 
   const [formData2, setFormData2] = useState({
     name: editDriver?.name || "",
@@ -119,6 +121,10 @@ function DriverRegistration() {
     if (editDriver?.photo_url) {
       setPreviewImage2(editDriver.photo_url);
     }
+
+    if (nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
   }, [editDriver]);
 
   return (
@@ -151,21 +157,21 @@ function DriverRegistration() {
               <div className={DrStyle.formright}>
                 <div className={`${DrStyle.Group} ${DrStyle.name}`}>
                   <label htmlFor="name">이름</label>
-                  <input type="text" name="name" value={formData2.name} onChange={handleChange2} />
+                  <input type="text" name="name" value={formData2.name} onChange={handleChange2} ref={nameInputRef} autoComplete="off" required />
                 </div>
                 <div className={`${DrStyle.Group} ${DrStyle.name}`}>
                   <label htmlFor="phone">연락처</label>
-                  <input type="number" name="phone" value={formData2.phone} onChange={handleChange2} />
+                  <input type="number" name="phone" value={formData2.phone} onChange={handleChange2} autoComplete="off" required />
                 </div>
                 <div className={`${DrStyle.Group} ${DrStyle.email}`}>
                   <label htmlFor="email">이메일</label>
-                  <input type="email" name="email"  value={formData2.email} onChange={handleChange2} />
+                  <input type="email" name="email"  value={formData2.email} onChange={handleChange2} autoComplete="off" required />
                 </div>
               </div>
             </div>
             <div className={`${DrStyle.Group} ${DrStyle.address}`}>
               <label htmlFor="address">주소</label>
-              <input type="text" name="address" value={formData2.address} onChange={handleChange2} />
+              <input type="text" name="address" value={formData2.address} onChange={handleChange2} autoComplete="off" required />
             </div>
             <div className={`${DrStyle.Group} ${DrStyle.memo}`}>
               <label htmlFor="memo">메모</label>
