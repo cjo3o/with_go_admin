@@ -48,6 +48,9 @@ import FAQTabspage from './pages/AddFunction/FAQTabspage.jsx';
 
 import InquiryTabs from './pages/AddFunction/InquiryTabspage.jsx';
 import InquiryEdit from './pages/AddFunction/InquiryEdit.jsx';
+import ApplicationList from "./pages/Reservation/ApplicationList.jsx";
+import NewReservationAddPage from "./pages/Reservation/NewReservationAddPage.jsx";
+import Reservation from "./pages/Reservation/Reservation.jsx";
 
 function App() {
     const [count, setCount] = useState(0);
@@ -69,6 +72,9 @@ function App() {
                     <Route path="/storage/list" element={<StorageList/>}/>
                     <Route path="/storage/create" element={<StorageCreate/>}/>
                     <Route path="/storage/create/:storage_id" element={<StorageCreate />} />
+                    <Route path="/Reservation/ApplicationList" element={<ApplicationList />} />
+                    <Route path="/Reservation/NewReservationAddPage" element={<NewReservationAddPage />} />
+                    <Route path="/Reservation/Reservation" element={<Reservation />} />
 
                     <Route path="/event/list" element={<EventList />} />
                     <Route path="/event-add" element={<EventAdd />} />

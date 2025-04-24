@@ -79,17 +79,17 @@ function Sidebar(props) {
                                             <li
                                                 onClick={boolSidebar}
                                             >
-                                                <Link to="">배송/보관관리</Link>
+                                                <Link to="/Reservation">배송/보관관리</Link>
                                             </li>
                                             <li
                                                 onClick={boolSidebar}
                                             >
-                                                <Link to="">예약신청목록</Link>
+                                                <Link to="/ApplicationList">예약신청목록</Link>
                                             </li>
                                             <li
                                                 onClick={boolSidebar}
                                             >
-                                                <Link to="">신규예약등록</Link>
+                                                <Link to="/NewReservationAddPage">신규예약등록</Link>
                                             </li>
                                         </ul>
                                     </div>
