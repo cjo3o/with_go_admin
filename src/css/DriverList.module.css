@@ -7,6 +7,18 @@
   min-width: 250px;
 }
 
+.card {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  background: white;
+  flex-direction: column;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
 .DL_top {
   font-size: 24px;
   font-weight: bold;
@@ -107,13 +119,18 @@ tfoot td {
   cursor: default !important;
 }
 
-.dtable table {
-  min-width: 1360px;
+.DL_main {
+  min-width: 1440px;
 }
 
 @media (max-width: 768px) {
   .content {
     width: 100%;
+  }
+
+  .DL_main {
+    width: 400px;
+    min-width: 100%;
   }
   .dtable {
     overflow:hidden;

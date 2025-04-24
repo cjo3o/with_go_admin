@@ -1,6 +1,5 @@
 .content {
-  flex: 1;
-  padding: 70px 60px 0;
+  min-width: 90%;
 }
 
 .Admin_top {
@@ -363,16 +362,26 @@ tr {
   cursor: auto !important;
 }
 
-@media (max-width: 768px) {
-  .content {
-    width: 100%;
-    padding: 60px 20px 0;
-  }
+.Admin_content,
+.list {
+  min-width: 1350px;
+}
 
+@media (max-width: 768px) {
+  .Admin_top {
+    min-width: 445px;
+  }
   .Admin_content {
+    width: 445px;
+    min-width: 100%;
     margin-top: 10px;
     flex-direction: column;
     align-items: center;
+  }
+
+  .list {
+    width: 445px;
+    min-width: 100%;
   }
 
   .top,

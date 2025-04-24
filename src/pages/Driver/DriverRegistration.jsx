@@ -135,9 +135,9 @@ function DriverRegistration() {
 
   return (
     <>
-      <div className={DrStyle.content}>
+      <div className='main'>
         <div className={DrStyle.DR_top}>기사 관리</div>
-        <div className={`${DrStyle.DR_main} card`}>
+        <div className={`${DrStyle.DR_main} ${DrStyle.card}`}>
           <div className={DrStyle.MainTop}>
             <h3>기사 등록</h3>
             <Button type="primary" onClick={goToDriverList}>
@@ -211,7 +211,7 @@ function DriverRegistration() {
                 </div>
               </div>
             </div>
-            <div className={`${DrStyle.Group} ${DrStyle.email}`}>
+            <div className={`${DrStyle.Group} ${DrStyle.phone}`}>
               <label htmlFor="phone"><em className={DrStyle.fem}>*</em>연락처</label>
               <input type="number" name="phone" value={formData2.phone} onChange={handleChange2} placeholder="- 없이 입력하세요." autoComplete="off" required />
             </div>

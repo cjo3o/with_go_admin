@@ -120,9 +120,9 @@ function DriverList() {
 
   return (
     <>
-      <div className={DlStyle.content}>
+      <div className='main'>
         <div className={DlStyle.DL_top}>기사 관리</div>
-        <div className={`${DlStyle.DL_main} card`}>
+        <div className={`${DlStyle.DL_main} ${DlStyle.card}`}>
           <div className={DlStyle.MainTop}>
             <h3>기사 목록</h3>
             <LookupSearch onSearch={handleSearch3} />
