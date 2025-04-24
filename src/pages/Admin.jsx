@@ -24,13 +24,13 @@ function Admin() {
   const [storage, setstorage] = useState([]);
   const [twoData, settwoData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusLogs, setStatusLogs] = useState(
-      0);
+  const [statusLogs, setStatusLogs] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [canceledPrice, setCanceledPrice] = useState(0);
   const actualPayment = totalPrice - canceledPrice;
   const [filterType, setFilterType] = useState("");
-
+  const [completeCount, setCompleteCount] = useState(0);
+  const [cancelCount, setCancelCount] = useState(0);
   const [todayCount, setTodayCount] = useState(0);
   const [todayDeliveryCount, setTodayDeliveryCount] = useState(0);
   const [todayStorageCount, setTodayStorageCount] = useState(0);
