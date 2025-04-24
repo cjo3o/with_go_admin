@@ -156,21 +156,32 @@ function DriverRegistration() {
               </div>
               <div className={DrStyle.formright}>
                 <div className={`${DrStyle.Group} ${DrStyle.name}`}>
-                  <label htmlFor="name">이름</label>
+                  <label htmlFor="name"><em className={DrStyle.fem}>*</em>이름</label>
                   <input type="text" name="name" value={formData2.name} onChange={handleChange2} ref={nameInputRef} autoComplete="off" required />
                 </div>
-                <div className={`${DrStyle.Group} ${DrStyle.name}`}>
-                  <label htmlFor="phone">연락처</label>
-                  <input type="number" name="phone" value={formData2.phone} onChange={handleChange2} autoComplete="off" required />
+                <div className={`${DrStyle.Group} ${DrStyle.birthday}`}>
+                  <label htmlFor="birthday"><em className={DrStyle.fem}>*</em>생년월일</label>
+                  <input type="number" name="birthday" value={formData2.email} onChange={handleChange2} placeholder="생년월일 6자리" autoComplete="off" required />
                 </div>
-                <div className={`${DrStyle.Group} ${DrStyle.email}`}>
-                  <label htmlFor="email">이메일</label>
-                  <input type="email" name="email"  value={formData2.email} onChange={handleChange2} autoComplete="off" required />
+                <div className={`${DrStyle.Group}`}>
+                  <label htmlFor="gender"><em className={DrStyle.fem}>*</em>성별</label>
+                  <div className="gender2">
+                  <input type="radio" className={DrStyle.genra} name="men" id="male" /><label htmlFor="male">남자</label>
+                  <input type="radio" className={DrStyle.genra} name="men" id="female" /><label htmlFor="female">여자</label>
+                  </div>
                 </div>
               </div>
             </div>
+            <div className={`${DrStyle.Group} ${DrStyle.email}`}>
+                  <label htmlFor="phone"><em className={DrStyle.fem}>*</em>연락처</label>
+                  <input type="number" name="phone" value={formData2.phone} onChange={handleChange2} placeholder="- 없이 입력하세요." autoComplete="off" required />
+                </div>
+            <div className={`${DrStyle.Group} ${DrStyle.email}`}>
+                  <label htmlFor="email"><em className={DrStyle.fem}>*</em>이메일</label>
+                  <input type="email" name="email"  value={formData2.email} onChange={handleChange2} autoComplete="off" required />
+                </div>
             <div className={`${DrStyle.Group} ${DrStyle.address}`}>
-              <label htmlFor="address">주소</label>
+              <label htmlFor="address"><em className={DrStyle.fem}>*</em>주소</label>
               <input type="text" name="address" value={formData2.address} onChange={handleChange2} autoComplete="off" required />
             </div>
             <div className={`${DrStyle.Group} ${DrStyle.memo}`}>

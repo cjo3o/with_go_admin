@@ -32,7 +32,7 @@
 .Group label {
   display: inline-block;  
   width: 70px;
-  text-align: center;
+  text-align: left;
   font-weight: 600;
   color: #333;
 }
@@ -45,6 +45,9 @@
   transition: border-color 0.3s ease;
 }
 
+.genra {
+  gap:1rem;
+}
 
 .Group textarea {
   flex: 1;
@@ -53,6 +56,11 @@
   border-radius: 6px;
   font-size: 14px;
   transition: border-color 0.3s ease;
+}
+
+.gender2 {
+  width: 20px;
+  justify-content: center;
 }
 
 .memo {
@@ -64,10 +72,13 @@
   height: 150px;
   resize: none;
 }
-
-.name input,
-.email input {
+.birthday input,
+.name input {
   min-width: 30%;
+}
+.email input{
+  width: 42%;
+  min-width: 415px;
 }
 
 .address input {
@@ -88,6 +99,7 @@ input[type="text"]{
 }
 
 .imge input[type="file"] {
+  font-size: 12px;
   margin-top: 10px;
 }
 
@@ -117,6 +129,13 @@ input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.fem {
+    color: red;
+    font-style: normal;
+    vertical-align: -3px;
+    margin-right: 2px;
 }
 
 @media (max-width: 768px) {

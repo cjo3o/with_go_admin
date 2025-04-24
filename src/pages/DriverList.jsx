@@ -130,13 +130,14 @@ function DriverList() {
           <div className={DlStyle.dtable}>
             <table>
               <colgroup>
-                <col style={{ width: "1%" }} />
-                <col style={{ width: "2%" }} />
-                <col style={{ width: "3%" }} />
                 <col style={{ width: "2%" }} />
                 <col style={{ width: "2%" }} />
+                <col style={{ width: "4%" }} />
                 <col style={{ width: "3%" }} />
                 <col style={{ width: "3%" }} />
+                <col style={{ width: "3%" }} />
+                <col style={{ width: "4%" }} />
+                <col style={{ width: "5%" }} />
                 <col style={{ width: "8%" }} />
                 <col style={{ width: "2%" }} />
                 <col style={{ width: "2%" }} />
@@ -153,6 +154,7 @@ function DriverList() {
                   <th>사진</th>
                   <th>아이디</th>
                   <th>이름</th>
+                  <th>생년월일</th>
                   <th>연락처</th>
                   <th>이메일</th>
                   <th>주소</th>
@@ -179,13 +181,13 @@ function DriverList() {
                   })
                 ) : (
                   <tr>
-                    <td colSpan="9">등록된 기사가 없습니다.</td>
+                    <td colSpan="11">등록된 기사가 없습니다.</td>
                   </tr>
                 )}
               </tbody>
               <tfoot>
                 <tr>
-                  <td colSpan="9">
+                  <td colSpan="11">
                     <div className={DlStyle.foot_btn}>
                       {selectedDrivers.length > 0 && (
                         <button

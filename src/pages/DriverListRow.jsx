@@ -63,6 +63,7 @@ function DriverListRow({
       </td>
       <td>{driver.driver_id}</td>
       <td>{driver.name}</td>
+      <td>{driver.birthday}</td>
       <td>
         {driver.phone
           ? driver.phone.length === 11
