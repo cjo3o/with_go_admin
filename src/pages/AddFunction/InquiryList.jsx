@@ -81,7 +81,7 @@ const InquiryList = ({ filterType = '', searchKeyword = '' }) => {
             </thead>
             <tbody>
             {currentItems.map((item, idx) => (
-                <tr key={item.text_num}>
+                <tr key={item.text_num} className={item.stat?.trim() === '답변완료' ? 'inquiry-answered' : ''}>
                     <td>
                         <Checkbox
                             checked={selectedIds.includes(item.text_num)}

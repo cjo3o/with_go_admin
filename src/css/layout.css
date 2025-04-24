@@ -145,3 +145,7 @@ th {
         margin-left: 0;
     }
 }
+
+.inquiry-answered {
+    background-color: #fff7d6;
+}
