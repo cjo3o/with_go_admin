@@ -62,6 +62,7 @@ function EventList() {
       <div className="header">이벤트 · 프로모션 관리</div>
       <div className="card">
         <div className="title">이벤트 리스트</div>
+        <div className="table-wrapper">
         <table className="event-table common-table">
           <thead>
             <tr>
@@ -115,18 +116,18 @@ function EventList() {
             ))}
           </tbody>
         </table>
-
+      </div>
         <div className="table-footer bottom-right-btn">
           {selectedEvents.length > 0 && (
-            <button className="btn btn-delete" onClick={handleBulkDelete}>
-              선택 삭제 ({selectedEvents.length})
-            </button>
+              <button className="btn btn-delete" onClick={handleBulkDelete}>
+                선택 삭제 ({selectedEvents.length})
+              </button>
           )}
           <button className="btn btn-add-confirm" onClick={() => navigate('/event-add')}>
             새 이벤트 등록
           </button>
         </div>
-      </div>
+    </div>
     </div>
   );
 }

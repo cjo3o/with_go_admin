@@ -141,6 +141,8 @@ tfoot td .table-footer {
     width: 100%;
     padding-right: 35px;
     margin-top: 16px;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .default-style .ant-btn-primary {

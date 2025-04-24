@@ -175,6 +175,7 @@ function StorageCreate() {
                             autoComplete="off"
                             value={form.name}
                             onChange={handleChange}
+                            required
                         />
                     </div>
                     <div className='group'>
@@ -185,6 +186,7 @@ function StorageCreate() {
                             autoComplete="off"
                             value={form.address}
                             onChange={handleChange}
+                            required
                         />
                     </div>
                     <div className='group'>
@@ -195,6 +197,7 @@ function StorageCreate() {
                             autoComplete="off"
                             value={form.phone}
                             onChange={handleChange}
+                            required
                         />
                     </div>
                     <div className='group'>
@@ -205,6 +208,7 @@ function StorageCreate() {
                             autoComplete="off"
                             value={form.map_url}
                             onChange={handleChange}
+                            required
                         />
                     </div>
                     <div className='group'>
