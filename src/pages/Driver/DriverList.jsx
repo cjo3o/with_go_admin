@@ -37,11 +37,10 @@ function DriverList() {
     const checked = e.target.checked;
     setIsAllChecked(checked);
     if (checked) {
-      setSelectedDrivers(filteredDrivers.map(driver => driver.id));
+      setSelectedDrivers(filteredDrivers.map((driver) => driver.id));
     } else {
       setSelectedDrivers([]);
     }
-
   };
 
   const handleDriverCheck = (e, driverId) => {
@@ -49,11 +48,11 @@ function DriverList() {
     if (checked) {
       setSelectedDrivers([...selectedDrivers, driverId]);
     } else {
-      setSelectedDrivers(selectedDrivers.filter(id => id !== driverId));
+      setSelectedDrivers(selectedDrivers.filter((id) => id !== driverId));
     }
   };
 
-  const filteredDrivers = drivers.filter(driver => {
+  const filteredDrivers = drivers.filter((driver) => {
     if (!searchTerm3) return true;
     return (
       driver.name.toLowerCase().includes(searchTerm3.toLowerCase()) ||
@@ -71,33 +70,35 @@ function DriverList() {
   };
 
   const DeleteSelected = async () => {
-    if (!window.confirm('선택한 기사를 삭제하시겠습니까?')) return;
+    if (!window.confirm("선택한 기사를 삭제하시겠습니까?")) return;
 
     try {
       const { error } = await supabase
-        .from('DriverList')
+        .from("DriverList")
         .delete()
-        .in('id', selectedDrivers);
+        .in("id", selectedDrivers);
 
       if (error) {
         console.error(error);
-        alert('삭제 중 오류가 발생했습니다.');
+        alert("삭제 중 오류가 발생했습니다.");
         return;
       }
 
-      setDrivers(drivers.filter(driver => !selectedDrivers.includes(driver.id)));
+      setDrivers(
+        drivers.filter((driver) => !selectedDrivers.includes(driver.id))
+      );
       setSelectedDrivers([]);
-      alert('삭제 완료되었습니다.');
+      alert("삭제 완료되었습니다.");
     } catch (err) {
       console.error(err);
-      alert('삭제 중 오류가 발생했습니다.');
+      alert("삭제 중 오류가 발생했습니다.");
     }
   };
 
   useEffect(() => {
     setIsAllChecked(
       filteredDrivers.length > 0 &&
-      filteredDrivers.every(driver => selectedDrivers.includes(driver.id))
+        filteredDrivers.every((driver) => selectedDrivers.includes(driver.id))
     );
   }, [filteredDrivers, selectedDrivers]);
 
@@ -110,7 +111,10 @@ function DriverList() {
   };
 
   // 현재 페이지에 맞는 데이터를 필터링
-  const currentDrivers = filteredDrivers.slice((currentPage3 - 1) * usersPerPage3, currentPage3 * usersPerPage3);
+  const currentDrivers = filteredDrivers.slice(
+    (currentPage3 - 1) * usersPerPage3,
+    currentPage3 * usersPerPage3
+  );
 
   const totalPages3 = Math.ceil(filteredDrivers.length / usersPerPage3);
 
@@ -121,80 +125,82 @@ function DriverList() {
         <div className={`${DlStyle.DL_main} card`}>
           <div className={DlStyle.MainTop}>
             <h3>기사 목록</h3>
-            <LookupSearch
-              onSearch={handleSearch3}
-            />
+            <LookupSearch onSearch={handleSearch3} />
           </div>
-          <table>
-            <colgroup>
-              <col style={{ width: "1%" }} />
-              <col style={{ width: "2%" }} />
-              <col style={{ width: "3%" }} />
-              <col style={{ width: "2%" }} />
-              <col style={{ width: "2%" }} />
-              <col style={{ width: "3%" }} />
-              <col style={{ width: "3%" }} />
-              <col style={{ width: "8%" }} />
-              <col style={{ width: "2%" }} />
-              <col style={{ width: "2%" }} />
-            </colgroup>
-            <thead>
-              <tr>
-                <th className={DlStyle.th_first}>
-                  <Checkbox
-                    onChange={handleAllCheck}
-                    checked={isAllChecked}
-                  />
-                </th>
-                <th>순번</th>
-                <th>사진</th>
-                <th>아이디</th>
-                <th>이름</th>
-                <th>연락처</th>
-                <th>이메일</th>
-                <th>주소</th>
-                <th>첨부파일</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentDrivers.length > 0 ? (
-                currentDrivers.map((driver) => {
-                  const orderNum = drivers.length - drivers.findIndex(d => d.id === driver.id);
-
-                  return (
-                    <DriverListRow
-                      key={driver.id}
-                      driver={{ ...driver, orderNum }}
-                      isChecked={selectedDrivers.includes(driver.id)}
-                      onDriverCheck={(e) => handleDriverCheck(e, driver.id)}
-                      onDriverClick={() => openModal(driver)}
-                    />
-                  );
-                })
-              ) : (
+          <div className={DlStyle.dtable}>
+            <table>
+              <colgroup>
+                <col style={{ width: "1%" }} />
+                <col style={{ width: "2%" }} />
+                <col style={{ width: "3%" }} />
+                <col style={{ width: "2%" }} />
+                <col style={{ width: "2%" }} />
+                <col style={{ width: "3%" }} />
+                <col style={{ width: "3%" }} />
+                <col style={{ width: "8%" }} />
+                <col style={{ width: "2%" }} />
+                <col style={{ width: "2%" }} />
+              </colgroup>
+              <thead>
                 <tr>
-                  <td colSpan="9">등록된 기사가 없습니다.</td>
+                  <th className={DlStyle.th_first}>
+                    <Checkbox
+                      onChange={handleAllCheck}
+                      checked={isAllChecked}
+                    />
+                  </th>
+                  <th>순번</th>
+                  <th>사진</th>
+                  <th>아이디</th>
+                  <th>이름</th>
+                  <th>연락처</th>
+                  <th>이메일</th>
+                  <th>주소</th>
+                  <th>첨부파일</th>
+                  <th></th>
                 </tr>
-              )}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan="9">
-                  <div className={DlStyle.foot_btn}>
-                    {selectedDrivers.length > 0 && (
-                      <button
-                        className={DlStyle.btn_delete}
-                        onClick={DeleteSelected}
-                      >
-                        선택 삭제 ({selectedDrivers.length})
-                      </button>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+              </thead>
+              <tbody>
+                {currentDrivers.length > 0 ? (
+                  currentDrivers.map((driver) => {
+                    const orderNum =
+                      drivers.length -
+                      drivers.findIndex((d) => d.id === driver.id);
+
+                    return (
+                      <DriverListRow
+                        key={driver.id}
+                        driver={{ ...driver, orderNum }}
+                        isChecked={selectedDrivers.includes(driver.id)}
+                        onDriverCheck={(e) => handleDriverCheck(e, driver.id)}
+                        onDriverClick={() => openModal(driver)}
+                      />
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan="9">등록된 기사가 없습니다.</td>
+                  </tr>
+                )}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan="9">
+                    <div className={DlStyle.foot_btn}>
+                      {selectedDrivers.length > 0 && (
+                        <button
+                          className={DlStyle.btn_delete}
+                          onClick={DeleteSelected}
+                        >
+                          선택 삭제 ({selectedDrivers.length})
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
           <Pagination
             currentPage2={currentPage3}
             totalPages2={totalPages3}
@@ -208,7 +214,7 @@ function DriverList() {
         onCancel={closeModal}
       />
     </>
-  )
+  );
 }
 
 export default DriverList;

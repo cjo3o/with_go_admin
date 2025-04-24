@@ -110,3 +110,22 @@ tfoot td {
 .noPointer {
   cursor: default !important;
 }
+
+.dtable table {
+  min-width: 1380px;
+}
+
+@media (max-width: 768px) {
+  .content {
+    width: 100%;
+  }
+  .dtable {
+    overflow:hidden;
+    overflow-x: scroll;
+    width: 100%;
+  }
+
+  .dtable table {
+    min-width: 1380px;
+  }
+}
