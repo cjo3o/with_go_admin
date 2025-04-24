@@ -133,14 +133,14 @@ function DriverList() {
                 <col style={{ width: "2%" }} />
                 <col style={{ width: "2%" }} />
                 <col style={{ width: "4%" }} />
-                <col style={{ width: "3%" }} />
-                <col style={{ width: "3%" }} />
+                <col style={{ width: "4%" }} />
+                <col style={{ width: "4%" }} />
                 <col style={{ width: "3%" }} />
                 <col style={{ width: "4%" }} />
                 <col style={{ width: "5%" }} />
-                <col style={{ width: "8%" }} />
-                <col style={{ width: "2%" }} />
-                <col style={{ width: "2%" }} />
+                <col style={{ width: "5%" }} />
+                <col style={{ width: "4%" }} />
+                <col style={{ width: "4%" }} />
               </colgroup>
               <thead>
                 <tr>
@@ -155,9 +155,9 @@ function DriverList() {
                   <th>아이디</th>
                   <th>이름</th>
                   <th>생년월일</th>
+                  <th>성별</th>
                   <th>연락처</th>
                   <th>이메일</th>
-                  <th>주소</th>
                   <th>첨부파일</th>
                   <th></th>
                 </tr>

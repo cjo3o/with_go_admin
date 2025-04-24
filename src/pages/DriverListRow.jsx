@@ -13,7 +13,7 @@ function DriverListRow({
   const navigate = useNavigate();
 
   const handleEditClick2 = (e) => {
-    e.stopPropagation(); // 행의 클릭 이벤트 막기
+    e.stopPropagation();
     navigate("/DriverRegistration", { state: { driver } });
   };
 
@@ -30,7 +30,6 @@ function DriverListRow({
     const ignoredTds = ["tdCenter", "noPointer"];
     const targetTd = e.target.closest("td");
 
-    // 클릭된 <td>의 className이 무시 대상이라면 return
     if (
       targetTd &&
       ignoredTds.some((className) =>
@@ -40,12 +39,11 @@ function DriverListRow({
       return;
     }
 
-    // 체크박스와 링크는 기존대로 무시
     if (e.target.closest('input[type="checkbox"]') || e.target.closest("a") || e.target.closest("button")) {
       return;
     }
 
-    onDriverClick(); // 모달 열기
+    onDriverClick();
   };
 
   return (
@@ -64,6 +62,7 @@ function DriverListRow({
       <td>{driver.driver_id}</td>
       <td>{driver.name}</td>
       <td>{driver.birthday}</td>
+      <td>{driver.gender}</td>
       <td>
         {driver.phone
           ? driver.phone.length === 11
@@ -72,7 +71,6 @@ function DriverListRow({
           : "없음"}
       </td>
       <td>{driver.email}</td>
-      <td>{driver.address}</td>
       <td className={DlStyle.noPointer}>
         {driver.file_url ? (
           <a

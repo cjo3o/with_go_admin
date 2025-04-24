@@ -37,11 +37,13 @@ function DriverRegistration() {
   const [formData2, setFormData2] = useState({
     name: editDriver?.name || "",
     phone: editDriver?.phone || "",
+    birthday: editDriver?.birthday || "",
     email: editDriver?.email || "",
     address: editDriver?.address || "",
     memo: editDriver?.memo || "",
     photo_url: editDriver?.photo_url || "",
     file_url: editDriver?.file_url || "",
+    gender: editDriver?.gender || "",
   });
 
   const handleImageChange2 = (e) => {
@@ -62,6 +64,11 @@ function DriverRegistration() {
 
   const handleChange2 = (e) => {
     const { name, value } = e.target;
+
+    if (name === "birthday") {
+      if (!/^\d*$/.test(value) || value.length > 6) return;
+    }
+
     setFormData2((prev) => ({
       ...prev,
       [name]: value,
@@ -85,10 +92,10 @@ function DriverRegistration() {
       ...formData2,
       photo_url: photoUrl,
       file_url: fileUrl,
+      password: formData2.birthday
     };
 
     if (editDriver) {
-      // ✅ 수정 모드: update
       const { error } = await supabase
         .from("DriverList")
         .update(dataToSave)
@@ -101,7 +108,6 @@ function DriverRegistration() {
         navigate2("/DriverList");
       }
     } else {
-      // ✅ 등록 모드: insert
       const { error } = await supabase.from("DriverList").insert([dataToSave]);
 
       if (error) {
@@ -156,36 +162,77 @@ function DriverRegistration() {
               </div>
               <div className={DrStyle.formright}>
                 <div className={`${DrStyle.Group} ${DrStyle.name}`}>
-                  <label htmlFor="name"><em className={DrStyle.fem}>*</em>이름</label>
+                  <label htmlFor="name"><em className={DrStyle.fem}>*</em>
+                    <span>이</span>
+                    <span style={{ marginRight: '25px' }}></span>
+                    <span>름</span>
+                  </label>
                   <input type="text" name="name" value={formData2.name} onChange={handleChange2} ref={nameInputRef} autoComplete="off" required />
                 </div>
                 <div className={`${DrStyle.Group} ${DrStyle.birthday}`}>
                   <label htmlFor="birthday"><em className={DrStyle.fem}>*</em>생년월일</label>
-                  <input type="number" name="birthday" value={formData2.email} onChange={handleChange2} placeholder="생년월일 6자리" autoComplete="off" required />
+                  <input type="number"
+                    name="birthday"
+                    value={formData2.birthday}
+                    onChange={handleChange2}
+                    onKeyDown={(e) => {
+                      const invalidChars = ["e", "E", "+", "-", "."];
+                      if (invalidChars.includes(e.key)) {
+                        e.preventDefault();
+                      }
+                    }}
+                    onPaste={(e) => {
+                      const paste = e.clipboardData.getData("text");
+                      if (!/^\d{1,6}$/.test(paste)) {
+                        e.preventDefault();
+                      }
+                    }}
+                    placeholder="생년월일 6자리"
+                    autoComplete="off"
+                    inputMode="numeric"
+                    required />
                 </div>
-                <div className={`${DrStyle.Group}`}>
-                  <label htmlFor="gender"><em className={DrStyle.fem}>*</em>성별</label>
-                  <div className="gender2">
-                  <input type="radio" className={DrStyle.genra} name="men" id="male" /><label htmlFor="male">남자</label>
-                  <input type="radio" className={DrStyle.genra} name="men" id="female" /><label htmlFor="female">여자</label>
+                <div className={`${DrStyle.Group} ${DrStyle.gender4}`}>
+                  <label htmlFor="gender3"><em className={DrStyle.fem}>*</em>
+                    <span>성</span>
+                    <span style={{ marginRight: '25px' }}></span>
+                    <span>별</span>
+                  </label>
+                  <div className={DrStyle.gender2}>
+                    <input type="radio" name="gender" id="male" value="남"
+                      checked={formData2.gender === "남"}
+                      onChange={handleChange2} required />
+                    <label htmlFor="male" style={{ paddingLeft: "10px", width: "35px" }}>남</label>
+                    <input type="radio" name="gender" id="female" value="여"
+                      checked={formData2.gender === "여"}
+                      onChange={handleChange2} required />
+                    <label htmlFor="female" style={{ paddingLeft: "10px", width: "35px" }}>여</label>
                   </div>
                 </div>
               </div>
             </div>
             <div className={`${DrStyle.Group} ${DrStyle.email}`}>
-                  <label htmlFor="phone"><em className={DrStyle.fem}>*</em>연락처</label>
-                  <input type="number" name="phone" value={formData2.phone} onChange={handleChange2} placeholder="- 없이 입력하세요." autoComplete="off" required />
-                </div>
+              <label htmlFor="phone"><em className={DrStyle.fem}>*</em>연락처</label>
+              <input type="number" name="phone" value={formData2.phone} onChange={handleChange2} placeholder="- 없이 입력하세요." autoComplete="off" required />
+            </div>
             <div className={`${DrStyle.Group} ${DrStyle.email}`}>
-                  <label htmlFor="email"><em className={DrStyle.fem}>*</em>이메일</label>
-                  <input type="email" name="email"  value={formData2.email} onChange={handleChange2} autoComplete="off" required />
-                </div>
+              <label htmlFor="email"><em className={DrStyle.fem}>*</em>이메일</label>
+              <input type="email" name="email" value={formData2.email} onChange={handleChange2} autoComplete="off" required />
+            </div>
             <div className={`${DrStyle.Group} ${DrStyle.address}`}>
-              <label htmlFor="address"><em className={DrStyle.fem}>*</em>주소</label>
+              <label htmlFor="address"><em className={DrStyle.fem}>*</em>
+                <span>주</span>
+                <span style={{ marginRight: '12px' }}></span>
+                <span>소</span>
+              </label>
               <input type="text" name="address" value={formData2.address} onChange={handleChange2} autoComplete="off" required />
             </div>
             <div className={`${DrStyle.Group} ${DrStyle.memo}`}>
-              <label htmlFor="memo">메모</label>
+              <label htmlFor="memo">
+                <span style={{ marginLeft: '8px' }}>메</span>
+                <span style={{ marginRight: '12px' }}></span>
+                <span>모</span>
+              </label>
               <textarea name="memo" value={formData2.memo} onChange={handleChange2}></textarea>
             </div>
             <div className={`${DrStyle.Group} ${DrStyle.file}`}>
