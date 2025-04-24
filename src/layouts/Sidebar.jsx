@@ -9,6 +9,8 @@ import backIcon from '../assets/Icon/back.png';
 import {RightOutlined, LeftOutlined} from "@ant-design/icons";
 import useBreakpoint from "antd/es/grid/hooks/useBreakpoint.js";
 import {Button} from "antd";
+import DriverList from "../pages/Driver/DriverList.jsx";
+import DriverRegistration from "../pages/Driver/DriverRegistration.jsx";
 
 function Sidebar(props) {
     const [openMenu, setOpenMenu] = useState(null); // 열려있는 메뉴 상태
@@ -117,12 +119,12 @@ function Sidebar(props) {
                                             <li
                                                 onClick={boolSidebar}
                                             >
-                                                <Link to="">기사목록</Link>
+                                                <Link to="/Driverlist">기사목록</Link>
                                             </li>
                                             <li
                                                 onClick={boolSidebar}
                                             >
-                                                <Link to="">기사등록</Link>
+                                                <Link to="/DriverRegistration">기사등록</Link>
                                             </li>
                                         </ul>
                                     </div>

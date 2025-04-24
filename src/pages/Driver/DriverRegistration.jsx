@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import DrStyle from "../css/DriverRegistration.module.css";
+import DrStyle from "../../css/DriverRegistration.module.css";
 import { Button } from "antd";
-import { supabase } from "../lib/supabase";
+import { supabase } from "../../lib/supabase.js";
 import { useNavigate } from "react-router-dom";
 
 const uploadFileToStorage2 = async (folder, file) => {

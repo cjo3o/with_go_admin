@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal } from 'antd';
-import DlStyle from "../css/DriverList.module.css";
+import DlStyle from "../../css/DriverList.module.css";
 
 const DriverListModal = ({ visible, driver, onCancel }) => {
     if (!driver) return null;

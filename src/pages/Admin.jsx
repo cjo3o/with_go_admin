@@ -24,9 +24,8 @@ function Admin() {
   const [storage, setstorage] = useState([]);
   const [twoData, settwoData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusLogs, setStatusLogs] = useState({});
-  const [completeCount, setCompleteCount] = useState(0);
-  const [cancelCount, setCancelCount] = useState(0);
+  const [statusLogs, setStatusLogs] = useState(
+      0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [canceledPrice, setCanceledPrice] = useState(0);
   const actualPayment = totalPrice - canceledPrice;

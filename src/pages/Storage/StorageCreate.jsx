@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {supabase} from "../lib/supabase.js";
-import '../css/StorageCreate.css';
+import {supabase} from "../../lib/supabase.js";
+import '../../css/StorageCreate.css';
 
 function StorageCreate() {
     const [form, setForm] = useState({

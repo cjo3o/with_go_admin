@@ -39,9 +39,8 @@ import ReviewEdit from './pages/AddFunction/ReviewEdit.jsx';
 import FAQEdit from './pages/AddFunction/FAQEdit.jsx';
 import FAQAdd from "./pages/AddFunction/FAQAdd.jsx";
 
-import Memberlist from "./pages/Memberlist.jsx";
-import DriverList from "./pages/DriverList.jsx";
-import DriverRegistration from "./pages/DriverRegistration.jsx";
+import DriverList from "./pages/Driver/DriverList.jsx";
+import DriverRegistration from "./pages/Driver/DriverRegistration.jsx";
 import Memberlist from "./pages/Member/Memberlist.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 

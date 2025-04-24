@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import supabase from "../lib/supabase.js";
-import "../css/StorageList.css"
+import supabase from "../../lib/supabase.js";
+import "../../css/StorageList.css"
 import {Checkbox, Image} from "antd";
 import {useNavigate} from 'react-router-dom';
-import Lookup from "../layouts/Lookup.jsx";
+import Lookup from "../../layouts/Lookup.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAnglesLeft, faAnglesRight, faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
 import {CloseOutlined} from "@ant-design/icons";

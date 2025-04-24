@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import DlStyle from "../css/DriverList.module.css";
-import LookupSearch from './LookupSearch2';
+import DlStyle from "../../css/DriverList.module.css";
+import LookupSearch from '../../components/LookupSearch2.jsx';
 import { Checkbox } from 'antd';
-import { supabase } from "../lib/supabase";
-import DriverListRow from './DriverListRow';
-import DriverListModal from './DriverListModal';
-import Pagination from "./pagination.jsx";
+import { supabase } from "../../lib/supabase.js";
+import DriverListRow from '../../components/DriverListRow.jsx';
+import DriverListModal from './DriverListModal.jsx';
+import Pagination from "../../layouts/Pagination.jsx";
 
 function DriverList() {
   const [drivers, setDrivers] = useState([]);
