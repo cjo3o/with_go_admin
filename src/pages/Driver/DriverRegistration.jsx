@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import DrStyle from "../css/DriverRegistration.module.css";
+import DrStyle from "../../css/DriverRegistration.module.css";
 import { Button } from "antd";
 import { supabase } from "../../lib/supabase.js";
 import { useNavigate } from "react-router-dom";
