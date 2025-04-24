@@ -1,44 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import supabase from '../lib/supabase';
-import '../css/Review.css';
-import '../css/layout.css';
-import '../css/ui.css';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import supabase from '../../lib/supabase.js';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/NoticePromotion.css';
 
-function ReviewEdit() {
+function NoticeAdd() {
     const navigate = useNavigate();
-    const { id } = useParams();
-
     const [formData, setFormData] = useState({
         title: '',
-        review_txt: '',
+        content: '',
+        status: '공개',
         file_url: ''
     });
+
     const [newFile, setNewFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
 
-    useEffect(() => {
-        const fetchReview = async () => {
-            const { data, error } = await supabase
-                .from('review')
-                .select('*')
-                .eq('review_num', id)
-                .single();
-
-            if (!error && data) {
-                setFormData(data);
-                setPreviewUrl(data.file_url);
-            } else {
-                alert('리뷰 데이터를 불러오는 데 실패했습니다');
-            }
-        };
-
-        if (id) fetchReview();
-    }, [id]);
-
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleFileChange = (e) => {
@@ -49,14 +32,15 @@ function ReviewEdit() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        let updatedImageUrl = formData.file_url;
+
+        let uploadedUrl = '';
 
         if (newFile) {
             const fileName = `${Date.now()}_${newFile.name}`;
-            const filePath = `review-images/${fileName}`;
+            const filePath = `notice-images/${fileName}`;
 
             const { error: uploadError } = await supabase.storage
-                .from('review_uploads')
+                .from('images')
                 .upload(filePath, newFile);
 
             if (uploadError) {
@@ -64,35 +48,27 @@ function ReviewEdit() {
                 return;
             }
 
-            const { data: publicData } = supabase.storage
-                .from('review_uploads')
-                .getPublicUrl(filePath);
-
-            updatedImageUrl = publicData.publicUrl;
+            const { data: publicData } = supabase.storage.from('images').getPublicUrl(filePath);
+            uploadedUrl = publicData.publicUrl;
         }
 
-        const { error } = await supabase
-            .from('review')
-            .update({
-                title: formData.title,
-                review_txt: formData.review_txt,
-                file_url: updatedImageUrl
-            })
-            .eq('review_num', id);
+        const payload = { ...formData, file_url: uploadedUrl };
+
+        const { error } = await supabase.from('withgo_notifications').insert([payload]);
 
         if (error) {
-            alert('수정 실패');
+            alert('공지 등록 실패');
         } else {
-            alert('성공적으로 수정되었습니다');
-            navigate('/review');
+            alert('공지 등록 완료!');
+            navigate('/notice');
         }
     };
 
     return (
         <div className="main">
-            <div className="header">이용후기 수정</div>
+            <div className="header">공지사항 등록</div>
             <div className="card">
-                <form className="form" onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="form">
                     <div className="form-group">
                         <label>제목</label>
                         <input
@@ -103,39 +79,50 @@ function ReviewEdit() {
                             required
                         />
                     </div>
+
                     <div className="form-group">
                         <label>내용</label>
                         <textarea
-                            name="review_txt"
-                            value={formData.review_txt}
+                            name="content"
+                            value={formData.content}
                             onChange={handleChange}
                             rows={6}
                             required
                         ></textarea>
                     </div>
+
                     <div className="form-group">
-                        <label>현재 이미지 미리보기</label>
+                        <label>이미지 첨부</label>
+                        <input type="file" accept="image/*" onChange={handleFileChange} />
                         {previewUrl && (
                             <div style={{ marginTop: '10px' }}>
                                 <img
                                     src={previewUrl}
-                                    alt="리뷰 이미지"
+                                    alt="미리보기"
                                     style={{ maxWidth: '200px', borderRadius: '6px' }}
                                     onError={(e) => (e.target.style.display = 'none')}
                                 />
                             </div>
                         )}
                     </div>
+
                     <div className="form-group">
-                        <label>이미지 변경 (선택)</label>
-                        <input type="file" accept="image/*" onChange={handleFileChange} />
+                        <label>상태</label>
+                        <div className="custom-select-wrapper">
+                            <select name="status" value={formData.status} onChange={handleChange}>
+                                <option value="공개">공개</option>
+                                <option value="숨김">숨김</option>
+                            </select>
+                            <FontAwesomeIcon icon={faArrowDown} className="select-icon" />
+                        </div>
                     </div>
+
                     <div className="form-button-wrapper">
                         <button type="button" className="btn btn-back" onClick={() => navigate(-1)}>
                             뒤로가기
                         </button>
                         <button type="submit" className="btn btn-add-confirm">
-                            수정 완료
+                            등록 완료
                         </button>
                     </div>
                 </form>
@@ -144,4 +131,4 @@ function ReviewEdit() {
     );
 }
 
-export default ReviewEdit;
+export default NoticeAdd;

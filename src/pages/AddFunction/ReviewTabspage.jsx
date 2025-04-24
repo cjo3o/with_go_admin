@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import {Radio, Input} from 'antd';
 import {SearchOutlined} from '@ant-design/icons';
-import ReviewTable from './ReviewTable';
+import ReviewTable from './ReviewTable.jsx';
 
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/Review.css';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/Review.css';
 
 const ReviewTabspage = () => {
     const [filterType, setFilterType] = useState('');

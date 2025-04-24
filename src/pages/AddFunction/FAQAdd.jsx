@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
-import supabase from '../lib/supabase';
-import '../css/FAQ.css';
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/faq.css';
+import supabase from '../../lib/supabase.js';
+import '../../css/FAQ.css';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/FAQ.css';
 
-function FAQEdit() {
+function FAQAdd() {
     const navigate = useNavigate();
-    const { id } = useParams();
 
     const [formData, setFormData] = useState({
         question: '',
@@ -18,29 +17,6 @@ function FAQEdit() {
         category: '기타',
         status: '공개'
     });
-
-    useEffect(() => {
-        const fetchFAQ = async () => {
-            const { data, error } = await supabase
-                .from('withgo_faqs')
-                .select('*')
-                .eq('id', id)
-                .single();
-
-            if (error || !data) {
-                alert('FAQ 데이터를 불러오는 데 실패했습니다');
-                console.error(error || '데이터 없음');
-                return;
-            }
-
-            setFormData({
-                ...data,
-                answer: data.answer?.replace(/<br\s*\/?>/gi, ' ')
-            });
-        };
-
-        if (id) fetchFAQ();
-    }, [id]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -52,26 +28,20 @@ function FAQEdit() {
 
         const { error } = await supabase
             .from('withgo_faqs')
-            .update({
-                question: formData.question,
-                answer: formData.answer,
-                category: formData.category,
-                status: formData.status
-            })
-            .eq('id', id);
+            .insert([{ ...formData }]);
 
         if (error) {
-            alert('FAQ 수정에 실패했습니다');
+            alert('등록에 실패했습니다');
             console.error(error);
         } else {
-            alert('FAQ가 성공적으로 수정되었습니다');
+            alert('FAQ가 성공적으로 등록되었습니다');
             navigate('/faq');
         }
     };
 
     return (
         <div className="main">
-            <div className="header">FAQ 수정</div>
+            <div className="header">새 FAQ 등록</div>
             <div className="card">
                 <form onSubmit={handleSubmit} className="form">
                     <div className="form-group">
@@ -140,7 +110,7 @@ function FAQEdit() {
                             type="submit"
                             className="btn btn-add-confirm"
                         >
-                            수정 완료
+                            등록 완료
                         </button>
                     </div>
                 </form>
@@ -149,4 +119,4 @@ function FAQEdit() {
     );
 }
 
-export default FAQEdit;
+export default FAQAdd;

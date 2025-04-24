@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox } from 'antd';
-import supabase from '../lib/supabase';
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/NoticePromotion.css';
+import supabase from '../../lib/supabase.js';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/NoticePromotion.css';
 
 function NoticePromotion() {
   const [notices, setNotices] = useState([]);

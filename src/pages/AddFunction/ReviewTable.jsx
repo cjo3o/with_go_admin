@@ -8,11 +8,11 @@ import {
     faChevronLeft, faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
 
-import supabase from '../lib/supabase';
+import supabase from '../../lib/supabase.js';
 
-import '../css/ui.css';
-import '../css/layout.css';
-import '../css/Review.css';
+import '../../css/ui.css';
+import '../../css/layout.css';
+import '../../css/Review.css';
 
 function ReviewTable({ filterType, statusFilter, searchKeyword }) {
     const [reviews, setReviews] = useState([]);

@@ -12,40 +12,40 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import Home from "./pages/Home.jsx";
 import Sidebar from "./layouts/Sidebar.jsx";
 
-import PartnerList from "./pages/PartnerList.jsx";
-import PartnerCreate from "./pages/PartnerCreate.jsx";
-import StorageList from "./pages/StorageList.jsx";
-import StorageCreate from "./pages/StorageCreate.jsx";
+import PartnerList from "./pages/Partner/PartnerList.jsx";
+import PartnerCreate from "./pages/Partner/PartnerCreate.jsx";
+import StorageList from "./pages/Storage/StorageList.jsx";
+import StorageCreate from "./pages/Storage/StorageCreate.jsx";
 
 
 import Admin from "./pages/Admin.jsx";
 
 
-import EmployeeList from "./pages/EmployeeList.jsx";
-import EventAdd from "./pages/Event_add.jsx";
-import EventEdit from "./pages/Eventedit.jsx";
+import EmployeeList from "./pages/Role/EmployeeList.jsx";
+import EventAdd from "./pages/AddFunction/Event_add.jsx";
+import EventEdit from "./pages/AddFunction/Eventedit.jsx";
 import Login from "./pages/Login.jsx";
 
-import EventList from "./pages/EventList.jsx";
+import EventList from "./pages/AddFunction/EventList.jsx";
 
-import NoticeList from "./pages/NoticeList.jsx";
+import NoticeList from "./pages/AddFunction/NoticeList.jsx";
 
-import NoticeAdd from './pages/NoticeAdd.jsx';
-import NoticeEdit from './pages/NoticeEdit.jsx';
+import NoticeAdd from './pages/AddFunction/NoticeAdd.jsx';
+import NoticeEdit from './pages/AddFunction/NoticeEdit.jsx';
 
-import ReviewTabspage from './pages/ReviewTabspage.jsx';
-import ReviewEdit from './pages/ReviewEdit.jsx';
+import ReviewTabspage from './pages/AddFunction/ReviewTabspage.jsx';
+import ReviewEdit from './pages/AddFunction/ReviewEdit.jsx';
 
-import FAQEdit from './pages/FAQEdit';
-import FAQAdd from "./pages/FAQAdd.jsx";
+import FAQEdit from './pages/AddFunction/FAQEdit.jsx';
+import FAQAdd from "./pages/AddFunction/FAQAdd.jsx";
 
-import Memberlist from "./pages/Memberlist.jsx";
+import Memberlist from "./pages/Member/Memberlist.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 
-import FAQTabspage from './pages/FAQTabspage.jsx';
+import FAQTabspage from './pages/AddFunction/FAQTabspage.jsx';
 
-import InquiryTabs from './pages/InquiryTabspage.jsx';
-import InquiryEdit from './pages/InquiryEdit.jsx';
+import InquiryTabs from './pages/AddFunction/InquiryTabspage.jsx';
+import InquiryEdit from './pages/AddFunction/InquiryEdit.jsx';
 
 function App() {
     const [count, setCount] = useState(0);

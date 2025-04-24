@@ -8,10 +8,10 @@ import {
     faChevronLeft, faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
 
-import supabase from '../lib/supabase';
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/inquiry.css';
+import supabase from '../../lib/supabase.js';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/inquiry.css';
 
 const InquiryList = ({ filterType = '', searchKeyword = '' }) => {
     const [inquiries, setInquiries] = useState([]);

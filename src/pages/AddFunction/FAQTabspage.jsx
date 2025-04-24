@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Radio, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import FAQList from './FAQList';
+import FAQList from './FAQList.jsx';
 
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/faq.css';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/FAQ.css';
 
 const FAQTabspage = () => {
   const [filterType, setFilterType] = useState('');

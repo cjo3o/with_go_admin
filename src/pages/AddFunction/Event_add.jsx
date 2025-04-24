@@ -2,21 +2,22 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
-import supabase from '../lib/supabase';
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/NoticePromotion.css';
+import supabase from '../../lib/supabase.js';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/Event.css';
 
-function NoticeAdd() {
+function EventAdd() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         title: '',
-        content: '',
-        status: '공개',
-        file_url: ''
+        date: '',
+        link_url: '',
+        status: '이벤트 진행중',
+        img_url: ''
     });
 
-    const [newFile, setNewFile] = useState(null);
+    const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
 
     const handleChange = (e) => {
@@ -25,9 +26,9 @@ function NoticeAdd() {
     };
 
     const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setNewFile(file);
-        setPreviewUrl(URL.createObjectURL(file));
+        const newFile = e.target.files[0];
+        setFile(newFile);
+        setPreviewUrl(URL.createObjectURL(newFile));
     };
 
     const handleSubmit = async (e) => {
@@ -35,38 +36,45 @@ function NoticeAdd() {
 
         let uploadedUrl = '';
 
-        if (newFile) {
-            const fileName = `${Date.now()}_${newFile.name}`;
-            const filePath = `notice-images/${fileName}`;
+        if (file) {
+            const fileName = `${Date.now()}_${file.name}`;
+            const filePath = `event-images/${fileName}`;
 
-            const { error: uploadError } = await supabase.storage
+            const { error: uploadError } = await supabase
+                .storage
                 .from('images')
-                .upload(filePath, newFile);
+                .upload(filePath, file);
 
             if (uploadError) {
                 alert('이미지 업로드 실패');
                 return;
             }
 
-            const { data: publicData } = supabase.storage.from('images').getPublicUrl(filePath);
+            const { data: publicData } = supabase.storage
+                .from('images')
+                .getPublicUrl(filePath);
+
             uploadedUrl = publicData.publicUrl;
         }
 
-        const payload = { ...formData, file_url: uploadedUrl };
-
-        const { error } = await supabase.from('withgo_notifications').insert([payload]);
+        const { error } = await supabase.from('withgo_event').insert([
+            {
+                ...formData,
+                img_url: uploadedUrl
+            }
+        ]);
 
         if (error) {
-            alert('공지 등록 실패');
+            alert('이벤트 등록 실패');
         } else {
-            alert('공지 등록 완료!');
-            navigate('/notice');
+            alert('이벤트가 등록되었습니다!');
+            navigate('/event');
         }
     };
 
     return (
         <div className="main">
-            <div className="header">공지사항 등록</div>
+            <div className="header">이벤트 등록</div>
             <div className="card">
                 <form onSubmit={handleSubmit} className="form">
                     <div className="form-group">
@@ -81,14 +89,25 @@ function NoticeAdd() {
                     </div>
 
                     <div className="form-group">
-                        <label>내용</label>
-                        <textarea
-                            name="content"
-                            value={formData.content}
+                        <label>날짜</label>
+                        <input
+                            type="date"
+                            name="date"
+                            value={formData.date}
                             onChange={handleChange}
-                            rows={6}
                             required
-                        ></textarea>
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>유튜브 링크</label>
+                        <input
+                            type="text"
+                            name="link_url"
+                            value={formData.link_url}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
 
                     <div className="form-group">
@@ -100,7 +119,6 @@ function NoticeAdd() {
                                     src={previewUrl}
                                     alt="미리보기"
                                     style={{ maxWidth: '200px', borderRadius: '6px' }}
-                                    onError={(e) => (e.target.style.display = 'none')}
                                 />
                             </div>
                         )}
@@ -109,16 +127,24 @@ function NoticeAdd() {
                     <div className="form-group">
                         <label>상태</label>
                         <div className="custom-select-wrapper">
-                            <select name="status" value={formData.status} onChange={handleChange}>
-                                <option value="공개">공개</option>
-                                <option value="숨김">숨김</option>
+                            <select
+                                name="status"
+                                value={formData.status}
+                                onChange={handleChange}
+                            >
+                                <option value="이벤트 진행중">이벤트 진행중</option>
+                                <option value="이벤트 종료">이벤트 종료</option>
                             </select>
                             <FontAwesomeIcon icon={faArrowDown} className="select-icon" />
                         </div>
                     </div>
 
                     <div className="form-button-wrapper">
-                        <button type="button" className="btn btn-back" onClick={() => navigate(-1)}>
+                        <button
+                            type="button"
+                            className="btn btn-back"
+                            onClick={() => navigate(-1)}
+                        >
                             뒤로가기
                         </button>
                         <button type="submit" className="btn btn-add-confirm">
@@ -131,4 +157,4 @@ function NoticeAdd() {
     );
 }
 
-export default NoticeAdd;
+export default EventAdd;

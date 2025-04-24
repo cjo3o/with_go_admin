@@ -1,45 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
-import supabase from '../lib/supabase';
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/NoticePromotion.css';
+import supabase from '../../lib/supabase.js';
+import '../../css/Review.css';
+import '../../css/layout.css';
+import '../../css/ui.css';
 
-function NoticeEdit() {
+function ReviewEdit() {
     const navigate = useNavigate();
     const { id } = useParams();
 
     const [formData, setFormData] = useState({
         title: '',
-        content: '',
-        status: '공개',
+        review_txt: '',
         file_url: ''
     });
-
     const [newFile, setNewFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
 
     useEffect(() => {
-        const fetchNotice = async () => {
+        const fetchReview = async () => {
             const { data, error } = await supabase
-                .from('withgo_notifications')
+                .from('review')
                 .select('*')
-                .eq('id', id)
+                .eq('review_num', id)
                 .single();
 
             if (!error && data) {
                 setFormData(data);
                 setPreviewUrl(data.file_url);
+            } else {
+                alert('리뷰 데이터를 불러오는 데 실패했습니다');
             }
         };
-        fetchNotice();
+
+        if (id) fetchReview();
     }, [id]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        setFormData({ ...formData, [name]: value });
     };
 
     const handleFileChange = (e) => {
@@ -50,15 +49,14 @@ function NoticeEdit() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        let uploadedUrl = formData.file_url;
+        let updatedImageUrl = formData.file_url;
 
         if (newFile) {
             const fileName = `${Date.now()}_${newFile.name}`;
-            const filePath = `notice-images/${fileName}`;
+            const filePath = `review-images/${fileName}`;
 
             const { error: uploadError } = await supabase.storage
-                .from('images')
+                .from('review_uploads')
                 .upload(filePath, newFile);
 
             if (uploadError) {
@@ -66,26 +64,35 @@ function NoticeEdit() {
                 return;
             }
 
-            const { data: publicData } = supabase.storage.from('images').getPublicUrl(filePath);
-            uploadedUrl = publicData.publicUrl;
+            const { data: publicData } = supabase.storage
+                .from('review_uploads')
+                .getPublicUrl(filePath);
+
+            updatedImageUrl = publicData.publicUrl;
         }
 
         const { error } = await supabase
-            .from('withgo_notifications')
-            .update({ ...formData, file_url: uploadedUrl })
-            .eq('id', id);
+            .from('review')
+            .update({
+                title: formData.title,
+                review_txt: formData.review_txt,
+                file_url: updatedImageUrl
+            })
+            .eq('review_num', id);
 
-        if (!error) {
-            alert('공지사항이 수정되었습니다');
-            navigate('/notice-promotion');
+        if (error) {
+            alert('수정 실패');
+        } else {
+            alert('성공적으로 수정되었습니다');
+            navigate('/review');
         }
     };
 
     return (
         <div className="main">
-            <div className="header">공지사항 수정</div>
+            <div className="header">이용후기 수정</div>
             <div className="card">
-                <form onSubmit={handleSubmit} className="form">
+                <form className="form" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>제목</label>
                         <input
@@ -96,45 +103,33 @@ function NoticeEdit() {
                             required
                         />
                     </div>
-
                     <div className="form-group">
                         <label>내용</label>
                         <textarea
-                            name="content"
-                            value={formData.content}
+                            name="review_txt"
+                            value={formData.review_txt}
                             onChange={handleChange}
-                            rows="6"
+                            rows={6}
                             required
-                            style={{ resize: 'vertical' }}
-                        />
+                        ></textarea>
                     </div>
-
                     <div className="form-group">
-                        <label>이미지 첨부</label>
-                        <input type="file" accept="image/*" onChange={handleFileChange} />
+                        <label>현재 이미지 미리보기</label>
                         {previewUrl && (
                             <div style={{ marginTop: '10px' }}>
                                 <img
                                     src={previewUrl}
-                                    alt="미리보기"
+                                    alt="리뷰 이미지"
                                     style={{ maxWidth: '200px', borderRadius: '6px' }}
                                     onError={(e) => (e.target.style.display = 'none')}
                                 />
                             </div>
                         )}
                     </div>
-
                     <div className="form-group">
-                        <label>공개 여부</label>
-                        <div className="custom-select-wrapper">
-                            <select name="status" value={formData.status} onChange={handleChange}>
-                                <option value="공개">공개</option>
-                                <option value="비공개">비공개</option>
-                            </select>
-                            <FontAwesomeIcon icon={faArrowDown} className="select-icon" />
-                        </div>
+                        <label>이미지 변경 (선택)</label>
+                        <input type="file" accept="image/*" onChange={handleFileChange} />
                     </div>
-
                     <div className="form-button-wrapper">
                         <button type="button" className="btn btn-back" onClick={() => navigate(-1)}>
                             뒤로가기
@@ -149,4 +144,4 @@ function NoticeEdit() {
     );
 }
 
-export default NoticeEdit;
+export default ReviewEdit;

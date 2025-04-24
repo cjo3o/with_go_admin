@@ -1,11 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import supabase from '../lib/supabase';
+import supabase from '../../lib/supabase.js';
 
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/inquiry.css';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/inquiry.css';
 
 function InquiryEdit() {
     const { id } = useParams();

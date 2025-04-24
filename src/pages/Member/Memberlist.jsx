@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { MemberlistUser } from "./MemberlistUser.jsx";
-import MemberStyle from "../css/Memberlist.module.css";
-import Pagination from "./Pagination.jsx";
-import LookupSearch from "./LookupSearch.jsx";
-import UserList from "./UserList.jsx";
+import MemberStyle from "../../css/Memberlist.module.css";
+import Pagination from "../../layouts/Pagination.jsx";
+import LookupSearch from "../../components/LookupSearch.jsx";
+import UserList from "../../components/UserList.jsx";
 import { Checkbox } from "antd";
-import supabaseRole from "../lib/supabaserole.js";
+import supabaseRole from "../../lib/supabaserole.js";
 
 function Memberlist() {
   const [users, setUsers] = useState([]);

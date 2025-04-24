@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Radio, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons'; // ✅ 돋보기 아이콘 직접 가져옴
-import InquiryList from './InquiryList';
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/inquiry.css';
+import InquiryList from './InquiryList.jsx';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/inquiry.css';
 
 const InquiryTabspage = () => {
     const [filterType, setFilterType] = useState('');

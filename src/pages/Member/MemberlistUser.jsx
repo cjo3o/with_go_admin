@@ -1,4 +1,4 @@
-import supabase from "../lib/supabaserole";
+import supabase from "../../lib/supabaserole.js";
 
 export const MemberlistUser = async () => {
   const { data, error } = await supabase.auth.admin.listUsers();
