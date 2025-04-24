@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
-import supabase from '../lib/supabase';
-import '../css/FAQ.css';
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/faq.css';
+import supabase from '../../lib/supabase.js';
+import '../../css/FAQ.css';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/FAQ.css';
 
 function FAQEdit() {
     const navigate = useNavigate();
@@ -70,7 +70,7 @@ function FAQEdit() {
     };
 
     return (
-        <div className="main-content">
+        <div className="main">
             <div className="header">FAQ 수정</div>
             <div className="card">
                 <form onSubmit={handleSubmit} className="form">

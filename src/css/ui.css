@@ -70,10 +70,10 @@
     margin-bottom: 4px;
 }
 
-input[type="text"],
-input[type="date"],
-textarea,
-select {
+.form input[type="text"],
+.form input[type="date"],
+.form textarea,
+.form select {
     padding: 10px 14px;
     font-size: 15px;
     border: 1px solid #ccc;

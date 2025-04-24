@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
-import supabase from '../lib/supabase';
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/NoticePromotion.css';
+import supabase from '../../lib/supabase.js';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/NoticePromotion.css';
 
-function NoticeEdit() {
+function NoticeAdd() {
     const navigate = useNavigate();
-    const { id } = useParams();
-
     const [formData, setFormData] = useState({
         title: '',
         content: '',
@@ -20,22 +18,6 @@ function NoticeEdit() {
 
     const [newFile, setNewFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
-
-    useEffect(() => {
-        const fetchNotice = async () => {
-            const { data, error } = await supabase
-                .from('withgo_notifications')
-                .select('*')
-                .eq('id', id)
-                .single();
-
-            if (!error && data) {
-                setFormData(data);
-                setPreviewUrl(data.file_url);
-            }
-        };
-        fetchNotice();
-    }, [id]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -51,7 +33,7 @@ function NoticeEdit() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        let uploadedUrl = formData.file_url;
+        let uploadedUrl = '';
 
         if (newFile) {
             const fileName = `${Date.now()}_${newFile.name}`;
@@ -70,20 +52,21 @@ function NoticeEdit() {
             uploadedUrl = publicData.publicUrl;
         }
 
-        const { error } = await supabase
-            .from('withgo_notifications')
-            .update({ ...formData, file_url: uploadedUrl })
-            .eq('id', id);
+        const payload = { ...formData, file_url: uploadedUrl };
 
-        if (!error) {
-            alert('공지사항이 수정되었습니다');
-            navigate('/notice-promotion');
+        const { error } = await supabase.from('withgo_notifications').insert([payload]);
+
+        if (error) {
+            alert('공지 등록 실패');
+        } else {
+            alert('공지 등록 완료!');
+            navigate('/notice');
         }
     };
 
     return (
-        <div className="main-content">
-            <div className="header">공지사항 수정</div>
+        <div className="main">
+            <div className="header">공지사항 등록</div>
             <div className="card">
                 <form onSubmit={handleSubmit} className="form">
                     <div className="form-group">
@@ -103,10 +86,9 @@ function NoticeEdit() {
                             name="content"
                             value={formData.content}
                             onChange={handleChange}
-                            rows="6"
+                            rows={6}
                             required
-                            style={{ resize: 'vertical' }}
-                        />
+                        ></textarea>
                     </div>
 
                     <div className="form-group">
@@ -125,11 +107,11 @@ function NoticeEdit() {
                     </div>
 
                     <div className="form-group">
-                        <label>공개 여부</label>
+                        <label>상태</label>
                         <div className="custom-select-wrapper">
                             <select name="status" value={formData.status} onChange={handleChange}>
                                 <option value="공개">공개</option>
-                                <option value="비공개">비공개</option>
+                                <option value="숨김">숨김</option>
                             </select>
                             <FontAwesomeIcon icon={faArrowDown} className="select-icon" />
                         </div>
@@ -140,7 +122,7 @@ function NoticeEdit() {
                             뒤로가기
                         </button>
                         <button type="submit" className="btn btn-add-confirm">
-                            수정 완료
+                            등록 완료
                         </button>
                     </div>
                 </form>
@@ -149,4 +131,4 @@ function NoticeEdit() {
     );
 }
 
-export default NoticeEdit;
+export default NoticeAdd;

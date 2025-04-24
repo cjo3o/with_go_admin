@@ -1,29 +1,33 @@
 import React, { useState } from 'react';
 import { Radio, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import ReviewTable from './ReviewTable';
+import FAQList from './FAQList.jsx';
 
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/review.css';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/FAQ.css';
 
-const ReviewTabspage = () => {
+const FAQTabspage = () => {
   const [filterType, setFilterType] = useState('');
   const [inputValue, setInputValue] = useState('');
   const [searchValue, setSearchValue] = useState('');
 
-  const handleFilterChange = (e) => setFilterType(e.target.value);
-  const handleSearch = (value) => setSearchValue(value);
+  const handleFilterChange = (e) => {
+    setFilterType(e.target.value);
+  };
+
+  const handleSearch = (value) => {
+    setSearchValue(value);
+  };
 
   return (
-    <div className="wrapper">
-      <div className="main-content">
-        <div className="header">이용후기 관리</div>
+      <div className="main">
+        <div className="header">FAQ 관리</div>
 
-        <div className="card">
-          <div className="top-bar">
-            <div className="title">이용후기 리스트</div>
-            <div className="tab-and-search">
+          <div className="card">
+              <div className="top-bar">
+                  <div className="title">FAQ 리스트</div>
+                  <div className="tab-and-search">
               <Radio.Group
                 value={filterType}
                 onChange={handleFilterChange}
@@ -35,7 +39,7 @@ const ReviewTabspage = () => {
               </Radio.Group>
 
               <Input.Search
-                placeholder="리뷰 검색"
+                placeholder="질문 검색"
                 allowClear
                 enterButton={
                   <span>
@@ -51,16 +55,10 @@ const ReviewTabspage = () => {
             </div>
           </div>
 
-          <div className="review-inner">
-            <ReviewTable
-              filterType={filterType}
-              searchKeyword={searchValue}
-            />
-          </div>
+          <FAQList filterType={filterType} searchKeyword={searchValue} />
         </div>
       </div>
-    </div>
   );
 };
 
-export default ReviewTabspage;
+export default FAQTabspage;

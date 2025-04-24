@@ -1,11 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import supabase from '../lib/supabase';
+import supabase from '../../lib/supabase.js';
 
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/inquiry.css';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/inquiry.css';
 
 function InquiryEdit() {
     const { id } = useParams();
@@ -49,7 +49,7 @@ function InquiryEdit() {
     };
 
     return (
-        <div className="main-content">
+        <div className="main">
             <div className="header">1:1 문의 답변</div>
             <div className="card">
                 <form className="form" onSubmit={handleSubmit}>

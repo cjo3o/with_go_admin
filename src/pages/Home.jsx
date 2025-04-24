@@ -1,6 +1,15 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import {useNavigate} from "react-router-dom";
 
 function Home(props) {
+    const navigate = useNavigate();
+    useEffect(() => {
+        const res = sessionStorage.getItem("role");
+        console.log(res);
+        if (res === null) {
+            navigate("/Login");
+        }
+    }, []);
     return (
         <>
             <div className="main">

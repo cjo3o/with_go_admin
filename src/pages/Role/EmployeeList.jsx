@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import supabase from "../lib/supabase.js";
+import supabase from "../../lib/supabase.js";
 import bcrypt from 'bcryptjs';
 import {Button, Select, Input, Modal, message, Form, Card, Table} from "antd";
 import {EditOutlined, DeleteOutlined, EditFilled, DeleteFilled} from '@ant-design/icons';
@@ -172,9 +172,10 @@ function EmployeeList(props) {
             {contextHolder}
             <div className='main'>
                 <div className='header'>
-                    직원목록
+                    권한설정
                 </div>
                 <div className='card'>
+                    <div className="title">직원목록</div>
                     <Table dataSource={rowdata} columns={columns} rowKey="no">
                         {/*<thead>*/}
                         {/*<tr>*/}

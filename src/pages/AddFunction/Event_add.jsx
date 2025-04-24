@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
-import supabase from '../lib/supabase';
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/Event.css';
+import supabase from '../../lib/supabase.js';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/Event.css';
 
 function EventAdd() {
     const navigate = useNavigate();
@@ -73,7 +73,7 @@ function EventAdd() {
     };
 
     return (
-        <div className="main-content">
+        <div className="main">
             <div className="header">이벤트 등록</div>
             <div className="card">
                 <form onSubmit={handleSubmit} className="form">

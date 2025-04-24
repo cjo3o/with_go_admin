@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox } from 'antd';
-import supabase from '../lib/supabase';
-import '../css/layout.css';
-import '../css/ui.css';
-import '../css/Event.css';
+import supabase from '../../lib/supabase.js';
+import '../../css/layout.css';
+import '../../css/ui.css';
+import '../../css/Event.css';
 import 'antd/dist/reset.css';
 
 function EventList() {
@@ -58,7 +58,7 @@ function EventList() {
   };
 
   return (
-    <div className="main-content">
+    <div className="main">
       <div className="header">이벤트 · 프로모션 관리</div>
       <div className="card">
         <div className="title">이벤트 리스트</div>
