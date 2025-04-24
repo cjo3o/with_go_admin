@@ -1,167 +1,67 @@
-
-.faq-list-wrapper {
-    flex-grow: 1;
-    padding: 50px 60px 0;
-    position: relative;
-    font-size: 16px;
+.common-table {
+  width: 100%;
+  min-width: 1100px;
+  table-layout: fixed;
+  border-collapse: collapse;
 }
 
-.faq-header {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: rgb(0, 102, 204);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.common-table th,
+.common-table td {
+  padding: 16px;
+  font-size: 15px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.faq-card {
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-    position: relative;
+.faq-col-title,
+.faq-col-content {
+  text-align: left !important;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
-.faq-list-wrapper table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-}
-
-.faq-list-wrapper th,
-.faq-list-wrapper td {
-    text-align: center;
-    vertical-align: middle;
-    padding: 16px;
-    border-bottom: 1px solid #ddd;
-    word-break: keep-all;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 15px;
-}
-
-.faq-list-wrapper th {
-    background-color: #f0f2f5;
-    font-weight: bold;
-}
-
-.faq-col-select { width: 5%; }
-.faq-col-type { width: 10%; }
-.faq-col-title { width: 36%; text-align: left; padding-left: 20px; }
-.faq-col-content { width: 32%; text-align: left; }
-.faq-col-status { width: 10%; }
+.faq-col-select  { width: 4%; }
+.faq-col-type    { width: 4%; }
+.faq-col-title   { width: 26%; }
+.faq-col-content { width: 30%; }
+.faq-col-status  { width: 7%; }
+.faq-col-date    { width: 7%; }
 .faq-col-actions { width: 10%; }
 
-.faq-btn {
-    padding: 8px 16px;
-    font-size: 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    margin: 0 4px;
+.answer-toggle {
+  cursor: pointer;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: max-height 0.3s ease;
+  max-height: 32px;
+  line-height: 1.5;
 }
 
-.faq-btn-edit {
-    background-color: rgb(79, 23, 135);
-    color: white;
+.answer-toggle.open {
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 500px;
+  overflow: auto;
+  line-height: 1.6;
 }
 
-.faq-btn-delete {
-    background-color: rgb(158, 158, 158);
-    color: white;
-}
-
-.faq-btn-delete:hover {
-    background-color: rgb(247, 55, 79);
-}
-
-.faq-btn-add {
-    background-color: rgb(158, 158, 158);
-    color: white;
-}
-
-.faq-btn-add:hover {
-    background-color: rgb(0, 102, 204);
-    color: white;
-}
-
-.faq-btn-standard {
-    font-weight: bold;
-}
-
-.faq-footer {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-    gap: 8px;
-    padding-right: 20px;
-}
-
-.faq-top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.faq-pagination {
-    display: flex;
-    justify-content: center;
-    gap: 3px;
-    margin-top: 10px;
-}
-
-.faq-pagination button {
-    padding: 6px 11px;
-    border-radius: 3px;
-    background-color: #fffefe;
-    color: #5e5e5e;
-    border: 1px solid #f4f4f4;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.faq-pagination button.active {
-    background-color: rgb(0, 102, 204);
-    color: white;
-    font-weight: bold;
-    border-color: rgb(0, 102, 204);
-}
-
-.faq-pagination i {
-    font-size: 14px;
-}
-
-.faq-pagination button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-
-.faq-tabs-wrapper {
-  flex-grow: 1;
-  padding: 50px 60px 0;
-  font-size: 16px;
-}
-
-.faq-tab-search {
+.table-footer.bottom-right-btn {
   display: flex;
-  gap: 14px;
+  justify-content: flex-end;
   align-items: center;
+  gap: 8px;
+  padding-right: 35px;
+  margin-top: 16px;
 }
 
-.faq-search-input {
-  width: 200px;
-}
-
-.faq-top-bar {
+.pagination-wrapper {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  justify-content: center;
+  margin-top: 16px;
 }

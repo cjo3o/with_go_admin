@@ -1,7 +1,8 @@
 import React from 'react';
-import {Content} from "antd/es/layout/layout.js";
-import App from "../../Component/Tab.jsx";
-import {Button} from "antd";
+import App from "../../Components/Tab.jsx";
+import {Button, Layout} from "antd";
+
+const {Content} = Layout;
 
 function ApplicationList(props) {
     return (

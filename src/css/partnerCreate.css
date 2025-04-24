@@ -1,5 +1,5 @@
 /* 폼 전체 */
-.form {
+.form_Create {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -30,4 +30,8 @@
 .group input:focus {
     border-color: #0066cc;
     outline: none;
+}
+
+input[type="file"] {
+    cursor: pointer;
 }

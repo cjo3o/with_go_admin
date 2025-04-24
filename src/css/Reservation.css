@@ -12,30 +12,8 @@
     width: 100%;
 }
 
-.main_R{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.submain_R {
-    /*border-top: 1px solid #c1c1c1;*/
-    border-bottom: 1px solid #c1c1c1;
-}
-.header_R{
-    margin: 0 auto;
-    color: #434343;
-    padding-top: 20px;
-    padding-left: 45px;
-}
-
-.subheader_R{
-    margin: 20px 0;
-    padding-left: 45px;
-}
-
 .content_R{
-    width: 95%;
+    width: 100%;
     margin: 0 auto;
     /*position: relative;*/
     display: flex;
@@ -169,7 +147,7 @@
 }
 
 .content_middle{
-    width: 95%;
+    width: 100%;
     margin: 0 auto;
 }
 

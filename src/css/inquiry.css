@@ -1,25 +1,4 @@
 
-.inquiry-wrapper {
-    flex-grow: 1;
-    padding: 50px 60px 0;
-    font-size: 16px;
-}
-
-.inquiry-header {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: rgb(0, 102, 204);
-}
-
-.inquiry-card {
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
-
 .inquiry-table {
     width: 100%;
     border-collapse: collapse;
@@ -38,111 +17,97 @@
     text-align: center;
 }
 
+/* 체크박스 칸 */
+.inquiry-table th:first-child,
+.inquiry-table td:first-child {
+    width: 80px;
+    padding: 0 10px;
+    text-align: center;
+}
+.inquiry-table td:first-child .ant-checkbox-wrapper,
+.inquiry-table td:first-child .ant-checkbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+/* 제목/내용만 좌측 정렬 */
+.inquiry-col-title {
+    width: 20%;
+    text-align: left !important;
+    padding-left: 10px;
+}
+.inquiry-col-content {
+    width: 30%;
+    text-align: left !important;
+    padding-left: 10px;
+}
+
 .inquiry-table th {
     background-color: #f0f2f5;
     font-weight: bold;
 }
 
-.inquiry-col-title,
-.inquiry-col-content {
-    text-align: left;
+/* 각 열 너비 설정 */
+.inquiry-col-number {
+    width: 8%;
 }
-
-.inquiry-col-title {
-    width: 22%;
-    padding-left: 20px;
-}
-
-.inquiry-col-content {
-    width: 28%;
-    padding-left: 10px;
-}
-
-.inquiry-col-category,
-.inquiry-col-writer,
-.inquiry-col-date,
-.inquiry-col-visible,
-.inquiry-col-actions {
+.inquiry-col-category {
     width: 10%;
 }
+.inquiry-col-writer,
+.inquiry-col-date,
+.inquiry-col-status {
+    width: 20%;
+}
+.inquiry-col-actions {
+    width: 12%;
+}
 
-.inquiry-btn {
-    padding: 8px 16px;
-    font-size: 14px;
-    border: none;
-    border-radius: 6px;
+/* 내용 토글 박스 */
+.inquiry-toggle-box {
     cursor: pointer;
+    display: block;
+    overflow: hidden;
     white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: all 0.3s ease;
+}
+.inquiry-toggle-box.open {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: initial;
+    word-break: break-word;
 }
 
-.inquiry-btn-edit {
-    background-color: rgb(79, 23, 135);
-    color: white;
-}
-.inquiry-btn-edit:hover {
-    background-color: rgb(24, 1, 97);
-}
-
-.inquiry-btn-delete {
-    background-color: rgb(204, 55, 55);
-    color: white;
-}
-.inquiry-btn-delete:hover {
-    background-color: rgb(153, 0, 0);
-}
-
-.inquiry-btn-add {
-    background-color: rgb(158, 158, 158);
-    color: white;
-}
-.inquiry-btn-add:hover {
-    background-color: rgb(0, 102, 204);
-}
-
-.inquiry-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 20px;
-}
-
-.inquiry-tab-search {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-.inquiry-search-input {
-    width: 220px;
-}
-
-.inquiry-pagination {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 20px;
-}
-
-.inquiry-page-btn {
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    background-color: white;
-    color: #444;
-    cursor: pointer;
-    border-radius: 4px;
-}
-.inquiry-page-btn.active {
-    background-color: rgb(0, 102, 204);
-    color: white;
+/* 상태 버튼 스타일 */
+.btn-best {
+    border: 1px solid;
+    border-radius: 20px;
     font-weight: bold;
+    padding: 4px 14px;
+    font-size: 14px;
+    min-width: 56px;
+    text-align: center;
+    transition: all 0.2s ease;
+    background-color: #fff;
+    cursor: pointer;
+}
+.btn-best.blue {
+    color: rgb(0, 102, 204);
     border-color: rgb(0, 102, 204);
 }
-
-.inquiry-arrow-btn {
-    background-color: white;
-    border: 1px solid #eee;
-    padding: 6px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
+.btn-best.blue:hover {
+    background-color: rgb(0, 102, 204);
+    color: white;
+}
+.btn-best.orange {
+    background-color: #ff9900;
+    color: white;
+    border-color: #ff9900;
+}
+.btn-best.orange:hover {
+    background-color: #fab34a;
+    color: white;
 }
