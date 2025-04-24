@@ -33,7 +33,7 @@
 }
 
 .tdfile {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
 }
 
 .foot_btn {
@@ -96,10 +96,6 @@ tfoot td {
 }
 
 .spacing_strong {
-  letter-spacing: 11px;
-}
-
-.spacing_strong2 {
   letter-spacing: 2px;
 }
 
@@ -112,7 +108,7 @@ tfoot td {
 }
 
 .dtable table {
-  min-width: 1380px;
+  min-width: 1360px;
 }
 
 @media (max-width: 768px) {
