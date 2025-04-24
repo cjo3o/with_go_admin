@@ -1,7 +1,8 @@
-import React from "react";
-import { Checkbox } from "antd";
+import React, {useEffect} from "react";
+import {Checkbox, message} from "antd";
 import DlStyle from "../css/DriverList.module.css";
 import { useNavigate } from "react-router-dom";
+
 
 function DriverListRow({
   driver,
@@ -13,6 +14,11 @@ function DriverListRow({
   const navigate = useNavigate();
 
   const handleEditClick2 = (e) => {
+      const res = sessionStorage.getItem("role");
+      if (res !== '관리자') {
+          message.error('권한이 없습니다!');
+          return;
+      }
     e.stopPropagation(); // 행의 클릭 이벤트 막기
     navigate("/DriverRegistration", { state: { driver } });
   };

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import supabase from "../../lib/supabase.js";
 import "../../css/PartnerList.css"
-import {Checkbox, Image} from "antd";
+import {Checkbox, Image, message} from "antd";
 import {useNavigate} from 'react-router-dom';
 import Lookup from "../../layouts/Lookup.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -102,19 +102,25 @@ function PartnerList() {
 
     // 선택 삭제
     const handleBulkDelete = async () => {
-        if (!window.confirm('선택한 숙소를 삭제하시겠습니까?')) return;
-
-        const {error} = await supabase
-            .from('partner_place')
-            .delete()
-            .in('partner_id', selectedPartners);
-
-        if (error) {
-            alert('삭제 중 오류 발생');
+        const res = sessionStorage.getItem("role");
+        if (res !== '관리자') {
+            message.error('권한이 없습니다!')
+            return;
         } else {
-            alert('선택한 숙소가 삭제되었습니다');
-            fetchPartners();
-            setSelectedPartners([]);
+            if (!window.confirm('선택한 숙소를 삭제하시겠습니까?')) return;
+
+            const {error} = await supabase
+                .from('partner_place')
+                .delete()
+                .in('partner_id', selectedPartners);
+
+            if (error) {
+                alert('삭제 중 오류 발생');
+            } else {
+                alert('선택한 숙소가 삭제되었습니다');
+                fetchPartners();
+                setSelectedPartners([]);
+            }
         }
     };
 
@@ -175,7 +181,14 @@ function PartnerList() {
                                     <div className="card-top-right">
                                         <button
                                             className="btn btn-edit"
-                                            onClick={() => navigate(`/partner/create/${partner.partner_id}`)}
+                                            onClick={() => {
+                                                const res = sessionStorage.getItem("role")
+                                                if (res !== '관리자') {
+                                                    message.error('권한이 없습니다!')
+                                                    return;
+                                                }
+                                                navigate(`/partner/create/${partner.partner_id}`)
+                                            }}
                                         >
                                             수정
                                         </button>
