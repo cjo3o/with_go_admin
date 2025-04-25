@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {supabase} from "../../lib/supabase.js";
 import '../../css/StorageCreate.css';
+import DrStyle from "../../css/DriverRegistration.module.css";
 
 function StorageCreate() {
     const [form, setForm] = useState({
@@ -163,12 +164,11 @@ function StorageCreate() {
 
     return (
         <div className='main'>
-            <div className='header'>보관장소관리</div>
+            <div className='header'>보관장소등록</div>
             <div className='card'>
-                <h3>보관장소등록</h3>
                 <form onSubmit={handleSubmit} className='form_Create'>
                     <div className='group'>
-                        <label className='name'>장소명</label>
+                        <label className='name'><em className={DrStyle.fem}>*</em><span>장소명</span></label>
                         <input
                             type="text"
                             name="name"
@@ -179,33 +179,36 @@ function StorageCreate() {
                         />
                     </div>
                     <div className='group'>
-                        <label className='address'>주소</label>
+                        <label className='address'><em className={DrStyle.fem}>*</em><span>주소</span></label>
                         <input
                             type="text"
                             name="address"
                             autoComplete="off"
+                            placeholder="(우편번호)주소를 입력해주세요"
                             value={form.address}
                             onChange={handleChange}
                             required
                         />
                     </div>
                     <div className='group'>
-                        <label className='phone'>연락처</label>
+                        <label className='phone'><em className={DrStyle.fem}>*</em><span>연락처</span></label>
                         <input
                             type="text"
                             name="phone"
                             autoComplete="off"
+                            placeholder="- 넣어서 입력해주세요"
                             value={form.phone}
                             onChange={handleChange}
                             required
                         />
                     </div>
                     <div className='group'>
-                        <label className='map'>지도</label>
+                        <label className='map'><em className={DrStyle.fem}>*</em><span>지도</span></label>
                         <input
                             type="text"
                             name="map_url"
                             autoComplete="off"
+                            placeholder="구글맵 지도퍼가기 HTML 복사해주세요"
                             value={form.map_url}
                             onChange={handleChange}
                             required
