@@ -122,11 +122,6 @@
   flex: 1;
 }
 
-input[type="text"] {
-  width: 210px;
-  min-width: 30%;
-}
-
 .FormUp {
   display: flex;
   gap: 30px;
