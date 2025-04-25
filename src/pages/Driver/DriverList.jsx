@@ -199,7 +199,7 @@ function DriverList() {
                 <col style={{ width: "4%" }} />
               </colgroup>
               <thead>
-                <tr>
+                <tr className={DlStyle.headtr}>
                   <th className={DlStyle.th_first}>
                     <Checkbox
                       onChange={handleAllCheck}
@@ -237,7 +237,7 @@ function DriverList() {
                   })
                 ) : (
                   <tr>
-                    <td colSpan="11">등록된 기사가 없습니다.</td>
+                    <td className={DlStyle.falsetd} colSpan="11">등록된 기사가 없습니다.</td>
                   </tr>
                 )}
               </tbody>

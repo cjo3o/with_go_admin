@@ -396,45 +396,48 @@ function Admin() {
                 <h3>실시간 예약현황</h3>
               </div>
               <div className={AdminStyle.admin_search}>
-                <Radio.Group
-                  value={filterType}
-                  buttonStyle="solid"
-                  onChange={(e) => setFilterType(e.target.value)}
-                >
-                  <Radio.Button
-                    value=""
-                    className={AdminStyle.custom_radio_button}
+                <div>
+                  <Radio.Group
+                    value={filterType}
+                    buttonStyle="solid"
+                    onChange={(e) => setFilterType(e.target.value)}
                   >
-                    전체
-                  </Radio.Button>
-                  <Radio.Button
-                    value="보관"
-                    className={AdminStyle.custom_radio_button}
-                  >
-                    보관
-                  </Radio.Button>
-                  <Radio.Button
-                    value="배송"
-                    className={AdminStyle.custom_radio_button}
-                  >
-                    배송
-                  </Radio.Button>
-                </Radio.Group>
-
-                <Input.Search
-                  placeholder="리뷰 검색"
-                  allowClear
-                  enterButton={
-                    <span>
-                      <SearchOutlined style={{ marginRight: 4 }} />
-                      검색
-                    </span>
-                  }
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onSearch={handleSearch}
-                  className="search-input default-style"
-                />
+                    <Radio.Button
+                      value=""
+                      className={AdminStyle.custom_radio_button}
+                    >
+                      전체
+                    </Radio.Button>
+                    <Radio.Button
+                      value="보관"
+                      className={AdminStyle.custom_radio_button}
+                    >
+                      보관
+                    </Radio.Button>
+                    <Radio.Button
+                      value="배송"
+                      className={AdminStyle.custom_radio_button}
+                    >
+                      배송
+                    </Radio.Button>
+                  </Radio.Group>
+                </div>
+                <div>
+                  <Input.Search
+                    placeholder="검색"
+                    allowClear
+                    enterButton={
+                      <span>
+                        <SearchOutlined style={{ marginRight: 4 }} />
+                        검색
+                      </span>
+                    }
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onSearch={handleSearch}
+                    className={`${AdminStyle.searchin} search-input default-style`}
+                  />
+                </div>
               </div>
             </div>
             <div className={AdminStyle.table_over}>
@@ -602,7 +605,7 @@ function Admin() {
                       })
                   ) : (
                     <tr>
-                      <td colSpan="9">
+                      <td className={AdminStyle.falsetext} colSpan="9">
                         {searchTerm
                           ? "일치하는 접수건이 없습니다."
                           : "접수된 이력이 없습니다."}

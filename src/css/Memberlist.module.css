@@ -132,14 +132,14 @@ tfoot td {
 
 .mtable {
   overflow: hidden;
-  overflow-x: scroll;
+  overflow-x: auto;
   width: 100%;
 }
 
 @media (max-width: 768px) {
   .mtable {
     overflow: hidden;
-    overflow-x: scroll;
+    overflow-x: auto;
     width: 100%;
   }
 }

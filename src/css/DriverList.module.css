@@ -109,13 +109,17 @@ tfoot td {
   cursor: pointer;
 }
 
+.headtr {
+  cursor: auto;
+}
+
 .noPointer {
   cursor: default !important;
 }
 
 .dtable {
   overflow:hidden;
-  overflow-x: scroll;
+  overflow-x: auto;
   width: 100%;
 }
 
@@ -134,11 +138,16 @@ tfoot td {
   }
   .dtable {
     overflow:hidden;
-    overflow-x: scroll;
+    overflow-x: auto;
     width: 100%;
   }
 
   .dtable table {
     min-width: 1100px;
+  }
+
+  .falsetd {
+    text-align: left;
+    padding-left: 200px;
   }
 }

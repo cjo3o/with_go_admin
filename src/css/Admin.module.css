@@ -350,7 +350,7 @@ tr {
   min-width: 1350px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .Admin_top {
     min-width: 445px;
   }
@@ -524,15 +524,13 @@ tr {
   .admin_search {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     flex-wrap: wrap;
+    margin-bottom: 10px;
   }
 
   .list_up h3 {
     font-size: 0.9rem;
-  }
-
-  .admin_search {
-    margin-bottom: 10px;
   }
 
   /* .custom_radio_button {
@@ -553,11 +551,23 @@ tr {
     flex-wrap: wrap;
     gap: 5px;
   }
+  .searchin {
+    width: 177px !important;
+  }
+
+  .searchin button {
+    width: 60px;
+  }
 
   .page_btn,
   .arrow_btn {
     padding: 6px 8px;
     font-size: 14px;
+  }
+
+  .falsetext {
+    padding-left: 200px;
+    text-align: left;
   }
 
   th,
