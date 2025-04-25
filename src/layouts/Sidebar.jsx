@@ -240,16 +240,15 @@ function Sidebar(props) {
 
                         </ul>
                         <div className="sidebar-footer">
-                            <div className="footer-divider" />
                             <div className="footer-profile-row">
                                 <div className="profile-left">
-                                    <img src={profileIcon} alt="프로필" className="profile-icon" />
+                                    <img src={profileIcon} alt="프로필" className="profile-icon"/>
                                     <div className="profile-label">관리자전용</div>
                                 </div>
                                 <div className="profile-right">
                                     <p className="profile-name">{emName} 님</p>
                                     <p className="profile-greeting">안녕하세요</p>
-                                    <Button className="logout-btn" onClick={logout}>로그아웃</Button>
+                                    <button className="logout-btn" onClick={logout}>로그아웃</button>
                                 </div>
                             </div>
                         </div>
