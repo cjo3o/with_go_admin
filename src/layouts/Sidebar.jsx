@@ -141,49 +141,26 @@ function Sidebar(props) {
                             </li>
 
                             <li>
-                                <div onClick={() => toggleMenu('partner')} className="menu-toggle">제휴숙소관리</div>
-                                {openMenu === 'partner' && (
+                                <div onClick={() => toggleMenu('place')} className="menu-toggle">숙소/장소관리</div>
+                                {openMenu === 'place' && (
                                     <div className="sub-menu">
                                         <ul>
                                             <li
                                                 onClick={boolSidebar}
                                             >
-                                                <Link to="/partner/list">제휴숙소목록</Link>
+                                                <Link to="/partner/list">제휴숙소</Link>
                                             </li>
                                             {emRole === '관리자' && (
                                                 <li
                                                     onClick={boolSidebar}
                                                 >
-                                                    <Link to="/partner/create">제휴숙소등록</Link>
+                                                    <Link to="/storage/list">보관장소</Link>
                                                 </li>
                                             )}
                                         </ul>
                                     </div>
                                 )}
                             </li>
-
-                            <li>
-                                <div onClick={() => toggleMenu('storage')} className="menu-toggle">보관장소관리</div>
-                                {openMenu === 'storage' && (
-                                    <div className="sub-menu">
-                                        <ul>
-                                            <li
-                                                onClick={boolSidebar}
-                                            >
-                                                <Link to="/storage/list">보관장소목록</Link>
-                                            </li>
-                                            {emRole === '관리자' && (
-                                                <li
-                                                    onClick={boolSidebar}
-                                                >
-                                                    <Link to="/storage/create">보관장소등록</Link>
-                                                </li>
-                                            )}
-                                        </ul>
-                                    </div>
-                                )}
-                            </li>
-
                             {emRole === '관리자' && (
                                 <li>
                                     <div onClick={() => toggleMenu('feature')} className="menu-toggle">부가기능</div>
