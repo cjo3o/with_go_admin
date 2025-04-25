@@ -19,6 +19,8 @@
     align-items: flex-start; /* label과 control의 세로 정렬을 시작점으로 맞춤 (필요에 따라 변경) */
     margin-bottom: 20px; /* 각 Form.Item 간의 간격 */
     margin-left: 25px;
+    width: 100%;
+    gap: 5px;
 }
 
 .separated-form-item .ant-form-item-label {
@@ -49,5 +51,14 @@
     border-top: 10px solid transparent;
     border-right: 10px solid #FFA500; /* 꼬리 색상 (배경색과 동일) */
     border-bottom: 10px solid transparent;
+}
+
+/*.ant-form-item .separated-form-item .css-dev-only-do-not-override-1261szd{*/
+/*    width: 100%;*/
+/*}*/
+
+.ant-col .ant-form-item-label .css-dev-only-do-not-override-1261szd .ant-form-item-no-colon{
+    display: flex;
+    align-items: center;
 }
 

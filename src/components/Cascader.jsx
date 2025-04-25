@@ -1,59 +1,46 @@
 import React from 'react';
-import {Cascader} from 'antd';
+import { Cascader } from 'antd';
 
 const options = [
     {
-        value: 'Daegu',
-        label: <span>대구</span>,
+        value: 'daegu',
+        label: '대구',
         children: [
-            {
-                value: 'Daego-center',
-                label: '중구',
-            },
-            {
-                value: 'Daego-All',
-                label: '동구',
-            },
-            {
-                value: 'Daego-All',
-                label: '서구'
-            },
-            // children: [
-            //     {
-            //         value: '',
-            //         label: 'West Lake',
-            //     },
-            // ],
+            { value: 'junggu', label: '중구' },
+            { value: 'donggu', label: '동구' },
+            { value: 'seogu', label: '서구' },
+            { value: 'bukgu', label: '북구' },
+            { value: 'suseonggu', label: '수성구' },
+            { value: 'dalseogu', label: '달서구' },
+            { value: 'dalseogu', label: '달성군' },
         ],
     },
     {
-        value: 'jiangsu',
-        label: 'Jiangsu',
+        value: 'gyeongju',
+        label: '경주',
         children: [
-            {
-                value: 'nanjing',
-                label: 'Nanjing',
-                children: [
-                    {
-                        value: 'zhonghuamen',
-                        label: 'Zhong Hua Men',
-                    },
-                ],
-            },
+            { value: 'andong', label: '안강읍' },
+            { value: 'gangdong', label: '강동면' },
+            { value: 'yangbuk', label: '양북면' },
+            { value: 'naenam', label: '내남면' },
         ],
     },
 ];
-const onChange = value => {
+
+const onChange = (value) => {
     console.log(value);
 };
-// Just show the latest item.
-const displayRender = labels => labels[labels.length - 1];
-const App = () => (
+
+const displayRender = (labels) => labels.join(' / ');
+
+const LocationCascader = () => (
     <Cascader
         options={options}
-        expandTrigger="hover"
-        displayRender={displayRender}
         onChange={onChange}
+        displayRender={displayRender}
+        placeholder="지역 선택"
+        style={{ width: 150 }} // Cascader 너비
     />
 );
-export default App;
+
+export default LocationCascader;

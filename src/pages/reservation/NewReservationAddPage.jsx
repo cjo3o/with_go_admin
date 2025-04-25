@@ -21,6 +21,7 @@ import {
 import supabase from "../../lib/supabase.js";
 import bcrypt from 'bcryptjs';
 import {useNavigate} from "react-router-dom";
+import LocationCascader from '../../components/Cascader';
 
 import '../../css/NewReservationAdd.css';
 
@@ -38,38 +39,39 @@ const Counter = ({initialCount = 0, onCountChange}) => {
 
     return (
         <div style={{
-            padding: '10px',
+            padding: '5px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '150px'
+            width: '100px',
         }}>
             <button
                 onClick={decrement}
                 style={{
                     fontSize: '20px',
-                    padding: '5px 15px',
+                    padding: '0 10px',
                     backgroundColor: '#f0f0f0',
                     color: '#333',
                     border: 'none',
                     borderRadius: '3px',
                     cursor: 'pointer',
+
                 }}
             >
                 -
             </button>
             <div style={{
-                fontSize: '24px',
+                fontSize: '20px',
+                width: '40px',
+                // height: '30px',
                 backgroundColor: 'white',
-                width: "100%",
-                height: "100%",
+                // border: '1px solid #dddddd',
                 textAlign: 'center'
             }}> {count} </div>
             <button
                 onClick={increment}
                 style={{
                     fontSize: '20px',
-                    padding: '5px 15px',
+                    padding: '0 10px',
                     backgroundColor: '#f0f0f0',
                     color: '#333',
                     border: 'none',
@@ -206,31 +208,45 @@ function NewReservationAddPage() {
 
     const ReservationDatePicker = () => (
         <Space direction="vertical" size={12} style={{marginTop: '5px'}}>
-            {serviceType === 'delivery' && (
-                <Checkbox onChange={handleReturnTripChange}>왕복
-                    <span className="speech-bubble">왕복 배송시 체크 해주세요</span>
-                </Checkbox>
-            )}
-            <div style={{display: "flex", alignItems: "center"}}>
+            <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "5px", // ✅ 항목 간 간격 고정
+                width: '100%', // ✅ 고정 너비로 균형 유지
+            }}>
                 <RangePicker
                     renderExtraFooter={() => 'extra footer'}
                     showTime
                     value={storageDates}
-                    placeholder={[serviceType === 'delivery' ? 'PICK UP' : '보관 시작',
+                    placeholder={[
+                        serviceType === 'delivery' ? 'PICK UP' : '보관 시작',
                         serviceType === 'delivery' ? 'DROP OFF' : '보관 종료'
                     ]}
-                    style={{width: '350px', marginTop: '5px', marginBottom: '5px'}}
+                    style={{
+                        width: '350px',
+                        marginTop: '5px',
+                        marginBottom: '5px'
+                }}
                     onChange={(dates) => setStorageDates(dates)}
-                    // onOk={(dates) => setStorageDates(dates)}
                 />
                 <Select
                     className="select"
-                    defaultValue={locationOptions[0]?.options[0]?.value} // 기본 배송지 설정
+                    defaultValue={locationOptions[0]?.options[0]?.value}
                     style={{width: 120}}
                     onChange={handleLocationChange}
                     options={locationOptions}
                 />
-                <Cascader style={{width: '200px'}}></Cascader>
+
+                {serviceType === 'delivery' && (
+                    <>
+                        <LocationCascader />
+                        <Input className="separated-form-item" placeholder="상세주소" style={{
+                            width: '100px',
+                            margin: '0',
+                        }} />
+                    </>
+                )}
+
             </div>
             {serviceType === 'delivery' && isReturnTrip && (
                 <RangePicker
@@ -278,7 +294,7 @@ function NewReservationAddPage() {
                                             <Radio.Button value="storage">보관</Radio.Button>
                                         </Radio.Group>
                                     </Form.Item>
-                                    <Divider style={{margin: '12px 0', borderColor: '#d9d9d9'}}/>
+                                    <Divider style={{margin: '12px 0', borderColor: 'rgba(217,217,217,0.5)'}}/>
                                     <Form.Item
                                         label={serviceType === 'delivery' ? '예약일자' : '보관기간'}
                                         colon={false}
@@ -286,7 +302,7 @@ function NewReservationAddPage() {
                                     >
                                         <ReservationDatePicker/>
                                     </Form.Item>
-                                    <Divider style={{margin: '12px 0', borderColor: '#d9d9d9'}}/>
+                                    <Divider style={{margin: '12px 0', borderColor: 'rgba(217,217,217,0.5)'}}/>
                                     <Form.Item label="짐갯수" colon={false} className="separated-form-item">
                                         {[
                                             {label: '대(30인치 이상)', onChange: handleLargeCountChange},
@@ -300,11 +316,12 @@ function NewReservationAddPage() {
                                             </div>
                                         ))}
                                     </Form.Item>
-                                    <Divider style={{margin: '12px 0', borderColor: '#d9d9d9'}}/>
+                                    <Divider style={{margin: '12px 0', borderColor: 'rgba(217,217,217,0.5)'}}/>
                                     <Form.Item
                                         label="결제금액"
                                         colon={false}
                                         className="separated-form-item"
+
                                     >
                                         <PaymentDisplay amount={totalPayment}/>
                                     </Form.Item>
@@ -339,21 +356,22 @@ function NewReservationAddPage() {
                                         rules={[{required: true, message: '예약자명을 입력해주세요'}]}
                                         className="separated-form-item"
                                     >
-                                        <Input/>
+                                        <Input placeholder="ex) 홍길동" style={{ width: '100%' }}/>
                                     </Form.Item>
-                                    <Divider style={{ margin: '12px 0', borderColor: '#d9d9d9' }} />
+                                    <Divider style={{ margin: '16px 0', borderColor: 'rgba(217,217,217,0.5)' }} />
                                     <Form.Item
                                         label="이메일"
                                         name="email"
                                         rules={[{required: true, type: 'email', message: '올바른 이메일을 입력해주세요'}]}
                                         className="separated-form-item"
                                     >
-                                        <Input/>
+                                        <Input placeholder="ex) test123@example.com" style={{ width: '100%' }}/>
                                     </Form.Item>
                                     <Divider style={{
                                         margin: '16px 0',
                                         borderTop: '1px solid #d9d9d9',
                                         width: '100%',
+                                        borderColor: 'rgba(217,217,217,0.5)'
                                     }} />
                                     <Form.Item
                                         label="연락처"
@@ -364,7 +382,7 @@ function NewReservationAddPage() {
                                         ]}
                                         className="separated-form-item"
                                     >
-                                        <Input placeholder="010-1234-5678"/>
+                                        <Input placeholder="010-1234-5678" style={{ width: '100%' }} />
                                     </Form.Item>
                                     {/*<Form.Item style={{ textAlign: 'center', marginTop: 40 }}>*/}
                                     {/*</Form.Item>*/}
