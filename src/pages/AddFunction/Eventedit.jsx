@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { notification } from 'antd';
 import supabase from '../../lib/supabase.js';
 import '../../css/layout.css';
 import '../../css/ui.css';
@@ -31,7 +32,7 @@ function EventEdit() {
                 .single();
 
             if (error || !data) {
-                alert('이벤트 데이터를 불러오는 데 실패했습니다');
+                notification.error({ message: '이벤트 데이터를 불러오는 데 실패했습니다' });
                 return;
             }
 
@@ -64,7 +65,7 @@ function EventEdit() {
                 .upload(filePath, newFile);
 
             if (uploadError) {
-                alert('이미지 업로드에 실패했습니다');
+                notification.error({ message: '이미지 업로드에 실패했습니다' });
                 return;
             }
 
@@ -84,10 +85,10 @@ function EventEdit() {
             .eq('id', id);
 
         if (error) {
-            alert('수정에 실패했습니다');
+            notification.error({ message: '수정에 실패했습니다' });
         } else {
-            alert('이벤트가 수정되었습니다');
-            navigate('/event');
+            notification.success({ message: '이벤트가 수정되었습니다' });
+            navigate('/event/list');
         }
     };
 
