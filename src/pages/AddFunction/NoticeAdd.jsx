@@ -59,7 +59,7 @@ function NoticeAdd() {
         if (error) {
             alert('공지 등록 실패');
         } else {
-            alert('공지 등록 완료!');
+            alert('공지 등록 완료');
             navigate('/notice');
         }
     };

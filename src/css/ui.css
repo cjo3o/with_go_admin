@@ -52,6 +52,54 @@
     color: white;
 }
 
+.btn-best {
+    border: 1px solid;
+    border-radius: 20px;
+    font-weight: bold;
+    padding: 4px 14px;
+    font-size: 14px;
+    min-width: 56px;
+    text-align: center;
+    transition: all 0.2s ease, transform 0.2s ease;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.btn-best:hover {
+    transform: translateY(-2px);
+}
+
+.btn-best.blue {
+    color: rgb(0, 102, 204);
+    border-color: rgb(0, 102, 204);
+}
+
+.btn-best.blue:hover {
+    background-color: rgb(0, 102, 204);
+    color: white;
+}
+
+.btn-best.orange {
+    background-color: #ff9900;
+    color: white;
+    border-color: #ff9900;
+}
+
+.btn-best.orange:hover {
+    background-color: #fab34a;
+    color: white;
+}
+
+.review-best,
+.event-active-row {
+    background-color: #fff7d6;
+    font-weight: 500;
+}
+
+.event-active-row {
+    font-weight: bold;         /* 볼드체 */
+    color: #ff9900;            /* 오렌지 텍스트 */
+}
 
 .form {
     display: flex;
