@@ -99,6 +99,11 @@ function Memberlist() {
     }
   };
 
+  useEffect(() => {
+    // 페이지 바뀔 때 선택 초기화
+    setSelectedIds([]);
+  }, [currentPage2]);
+
   return (
     <>
       <div className={`${MemberStyle.main} main`}>

@@ -34,17 +34,44 @@ function DriverList() {
 
   useEffect(() => {
     fetchDrivers();
+
+    const subscription = supabase
+      .channel('driver_list_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', //
+          schema: 'public',
+          table: 'DriverList',
+        },
+        () => {
+          fetchDrivers();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
 
   const handleAllCheck = (e) => {
     const checked = e.target.checked;
     setIsAllChecked(checked);
     if (checked) {
-      setSelectedDrivers(filteredDrivers.map((driver) => driver.id));
+      setSelectedDrivers((prev) => [
+        ...prev,
+        ...currentDrivers
+          .filter((driver) => !prev.includes(driver.id))
+          .map((driver) => driver.id),
+      ]);
     } else {
-      setSelectedDrivers([]);
+      setSelectedDrivers((prev) =>
+        prev.filter((id) => !currentDrivers.some((driver) => driver.id === id))
+      );
     }
   };
+
 
   const handleDriverCheck = (e, driverId) => {
     const checked = e.target.checked;
@@ -98,12 +125,18 @@ function DriverList() {
     }
   };
 
+  // 현재 페이지에 맞는 데이터를 필터링
+  const currentDrivers = filteredDrivers.slice(
+    (currentPage3 - 1) * usersPerPage3,
+    currentPage3 * usersPerPage3
+  );
+
   useEffect(() => {
     setIsAllChecked(
-      filteredDrivers.length > 0 &&
-        filteredDrivers.every((driver) => selectedDrivers.includes(driver.id))
+      currentDrivers.length > 0 &&
+      currentDrivers.every((driver) => selectedDrivers.includes(driver.id))
     );
-  }, [filteredDrivers, selectedDrivers]);
+  }, [currentDrivers, selectedDrivers]);
 
   const openModal = (driver) => {
     setSelectedDriver(driver);
@@ -113,11 +146,11 @@ function DriverList() {
     setSelectedDriver(null);
   };
 
-  // 현재 페이지에 맞는 데이터를 필터링
-  const currentDrivers = filteredDrivers.slice(
-    (currentPage3 - 1) * usersPerPage3,
-    currentPage3 * usersPerPage3
-  );
+  const handlePageChange4 = (page) => {
+    setCurrentPage3(page);
+    setSelectedDrivers([]);  // ✅ 페이지 변경 시 선택 초기화
+  };
+
 
   const totalPages3 = Math.ceil(filteredDrivers.length / usersPerPage3);
 
@@ -213,7 +246,7 @@ function DriverList() {
           <Pagination
             currentPage2={currentPage3}
             totalPages2={totalPages3}
-            setCurrentPage2={setCurrentPage3}
+            setCurrentPage2={handlePageChange4}
           />
         </div>
       </div>
