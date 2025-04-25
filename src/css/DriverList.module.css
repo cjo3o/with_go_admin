@@ -120,7 +120,7 @@ tfoot td {
 }
 
 .dtable table {
-  min-width: 1370px;
+  min-width: 1100px;
 }
 
 @media (max-width: 768px) {
@@ -139,6 +139,6 @@ tfoot td {
   }
 
   .dtable table {
-    min-width: 1380px;
+    min-width: 1100px;
   }
 }

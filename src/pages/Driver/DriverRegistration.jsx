@@ -137,40 +137,42 @@ function DriverRegistration() {
     <>
       <div className='main'>
         <div className={DrStyle.DR_top}>기사 관리</div>
-        <div className={`${DrStyle.DR_main} ${DrStyle.card}`}>
+        <div className={`${DrStyle.DR_main} ${DrStyle.card} card`}>
           <div className={DrStyle.MainTop}>
-            <h3>기사 등록</h3>
-            <Button type="primary" onClick={goToDriverList}>
-              목록
-            </Button>
+            <div>
+              <h3>기사 등록</h3>
+            </div>
+            <div>
+              <Button type="primary" onClick={goToDriverList}>
+                목록
+              </Button>
+            </div>
           </div>
           <form className={DrStyle.DriverForm} onSubmit={handleSubmit2}>
             <div className={DrStyle.FormUp}>
               <div className={DrStyle.imge}>
                 {previewImage2 ? (
                   <div className={DrStyle.preview}>
-                    <img src={previewImage2} alt="미리보기" width="150" />
+                    <img src={previewImage2} alt="미리보기" />
                   </div>
                 ) : (
                   <div className={DrStyle.nopreview}>
                     등록된 사진이 없습니다.
                   </div>
                 )}
-                <div style={{ width: "150px", overflow: "visible" }}>
+                <div className={DrStyle.imgefile}>
                   <input type="file" onChange={handleImageChange2} />
                 </div>
               </div>
               <div className={DrStyle.formright}>
                 <div className={`${DrStyle.Group} ${DrStyle.name}`}>
                   <label htmlFor="name"><em className={DrStyle.fem}>*</em>
-                    <span>이</span>
-                    <span style={{ marginRight: '25px' }}></span>
-                    <span>름</span>
+                    이름
                   </label>
                   <input type="text" name="name" value={formData2.name} onChange={handleChange2} ref={nameInputRef} autoComplete="off" required />
                 </div>
                 <div className={`${DrStyle.Group} ${DrStyle.birthday}`}>
-                  <label htmlFor="birthday"><em className={DrStyle.fem}>*</em>생년월일</label>
+                  <label htmlFor="birthday" mar><em className={DrStyle.fem}>*</em>생년월일</label>
                   <input type="number"
                     name="birthday"
                     value={formData2.birthday}
@@ -194,9 +196,7 @@ function DriverRegistration() {
                 </div>
                 <div className={`${DrStyle.Group} ${DrStyle.gender4}`}>
                   <label htmlFor="gender3"><em className={DrStyle.fem}>*</em>
-                    <span>성</span>
-                    <span style={{ marginRight: '25px' }}></span>
-                    <span>별</span>
+                    성별
                   </label>
                   <div className={DrStyle.gender2}>
                     <input type="radio" name="gender" id="male" value="남"
@@ -221,16 +221,13 @@ function DriverRegistration() {
             </div>
             <div className={`${DrStyle.Group} ${DrStyle.address}`}>
               <label htmlFor="address"><em className={DrStyle.fem}>*</em>
-                <span>주</span>
-                <span style={{ marginRight: '12px' }}></span>
-                <span>소</span>
+                주소
               </label>
               <input type="text" name="address" value={formData2.address} onChange={handleChange2} autoComplete="off" required />
             </div>
             <div className={`${DrStyle.Group} ${DrStyle.memo}`}>
               <label htmlFor="memo">
                 <span style={{ marginLeft: '8px' }}>메</span>
-                <span style={{ marginRight: '12px' }}></span>
                 <span>모</span>
               </label>
               <textarea name="memo" value={formData2.memo} onChange={handleChange2}></textarea>

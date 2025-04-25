@@ -254,6 +254,7 @@ tr {
 
 .admin_search {
   display: flex;
+  gap: 16px;
   align-items: center;
   margin-bottom: 10px;
 }
@@ -353,6 +354,7 @@ tr {
   .Admin_top {
     min-width: 445px;
   }
+
   .Admin_content {
     width: 445px;
     min-width: 100%;
@@ -382,6 +384,7 @@ tr {
   .left {
     height: 200px;
   }
+
   .left1 {
     width: 100%;
     text-align: center;
@@ -399,7 +402,8 @@ tr {
   }
 
   .left2_1 {
-    font-size: 2rem; /* 기존 4rem → 작게 조정 */
+    font-size: 2rem;
+    /* 기존 4rem → 작게 조정 */
   }
 
   .left2_2 {
@@ -505,24 +509,38 @@ tr {
     margin-bottom: 15px;
   }
 
-  /* .admin_search {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  } */
-   .list_up h3 {
-    font-size: 0.9rem;
-   }
-   .admin_search {
+  .list_up {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
-   }
-
-  .custom_radio_button {
-    display: none;
+    flex-wrap: wrap;
   }
 
+  .list_title {
+    margin-bottom: 10px;
+  }
+
+  .admin_search {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .list_up h3 {
+    font-size: 0.9rem;
+  }
+
+  .admin_search {
+    margin-bottom: 10px;
+  }
+
+  /* .custom_radio_button {
+    display: none;
+  } */
+
   .table_over {
-    overflow:hidden;
+    overflow: hidden;
     overflow-x: scroll;
     width: 100%;
   }
