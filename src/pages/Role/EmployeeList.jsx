@@ -21,30 +21,30 @@ function EmployeeList(props) {
     const [messageApi, contextHolder] = message.useMessage();
     const [form] = Form.useForm();
 
-    const columns = [
-        {title: "번호", dataIndex: "no"},
-        {title: "이름", dataIndex: "name"},
-        {title: "이메일", dataIndex: "email"},
-        {title: "부서", dataIndex: "department"},
-        {title: "직위", dataIndex: "position"},
-        {title: "가입일", dataIndex: "created_at", render: (text) => (text.split('T').shift())},
-        {title: "권한", dataIndex: "role"},
-        {title: "상태", dataIndex: "status"},
-        {
-            title: "메모",
-            render: (_, record) => <Button color="default" variant="filled" onClick={() => showMemo(record)}>
-                메모
-            </Button>
-        },
-        {
-            title: "관리", render: (_, record) => <div style={{display: "flex", gap: "10px", justifyContent: "center"}}>
-                <Button icon={<EditOutlined/>} shape="square" size="medium"
-                        onClick={() => showEdit(record)}/>
-                <Button icon={<DeleteOutlined/>} shape="square" size="medium"
-                        onClick={() => showDelete(record)}/>
-            </div>
-        },
-    ]
+    // const columns = [
+    //     {title: "번호", dataIndex: "no"},
+    //     {title: "이름", dataIndex: "name"},
+    //     {title: "이메일", dataIndex: "email"},
+    //     {title: "부서", dataIndex: "department"},
+    //     {title: "직위", dataIndex: "position"},
+    //     {title: "가입일", dataIndex: "created_at", render: (text) => (text.split('T').shift())},
+    //     {title: "권한", dataIndex: "role"},
+    //     {title: "상태", dataIndex: "status"},
+    //     {
+    //         title: "메모",
+    //         render: (_, record) => <Button color="default" variant="filled" onClick={() => showMemo(record)}>
+    //             메모
+    //         </Button>
+    //     },
+    //     {
+    //         title: "관리", render: (_, record) => <div style={{display: "flex", gap: "10px", justifyContent: "center"}}>
+    //             <Button icon={<EditOutlined/>} shape="square" size="medium"
+    //                     onClick={() => showEdit(record)}/>
+    //             <Button icon={<DeleteOutlined/>} shape="square" size="medium"
+    //                     onClick={() => showDelete(record)}/>
+    //         </div>
+    //     },
+    // ]
 
     const showMemo = (employee) => {
         setSelectedEmployee(employee);
@@ -176,48 +176,53 @@ function EmployeeList(props) {
                 </div>
                 <div className='card'>
                     <div className="title">직원목록</div>
-                    <Table dataSource={rowdata} columns={columns} rowKey="no">
-                        {/*<thead>*/}
-                        {/*<tr>*/}
-                        {/*    <th>번호</th>*/}
-                        {/*    <th>이름</th>*/}
-                        {/*    <th>이메일</th>*/}
-                        {/*    <th>부서</th>*/}
-                        {/*    <th>직위</th>*/}
-                        {/*    <th>권한</th>*/}
-                        {/*    <th>가입일</th>*/}
-                        {/*    <th>상태</th>*/}
-                        {/*    <th>메모</th>*/}
-                        {/*    <th>관리</th>*/}
-                        {/*</tr>*/}
-                        {/*</thead>*/}
-                        {/*<tbody>*/}
-                        {/*{rowdata.map(item => (*/}
-                        {/*    <tr key={item.no}>*/}
-                        {/*        <td>{item.no}</td>*/}
-                        {/*        <td>{item.name}</td>*/}
-                        {/*        <td>{item.email}</td>*/}
-                        {/*        <td>{item.department}</td>*/}
-                        {/*        <td>{item.position}</td>*/}
-                        {/*        <td>{item.role}</td>*/}
-                        {/*        <td>{item.created_at.split('T').shift()}</td>*/}
-                        {/*        <td>{item.status}</td>*/}
-                        {/*        <td><Button color="default" variant="filled" onClick={() => showMemo(item)}>*/}
-                        {/*            메모*/}
-                        {/*        </Button></td>*/}
-                        {/*        <td>*/}
-                        {/*            <div style={{display: "flex", gap: "10px", justifyContent: "center"}}>*/}
-                        {/*                <Button icon={<EditOutlined/>} shape="square" size="medium"*/}
-                        {/*                        onClick={() => showEdit(item)}/>*/}
-                        {/*                <Button icon={<DeleteOutlined/>} shape="square" size="medium"*/}
-                        {/*                        onClick={() => showDelete(item)}/>*/}
-                        {/*            </div>*/}
-                        {/*        </td>*/}
+                    {/*<Table dataSource={rowdata} columns={columns} rowKey="no">*/}
 
-                        {/*    </tr>*/}
-                        {/*))}*/}
-                        {/*</tbody>*/}
-                    </Table>
+                    {/*</Table>*/}
+                    <div className="table-wrapper">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>이름</th>
+                                <th>이메일</th>
+                                <th>부서</th>
+                                <th>직위</th>
+                                <th>권한</th>
+                                <th>가입일</th>
+                                <th>상태</th>
+                                <th>메모</th>
+                                <th>관리</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {rowdata.map(item => (
+                                <tr key={item.no}>
+                                    <td>{item.no}</td>
+                                    <td>{item.name}</td>
+                                    <td>{item.email}</td>
+                                    <td>{item.department}</td>
+                                    <td>{item.position}</td>
+                                    <td>{item.role}</td>
+                                    <td>{item.created_at.split('T').shift()}</td>
+                                    <td>{item.status}</td>
+                                    <td><Button color="default" variant="filled" onClick={() => showMemo(item)}>
+                                        메모
+                                    </Button></td>
+                                    <td>
+                                        <div style={{display: "flex", gap: "10px", justifyContent: "center"}}>
+                                            <Button icon={<EditOutlined/>} shape="square" size="medium"
+                                                    onClick={() => showEdit(item)}/>
+                                            <Button icon={<DeleteOutlined/>} shape="square" size="medium"
+                                                    onClick={() => showDelete(item)}/>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
                     <div style={{textAlign: 'right', marginTop: '2rem'}}>
                         <Button type="primary" onClick={() => showInsert()}>
                             새 직원 등록

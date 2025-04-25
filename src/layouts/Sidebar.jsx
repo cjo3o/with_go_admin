@@ -52,9 +52,6 @@ function Sidebar(props) {
                     <div className="sidebar-content">
                         <div className="sidebar-logo">
                             <img src={logoWithgo} alt="WITHGO 로고" className="logo-img"/>
-                        </div>
-                        <div className="sidebar-title">
-                            <h2 className="menu-title">관리자 메뉴</h2>
                             <div className="menu-icons">
                                 <Link to="/" className="icon-link" onClick={boolSidebar}>
                                     <img src={homeIcon} alt="홈으로" className="menu-icon"/>
@@ -62,7 +59,23 @@ function Sidebar(props) {
                                 <a href="https://cjo3o.github.io/with_go/index.html" className="icon-link">
                                     <img src={backIcon} alt="뒤로가기" className="menu-icon"/>
                                 </a>
+                            </div>
+                        </div>
+                        {/*<div className="sidebar-title">*/}
+                        {/*    <h2 className="menu-title">관리자 메뉴</h2>*/}
 
+                        {/*</div>*/}
+                        <div className="sidebar-footer">
+                            <div className="footer-profile-row">
+                                <div className="profile-left">
+                                    <img src={profileIcon} alt="프로필" className="profile-icon"/>
+                                    <div className="profile-label">{emRole}</div>
+                                </div>
+                                <div className="profile-right">
+                                    <p className="profile-name">{emName} 님</p>
+                                    <p className="profile-greeting">안녕하세요</p>
+                                    <button className="logout-btn" onClick={logout}>로그아웃</button>
+                                </div>
                             </div>
                         </div>
                         <ul>
@@ -216,19 +229,7 @@ function Sidebar(props) {
                             )}
 
                         </ul>
-                        <div className="sidebar-footer">
-                            <div className="footer-profile-row">
-                                <div className="profile-left">
-                                    <img src={profileIcon} alt="프로필" className="profile-icon"/>
-                                    <div className="profile-label">관리자전용</div>
-                                </div>
-                                <div className="profile-right">
-                                    <p className="profile-name">{emName} 님</p>
-                                    <p className="profile-greeting">안녕하세요</p>
-                                    <button className="logout-btn" onClick={logout}>로그아웃</button>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                     {
                         !screens.md && (

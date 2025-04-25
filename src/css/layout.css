@@ -40,7 +40,8 @@ table {
     width: 100%;
     min-width: 800px;
     border-collapse: collapse;
-    table-layout: fixed;
+    table-layout: auto;
+    overflow: hidden;
 }
 
 .table-wrapper {
