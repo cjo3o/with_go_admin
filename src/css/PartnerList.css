@@ -181,6 +181,32 @@
     cursor: not-allowed;
 }
 
+.btn_P {
+    padding: 6px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+    height: 32px;
+}
+
+.btn-edit {
+    background-color: rgb(79, 23, 135);
+}
+.btn-edit:hover {
+    background-color: rgb(24, 1, 97);
+}
+
+.btn-delete {
+    background-color: rgb(158, 158, 158);
+}
+.btn-delete:hover {
+    background-color: rgb(247, 55, 79);
+}
+
 .page-btn, .group-btn, .arrow-btn {
     background-color: #fff;
     border: 1px solid #ccc;

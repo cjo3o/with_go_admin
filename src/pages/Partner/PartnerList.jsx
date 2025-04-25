@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import supabase from "../../lib/supabase.js";
 import "../../css/PartnerList.css"
-import {Checkbox, Image, message} from "antd";
+import {Checkbox, Image, message, Input} from "antd";
 import {useNavigate} from 'react-router-dom';
-import Lookup from "../../layouts/Lookup.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAnglesLeft, faAnglesRight, faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
 import {CloseOutlined} from "@ant-design/icons";
+import {SearchOutlined} from '@ant-design/icons';
 
 function PartnerList() {
     const [partners, setPartners] = useState([]);
@@ -14,6 +14,7 @@ function PartnerList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredPartners, setFilteredPartners] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [inputValue, setInputValue] = useState("");
 
     const itemsPerPage = 4;
     const totalPages = Math.ceil(filteredPartners.length / itemsPerPage);
@@ -153,7 +154,7 @@ function PartnerList() {
                             <div className="middle-actions" style={{display: 'flex', alignContent: 'center', gap: '10px'}}>
                                 <div className={`add-button-wrapper delBtnMargin`}>
                                     <button
-                                        className="btn btn-delete"
+                                        className="btn_P btn-delete"
                                         disabled={selectedPartners.length === 0}
                                         onClick={handleBulkDelete}
                                     >
@@ -161,7 +162,20 @@ function PartnerList() {
                                     </button>
                                 </div>
                                 <div className='PartnerList_Search'>
-                                    <Lookup onSearch={handleSearch}/>
+                                    <Input.Search
+                                        placeholder="제휴숙소 검색"
+                                        allowClear
+                                        enterButton={
+                                            <span>
+                    <SearchOutlined style={{marginRight: 4}}/>
+                    검색
+                  </span>
+                                        }
+                                        value={inputValue}
+                                        onChange={(e) => setInputValue(e.target.value)}
+                                        onSearch={handleSearch}
+                                        className="search-input default-style"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -180,7 +194,7 @@ function PartnerList() {
                                     </div>
                                     <div className="card-top-right">
                                         <button
-                                            className="btn btn-edit"
+                                            className="btn_P btn-edit"
                                             onClick={() => {
                                                 const res = sessionStorage.getItem("role")
                                                 if (res !== '관리자') {
