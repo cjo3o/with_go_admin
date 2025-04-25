@@ -4,13 +4,15 @@ import MemberStyle from "../../css/Memberlist.module.css";
 import Pagination from "../../layouts/Pagination.jsx";
 import LookupSearch from "../../components/LookupSearch.jsx";
 import UserList from "../../components/UserList.jsx";
-import { Checkbox } from "antd";
+import { Checkbox, Input } from "antd";
 import supabaseRole from "../../lib/supabaserole.js";
+import { SearchOutlined } from "@ant-design/icons";
 
 function Memberlist() {
   const [users, setUsers] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
 
+  const [inputValue, setInputValue] = useState("");
   const [searchTerm2, setSearchTerm2] = useState("");
   const [currentPage2, setCurrentPage2] = useState(1);
   const usersPerPage2 = 10;
@@ -97,17 +99,42 @@ function Memberlist() {
     }
   };
 
+  useEffect(() => {
+    // 페이지 바뀔 때 선택 초기화
+    setSelectedIds([]);
+  }, [currentPage2]);
+
   return (
     <>
       <div className={`${MemberStyle.main} main`}>
         <div className={MemberStyle.Memberlist_top}>회원 목록</div>
-        <div className={`${MemberStyle.Memberlist_content} ${MemberStyle.card}`}>
+        <div className={`${MemberStyle.Memberlist_content} card`}>
           <div className={MemberStyle.Memberlist_search}>
             <h3>회원 목록</h3>
-            <LookupSearch
-              onSearch={handleSearch2}
-              placeholder="검색어를 입력하세요"
-            />
+            <div>
+              {selectedIds.length > 0 && (
+                <button
+                  className={MemberStyle.btn_delete}
+                  onClick={DeleteSelected}
+                >
+                  선택 삭제 ({selectedIds.length})
+                </button>
+              )}
+              <Input.Search
+                placeholder="리뷰 검색"
+                allowClear
+                enterButton={
+                  <span>
+                    <SearchOutlined style={{ marginRight: 4 }} />
+                    검색
+                  </span>
+                }
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onSearch={handleSearch2}
+                className="search-input default-style"
+              />
+            </div>
           </div>
           <div className={MemberStyle.mtable}>
             <table>
@@ -155,22 +182,6 @@ function Memberlist() {
                 ))}
                 {noResultsMessage}
               </tbody>
-              <tfoot>
-                <tr>
-                  <td colSpan="7">
-                    <div className={MemberStyle.foot_btn}>
-                      {selectedIds.length > 0 && (
-                        <button
-                          className={MemberStyle.btn_delete}
-                          onClick={DeleteSelected}
-                        >
-                          선택 삭제 ({selectedIds.length})
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              </tfoot>
             </table>
           </div>
           <Pagination

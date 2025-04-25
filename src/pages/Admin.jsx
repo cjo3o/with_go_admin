@@ -3,9 +3,10 @@ import custody from "../assets/Icon/custody.svg";
 import delivery from "../assets/Icon/delivery.svg";
 import AdminStyle from "../css/Admin.module.css";
 import supabase from "../lib/supabase.js";
+import {SearchOutlined} from '@ant-design/icons';
 
 import Lookup from "../../src/layouts/Lookup.jsx";
-import { Radio } from "antd";
+import { Radio, Input } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAnglesLeft,
@@ -23,6 +24,7 @@ function Admin() {
   const [deliveryt, setdelivery] = useState([]);
   const [storage, setstorage] = useState([]);
   const [twoData, settwoData] = useState([]);
+  const [inputValue, setInputValue] = useState('');
   const [searchTerm, setSearchTerm] = useState("");
   const [statusLogs, setStatusLogs] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -330,7 +332,7 @@ function Admin() {
 
   return (
     <>
-      <div className='main'>
+      <div className="main">
         <div className={AdminStyle.Admin_top}>관리자 메인</div>
         <div className={AdminStyle.Admin_content}>
           <div className={AdminStyle.top}>
@@ -418,9 +420,20 @@ function Admin() {
                     배송
                   </Radio.Button>
                 </Radio.Group>
-                <Lookup
+
+                <Input.Search
+                  placeholder="리뷰 검색"
+                  allowClear
+                  enterButton={
+                    <span>
+                      <SearchOutlined style={{ marginRight: 4 }} />
+                      검색
+                    </span>
+                  }
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
                   onSearch={handleSearch}
-                  placeholder="검색어를 입력하세요"
+                  className="search-input default-style"
                 />
               </div>
             </div>

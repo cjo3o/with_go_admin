@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import DlStyle from "../../css/DriverList.module.css";
-import LookupSearch from '../../components/LookupSearch2.jsx';
-import { Checkbox } from 'antd';
+import LookupSearch from "../../components/LookupSearch2.jsx";
+import { Checkbox, Input } from "antd";
 import { supabase } from "../../lib/supabase.js";
-import DriverListRow from '../../components/DriverListRow.jsx';
-import DriverListModal from './DriverListModal.jsx';
+import DriverListRow from "../../components/DriverListRow.jsx";
+import DriverListModal from "./DriverListModal.jsx";
 import Pagination from "../../layouts/Pagination.jsx";
+import { SearchOutlined } from "@ant-design/icons";
 
 function DriverList() {
   const [drivers, setDrivers] = useState([]);
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [selectedDrivers, setSelectedDrivers] = useState([]);
   const [searchTerm3, setSearchTerm3] = useState("");
+  const [inputValue, setInputValue] = useState("");
+
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [currentPage3, setCurrentPage3] = useState(1);
-  const usersPerPage3 = 10;
+  const usersPerPage3 = 5;
 
   const fetchDrivers = async () => {
     const { data, error } = await supabase
@@ -31,17 +34,44 @@ function DriverList() {
 
   useEffect(() => {
     fetchDrivers();
+
+    const subscription = supabase
+      .channel('driver_list_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', //
+          schema: 'public',
+          table: 'DriverList',
+        },
+        () => {
+          fetchDrivers();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
 
   const handleAllCheck = (e) => {
     const checked = e.target.checked;
     setIsAllChecked(checked);
     if (checked) {
-      setSelectedDrivers(filteredDrivers.map((driver) => driver.id));
+      setSelectedDrivers((prev) => [
+        ...prev,
+        ...currentDrivers
+          .filter((driver) => !prev.includes(driver.id))
+          .map((driver) => driver.id),
+      ]);
     } else {
-      setSelectedDrivers([]);
+      setSelectedDrivers((prev) =>
+        prev.filter((id) => !currentDrivers.some((driver) => driver.id === id))
+      );
     }
   };
+
 
   const handleDriverCheck = (e, driverId) => {
     const checked = e.target.checked;
@@ -95,12 +125,18 @@ function DriverList() {
     }
   };
 
+  // 현재 페이지에 맞는 데이터를 필터링
+  const currentDrivers = filteredDrivers.slice(
+    (currentPage3 - 1) * usersPerPage3,
+    currentPage3 * usersPerPage3
+  );
+
   useEffect(() => {
     setIsAllChecked(
-      filteredDrivers.length > 0 &&
-        filteredDrivers.every((driver) => selectedDrivers.includes(driver.id))
+      currentDrivers.length > 0 &&
+      currentDrivers.every((driver) => selectedDrivers.includes(driver.id))
     );
-  }, [filteredDrivers, selectedDrivers]);
+  }, [currentDrivers, selectedDrivers]);
 
   const openModal = (driver) => {
     setSelectedDriver(driver);
@@ -110,22 +146,42 @@ function DriverList() {
     setSelectedDriver(null);
   };
 
-  // 현재 페이지에 맞는 데이터를 필터링
-  const currentDrivers = filteredDrivers.slice(
-    (currentPage3 - 1) * usersPerPage3,
-    currentPage3 * usersPerPage3
-  );
+  const handlePageChange4 = (page) => {
+    setCurrentPage3(page);
+    setSelectedDrivers([]);  // ✅ 페이지 변경 시 선택 초기화
+  };
+
 
   const totalPages3 = Math.ceil(filteredDrivers.length / usersPerPage3);
 
   return (
     <>
-      <div className='main'>
+      <div className="main">
         <div className={DlStyle.DL_top}>기사 관리</div>
         <div className={`${DlStyle.DL_main} ${DlStyle.card}`}>
           <div className={DlStyle.MainTop}>
             <h3>기사 목록</h3>
-            <LookupSearch onSearch={handleSearch3} />
+            <div>
+              {selectedDrivers.length > 0 && (
+                <button className={DlStyle.btn_delete} onClick={DeleteSelected}>
+                  <span>선택 삭제</span> ({selectedDrivers.length})
+                </button>
+              )}
+              <Input.Search
+                placeholder="기사 검색"
+                allowClear
+                enterButton={
+                  <span>
+                    <SearchOutlined style={{ marginRight: 4 }} />
+                    검색
+                  </span>
+                }
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onSearch={handleSearch3}
+                className="search-input default-style"
+              />
+            </div>
           </div>
           <div className={DlStyle.dtable}>
             <table>
@@ -185,28 +241,12 @@ function DriverList() {
                   </tr>
                 )}
               </tbody>
-              <tfoot>
-                <tr>
-                  <td colSpan="11">
-                    <div className={DlStyle.foot_btn}>
-                      {selectedDrivers.length > 0 && (
-                        <button
-                          className={DlStyle.btn_delete}
-                          onClick={DeleteSelected}
-                        >
-                          선택 삭제 ({selectedDrivers.length})
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              </tfoot>
             </table>
           </div>
           <Pagination
             currentPage2={currentPage3}
             totalPages2={totalPages3}
-            setCurrentPage2={setCurrentPage3}
+            setCurrentPage2={handlePageChange4}
           />
         </div>
       </div>
