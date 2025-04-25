@@ -59,6 +59,7 @@ function NoticePromotion() {
       <div className="header">공지사항 관리</div>
       <div className="card">
         <div className="title">공지사항 리스트</div>
+        <div className="table-wrapper">
         <table className="notice-table common-table">
           <thead>
             <tr>
@@ -113,6 +114,7 @@ function NoticePromotion() {
             ))}
           </tbody>
         </table>
+        </div>
 
         <div className="table-footer bottom-right-btn">
           {selectedIds.length > 0 && (
