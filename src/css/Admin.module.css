@@ -3,6 +3,7 @@
 }
 
 .Admin_top {
+  min-width: 1350px;
   font-size: 24px;
   font-weight: bold;
   padding: 0 0 20px 0;
@@ -255,25 +256,6 @@ tr {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-}
-
-/* .search_sel {
-  text-align: center;
-  width: 100px;
-  height: 40px;
-  margin-right: 5px;
-  margin-top: 10px;
-  background: #ffffff;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #d9d9d9;
-  border-radius: 6px;
-} */
-
-.custom_radio_button {
-  height: 40px;
-  line-height: 40px;
-  margin-top: 10px;
 }
 
 .pagination {
@@ -532,7 +514,7 @@ tr {
     font-size: 0.9rem;
    }
    .admin_search {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
    }
 
   .custom_radio_button {

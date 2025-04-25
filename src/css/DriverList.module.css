@@ -33,7 +33,7 @@
 .MainTop{
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px
+  margin-bottom: 10px
 } 
 
 .th_first {
@@ -48,20 +48,14 @@
   font-size: 1.2rem;
 }
 
-.foot_btn {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  padding: 10px 0;
-}
-
 .btn_delete {
+  height: 32px;
   padding: 8px 16px;
   font-size: 14px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  margin: 0 4px;
+  margin: 0 10px 0 0;
   background-color: rgb(158, 158, 158);
   color: white;
 }
@@ -119,8 +113,14 @@ tfoot td {
   cursor: default !important;
 }
 
-.DL_main {
-  min-width: 1440px;
+.dtable {
+  overflow:hidden;
+  overflow-x: scroll;
+  width: 100%;
+}
+
+.dtable table {
+  min-width: 1370px;
 }
 
 @media (max-width: 768px) {
