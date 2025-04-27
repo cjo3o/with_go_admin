@@ -79,12 +79,14 @@
 }
 
 .arrow_btn2:hover {
+  transition: all 0.2s ease;
   transform: translateY(-2px);
   background-color: #0056b3;
   color: white;
 }
 
 .arrow_btn2:disabled {
+  transform: translateY(0px);
   background-color: #f0f0f0;
   color: #aaa;
   cursor: default;

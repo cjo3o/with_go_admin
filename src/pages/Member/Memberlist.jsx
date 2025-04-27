@@ -121,7 +121,7 @@ function Memberlist() {
                 </button>
               )}
               <Input.Search
-                placeholder="리뷰 검색"
+                placeholder="회원 검색"
                 allowClear
                 enterButton={
                   <span>
