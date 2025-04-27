@@ -21,7 +21,7 @@ import {
 import supabase from "../../lib/supabase.js";
 import bcrypt from 'bcryptjs';
 import {useNavigate} from "react-router-dom";
-import LocationCascader from '../../components/Cascader';
+// import LocationCascader from '../../components/Cascader';
 
 import '../../css/NewReservationAdd.css';
 
@@ -90,12 +90,22 @@ function NewReservationAddPage() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [serviceType, setServiceType] = useState('delivery');
-    const [isReturnTrip, setIsReturnTrip] = useState(false);
     const [largeCount, setLargeCount] = useState(0);
     const [middleCount, setMiddleCount] = useState(0);
     const [smallCount, setSmallCount] = useState(0);
     const [totalPayment, setTotalPayment] = useState(0);
     const [storageDates, setStorageDates] = useState(null);  // 보관 기간 상태 선언 (추가)
+    // const [deliveryDates, setDeliveryDates] = useState(null);
+    const [detailAddress, setDetailAddress] = useState('');
+    const [cascaderValue, setCascaderValue] = useState([]);
+
+    const handleCascaderChange = (value) => {
+        setCascaderValue(value); // 선택한 지역구 값 저장
+    };
+
+    const handleDetailAddressChange = (e) => {
+        setDetailAddress(e.target.value);
+    };
 
     const locationOptions = [
         {
@@ -135,10 +145,11 @@ function NewReservationAddPage() {
 
 
     const onFinish = async (values) => {
-        const {name, email, phone} = values;
+        const { name, email, phone } = values;
         setLoading(true);
+
         try {
-            const reservationData = {
+            const commonData = {
                 name,
                 mail: email || null,
                 phone,
@@ -146,44 +157,55 @@ function NewReservationAddPage() {
                 medium: middleCount,
                 large: largeCount,
                 price: totalPayment,
-                location: serviceType === 'storage' ? storageLocation : null,
                 reservation_country: 'Korea',
-                storage_start_date: serviceType === 'storage' && storageDates?.[0] ? storageDates[0].format('YYYY-MM-DD') : null,
-                storage_end_date: serviceType === 'storage' && storageDates?.[1] ? storageDates[1].format('YYYY-MM-DD') : null,
             };
 
-            if (serviceType === 'storage' && (!storageDates || !storageDates[0] || !storageDates[1])) {
-                message.warning("보관 시작/종료 날짜를 선택해주세요");
-                setLoading(false);
-                return;
+            if (serviceType === 'storage') {
+                if (!storageDates || !storageDates[0] || !storageDates[1]) {
+                    message.warning("보관 시작/종료 날짜를 선택해주세요");
+                    setLoading(false);
+                    return;
+                }
+                const storageData = {
+                    ...commonData,
+                    location: storageLocation,
+                    storage_start_date: storageDates[0].format('YYYY-MM-DD'),
+                    storage_end_date: storageDates[1].format('YYYY-MM-DD'),
+                };
+                const { error } = await supabase.from('storage').insert([storageData]);
+                if (error) throw error;
+            } else if (serviceType === 'delivery') {
+                if (!storageDates || !storageDates[0]) {
+                    message.warning("배송 날짜를 선택해주세요");
+                    setLoading(false);
+                    return;
+                }
+                const deliveryArriveAddress = cascaderValue.join(' / ') + (detailAddress ? ` ${detailAddress}` : '');
+
+                const deliveryData = {
+                    ...commonData,
+                    delivery_date: storageDates[0].format('YYYY-MM-DD'),
+                    delivery_start: storageLocation,
+                    delivery_arrive: deliveryArriveAddress,
+                };
+                const { error } = await supabase.from('delivery').insert([deliveryData]);
+                if (error) throw error;
             }
 
-
-            const {error} = await supabase.from('storage')
-                .insert([reservationData]);
-            if (error) {
-                message.error("회원 추가 실패하였습니다.");
-                console.error("회원 추가 에러:", error);
-            } else {
-                // message.success('성공적으로 회원 추가 하였습니다.');
-                notification.success({message: '회원 등록 완료', description: '성공적으로 등록되었습니다.'});
-                // Modal.success({ title: '성공!', content: '작업이 완료되었습니다.', onOk: () => navigate('/ApplicationList') });
-            }
+            notification.success({ message: '예약 등록 완료', description: '성공적으로 등록되었습니다.' });
+            navigate('/ApplicationList');
         } catch (err) {
             message.error(`오류 발생: ${err.message}`);
-            console.error("회원 추가 중 오류:", err);
+            console.error("예약 등록 중 오류:", err);
         } finally {
             setLoading(false);
         }
-    }
+    };
+
 
     const handleServiceTypeChange = (e) => {
         setServiceType(e.target.value);
         setIsReturnTrip(false); // 서비스 타입 변경 시 왕복 체크 해제
-    };
-
-    const handleReturnTripChange = (e) => {
-        setIsReturnTrip(e.target.checked);
     };
 
     const handleLocationChange = value => {
@@ -231,7 +253,7 @@ function NewReservationAddPage() {
                 />
                 <Select
                     className="select"
-                    defaultValue={locationOptions[0]?.options[0]?.value}
+                    value={storageLocation}
                     style={{width: 120}}
                     onChange={handleLocationChange}
                     options={locationOptions}
@@ -239,16 +261,43 @@ function NewReservationAddPage() {
 
                 {serviceType === 'delivery' && (
                     <>
-                        <LocationCascader />
-                        <Input className="separated-form-item" placeholder="상세주소" style={{
-                            width: '100px',
-                            margin: '0',
-                        }} />
+                        <Cascader
+                            options={[{
+                                value: 'daegu', label: '대구', children: [
+                                    { value: 'junggu', label: '중구' },
+                                    { value: 'donggu', label: '동구' },
+                                    { value: 'seogu', label: '서구' },
+                                    { value: 'bukgu', label: '북구' },
+                                    { value: 'suseonggu', label: '수성구' },
+                                    { value: 'dalseogu', label: '달서구' },
+                                    { value: 'dalseonggun', label: '달성군' },
+                                ]
+                            }, {
+                                value: 'gyeongju', label: '경주', children: [
+                                    { value: 'andong', label: '안강읍' },
+                                    { value: 'gangdong', label: '강동면' },
+                                    { value: 'yangbuk', label: '양북면' },
+                                    { value: 'naenam', label: '내남면' },
+                                ]
+                            }]}
+                            value={cascaderValue}
+                            onChange={handleCascaderChange}
+                            displayRender={(labels) => labels.join(' / ')}
+                            placeholder="지역 선택"
+                            style={{ width: 150 }}
+                        />
+                        <Input
+                            placeholder="상세주소"
+                            style={{ width: '100px', marginLeft: '10px' }}
+                            value={detailAddress || ''}
+                            onChange={handleDetailAddressChange}
+                            allowClear
+                        />
                     </>
                 )}
 
             </div>
-            {serviceType === 'delivery' && isReturnTrip && (
+            {serviceType === 'delivery' && (
                 <RangePicker
                     renderExtraFooter={() => '※'}
                     showTime
@@ -341,6 +390,7 @@ function NewReservationAddPage() {
                                     backgroundColor: '#F9F9F9',
                                 }}>
                                 <Form
+                                    form={form}
                                     layout="horizontal"
                                     onFinish={onFinish}
                                     initialValues={{
@@ -393,7 +443,8 @@ function NewReservationAddPage() {
                                 textAlign: 'center'
                             }}>
                                 <Button type="primary"
-                                        htmlType="submit"
+                                        onClick={()=>form.submit()}
+                                        // htmlType="submit"
                                         loading={loading}
                                         style={{
                                             width: '100px',

@@ -169,6 +169,13 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1)
 }
 
+.middle-one-one {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    justify-content: end;
+}
+
 .select{
     margin: 13px 10px;
     height: 32px;

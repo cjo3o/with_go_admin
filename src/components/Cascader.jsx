@@ -12,7 +12,7 @@ const options = [
             { value: 'bukgu', label: '북구' },
             { value: 'suseonggu', label: '수성구' },
             { value: 'dalseogu', label: '달서구' },
-            { value: 'dalseogu', label: '달성군' },
+            { value: 'dalseonggun', label: '달성군' },
         ],
     },
     {

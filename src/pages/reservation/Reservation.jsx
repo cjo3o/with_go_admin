@@ -390,12 +390,33 @@ function Reservation() {
                         </div>
                     </div>
                 </div>
-                <div className="content_R">
-                    <div className="content_third">
+                {/*<div className="content_R">*/}
+                {/*    <div className="content_third">*/}
+                {/*        <Select*/}
+                {/*            defaultValue="name"*/}
+                {/*            onChange={(value) => setSearchField(value)}*/}
+                {/*            style={{width: 120, marginLeft: 20, marginRight: 15}}*/}
+                {/*        >*/}
+                {/*            <Select.Option value="name">예약자명</Select.Option>*/}
+                {/*            <Select.Option value="phone">연락처</Select.Option>*/}
+                {/*            <Select.Option value="driver">배정기사명</Select.Option>*/}
+                {/*        </Select>*/}
+                {/*        <Input*/}
+                {/*            className="custom-search-input"*/}
+                {/*            placeholder="검색어 입력"*/}
+                {/*            value={searchKeyword}*/}
+                {/*            onChange={(e) => setSearchKeyword(e.target.value)}*/}
+                {/*        />*/}
+                {/*        <Button type="primary" onClick={handleSearch}>검색</Button>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
+                <div className="content_middle">
+                    <div className="content_middle_one">
+                        <Button className="button-more" onClick={handleShowCheckbox}>다중관리</Button>
                         <Select
                             defaultValue="name"
                             onChange={(value) => setSearchField(value)}
-                            style={{width: 120, marginLeft: 20, marginRight: 15}}
+                            style={{width: 120, height: 40}}
                         >
                             <Select.Option value="name">예약자명</Select.Option>
                             <Select.Option value="phone">연락처</Select.Option>
@@ -407,25 +428,28 @@ function Reservation() {
                             value={searchKeyword}
                             onChange={(e) => setSearchKeyword(e.target.value)}
                         />
-                        <Button type="primary" onClick={handleSearch}>검색</Button>
-                    </div>
-                </div>
-                <div className="content_middle">
-                    <div className="content_middle_one">
-                        <Button className="button-more" onClick={handleShowCheckbox}>다중관리</Button>
-                        <div className="downmenu">
+                        <Button type="primary"
+                                onClick={handleSearch}
+                                style={{
+                                    height: 40,
+                                }}
+                        >검색</Button>
+                        <div className="middle-one-one">
+                            <Select
+                                defaultValue="recent"
+                                style={{
+                                    width: 120,
+                                    height: 40,
+                                    // marginRight: 8
+                                    float: "right",
+                                }}
+                                onChange={(value) => setSortOption(value)}
+                            >
+                                <Select.Option value="recent">최근등록순</Select.Option>
+                                <Select.Option value="driver">기사이름순</Select.Option>
+                            </Select>
+                            <FloatingBtn onClick={handleExcelDownload}/>
                         </div>
-                        <Select
-                            defaultValue="recent"
-                            style={{width: 120,
-                                height: 40,
-                                marginRight: 8}}
-                            onChange={(value) => setSortOption(value)}
-                        >
-                            <Select.Option value="recent">최근등록순</Select.Option>
-                            <Select.Option value="driver">기사이름순</Select.Option>
-                        </Select>
-                        <FloatingBtn onClick={handleExcelDownload}/>
                     </div>
                     <div className="content_middle_two">
                         <ExcelTable showCheckbox={showCheckbox} combinedSearchData={sortedData}/>
