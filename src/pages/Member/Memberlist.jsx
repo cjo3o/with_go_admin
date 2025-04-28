@@ -107,7 +107,7 @@ function Memberlist() {
   return (
     <>
       <div className={`${MemberStyle.main} main`}>
-        <div className={MemberStyle.Memberlist_top}>회원 목록</div>
+        <div className={MemberStyle.Memberlist_top}>회원 관리</div>
         <div className={`${MemberStyle.Memberlist_content} card`}>
           <div className={MemberStyle.Memberlist_search}>
             <h3>회원 목록</h3>
