@@ -32,7 +32,6 @@
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 80px;
     position: relative;
 }
 
@@ -154,6 +153,9 @@ th {
 @media (max-width: 767px) {
     .main {
         margin-left: 0;
+        padding: 45px 10px;
+        display: flex;
+        flex-direction: column;
     }
 }
 

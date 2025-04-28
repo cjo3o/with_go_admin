@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
-import luggage2 from "../../Images/luggage02.png"
-import luggage1 from "../../Images/luggage01.png"
+import luggage2 from "../../assets/Images/luggage_02.png"
+import luggage1 from "../../assets/Images/luggage_01.png"
 import FloatingBtn from "../../Components/ExcelDownload.jsx";
 import ExcelTable from "../../Components/ExcelTable.jsx";
 import {Button, DatePicker, Select, Input, message, Card} from "antd";
