@@ -2,15 +2,15 @@ import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
-import luggage2 from "../../assets/Images/luggage_02.png"
-import luggage1 from "../../assets/Images/luggage_01.png"
+import luggage2 from "../../Images/luggage02.png"
+import luggage1 from "../../Images/luggage01.png"
 import FloatingBtn from "../../Components/ExcelDownload.jsx";
 import ExcelTable from "../../Components/ExcelTable.jsx";
-import {Button, DatePicker, Select, Input, message} from "antd";
+import {Button, DatePicker, Select, Input, message, Card} from "antd";
 import dayjs from 'dayjs';
 import supabase from "../../lib/supabase.js";
 import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
+import {saveAs} from 'file-saver';
 
 import('../../css/Reservation.css')
 
@@ -33,7 +33,6 @@ function Reservation() {
         return today.toISOString().split('T')[0];
     });
     const [showDatePicker, setShowDatePicker] = useState(false);
-
 
 
     const handlePrevDate = () => {
@@ -63,14 +62,14 @@ function Reservation() {
     };
 
     const fetchReservationCounts = async (targetDate) => {
-        const { count: storage, error: storageError } = await supabase
+        const {count: storage, error: storageError} = await supabase
             .from('storage')
-            .select('*', { count: 'exact', head: true })
+            .select('*', {count: 'exact', head: true})
             .eq('storage_start_date', targetDate); // ✅ 날짜 필터
 
-        const { count: delivery, error: deliveryError } = await supabase
+        const {count: delivery, error: deliveryError} = await supabase
             .from('delivery')
-            .select('*', { count: 'exact', head: true })
+            .select('*', {count: 'exact', head: true})
             .eq('delivery_date', targetDate); // ✅ 날짜 필터
 
         if (storageError || deliveryError) {
@@ -141,17 +140,17 @@ function Reservation() {
 
     const fetchStatusCounts = async (targetDate) => {
         const conditions = ['처리완료', '취소', '미배정'];
-        const newCounts = { 처리완료: 0, 취소: 0, 미배정: 0 };
+        const newCounts = {처리완료: 0, 취소: 0, 미배정: 0};
 
         for (let status of conditions) {
             const [storageRes, deliveryRes] = await Promise.all([
                 supabase.from('storage')
-                    .select('*', { count: 'exact', head: true })
+                    .select('*', {count: 'exact', head: true})
                     .eq('situation', status)
                     .eq('storage_start_date', targetDate),
 
                 supabase.from('delivery')
-                    .select('*', { count: 'exact', head: true })
+                    .select('*', {count: 'exact', head: true})
                     .eq('situation', status)
                     .eq('delivery_date', targetDate),
             ]);
@@ -194,7 +193,7 @@ function Reservation() {
 
         // 컬럼 순서 및 정렬된 데이터 사용 (정렬은 sortedData가 필요하면 여기에 변경 가능)
         const formatSheet = (data) =>
-            data.map((row,index) => ({
+            data.map((row, index) => ({
                 번호: index + 1,
                 구분: row.division,
                 예약시간: row.reservationTime,
@@ -230,10 +229,10 @@ function Reservation() {
 
             // 머리글 스타일 (bold는 SheetJS 스타일 확장 사용 필요, 브라우저에선 기본 제한 있음)
             headerKeys.forEach((_, i) => {
-                const cellRef = XLSX.utils.encode_cell({ r: 0, c: i });
+                const cellRef = XLSX.utils.encode_cell({r: 0, c: i});
                 if (worksheet[cellRef]) {
                     worksheet[cellRef].s = {
-                        font: { bold: true }
+                        font: {bold: true}
                     };
                 }
             });
@@ -252,8 +251,8 @@ function Reservation() {
             return;
         }
 
-        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-        const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+        const excelBuffer = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
+        const blob = new Blob([excelBuffer], {type: 'application/octet-stream'});
 
         saveAs(blob, '위드고_예약자명단.xlsx');
         message.success('엑셀 다운로드가 완료되었습니다 ✅', 2.5);
@@ -303,136 +302,158 @@ function Reservation() {
     }, []);
 
     return (
-        <div className="main_R">
-            <div className="submain_R">
-                <div className="header_R">
-                    <h3>예약관리</h3>
-                </div>
+        <div className="main">
+            <div className="header">
+                <h3>예약관리</h3>
             </div>
-            <div className="subheader_R">
-                <p style={{fontSize: "17px", fontWeight: "bold", color: "#434343"}}>금일배송 / 보관 관리</p>
-            </div>
-            <div className="content_R">
-                <div
-                    className="content_first"
-                    style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "10px" }}
-                >
-                    <Button onClick={handlePrevDate} className="button">
-                        <FontAwesomeIcon icon={faChevronLeft} />
-                    </Button>
-
-                    <h2
-                        style={{ cursor: "pointer", margin: 0 }}
-                        onClick={() => setShowDatePicker(true)}
+            <div className="card">
+                <div className="title">금일배송 / 보관 관리</div>
+                <div className="content_R">
+                    <div
+                        className="content_first"
+                        style={{display: "flex", justifyContent: "center", alignItems: "center", gap: "10px"}}
                     >
-                        {new Date(selectedDate).toLocaleDateString('ko-KR')}
-                        {showDatePicker && (
-                            <DatePicker
-                                open
-                                defaultValue={dayjs(selectedDate)}
-                                onChange={(date, dateString) => {
-                                    setSelectedDate(dateString);
-                                    setShowDatePicker(false);
-                                }}
-                                onOpenChange={(open) => {
-                                    if (!open) setShowDatePicker(false);
-                                }}
-                                inputReadOnly
+                        <Button onClick={handlePrevDate} className="button">
+                            <FontAwesomeIcon icon={faChevronLeft}/>
+                        </Button>
+
+                        <h2
+                            style={{cursor: "pointer", margin: 0}}
+                            onClick={() => setShowDatePicker(true)}
+                        >
+                            {new Date(selectedDate).toLocaleDateString('ko-KR')}
+                            {showDatePicker && (
+                                <DatePicker
+                                    open
+                                    defaultValue={dayjs(selectedDate)}
+                                    onChange={(date, dateString) => {
+                                        setSelectedDate(dateString);
+                                        setShowDatePicker(false);
+                                    }}
+                                    onOpenChange={(open) => {
+                                        if (!open) setShowDatePicker(false);
+                                    }}
+                                    inputReadOnly
+                                    style={{
+                                        position: 'absolute',
+                                        zIndex: 1000,
+                                        width: 0,
+                                        height: 0,
+                                        opacity: 0,
+                                        pointerEvents: 'none',
+                                    }}
+                                    popupStyle={{
+                                        top: '260px',
+                                        left: '800px',
+                                        zIndex: 1500
+                                    }}
+                                />
+                            )}
+                        </h2>
+
+                        <Button onClick={handleNextDate} className="button">
+                            <FontAwesomeIcon icon={faChevronRight}/>
+                        </Button>
+                    </div>
+
+                </div>
+                <div className="content_R">
+                    <div className="content_second">
+                        <h2>전체 예약건수</h2>
+                        <h1>{storageCount + deliveryCount} 건</h1>
+                    </div>
+                    <div className="content_second_one">
+                        <img src={luggage2} alt="배송캐리어" style={{marginLeft: "30px"}}/>
+                        <div>
+                            <h2>배송예약</h2>
+                            <h1>{deliveryCount}건</h1>
+                        </div>
+                        <img src={luggage1} alt="보관캐리어"/>
+                        <div>
+                            <h2>보관예약</h2>
+                            <h1>{storageCount}건</h1>
+                        </div>
+                        <div className="border-right"></div>
+                        <div className="border-left">
+                            <div>
+                                <h3 className="complete">처리완료</h3>
+                                <h1>{statusCount.처리완료}건</h1>
+                            </div>
+                            <div>
+                                <h3 className="cancel">취소</h3>
+                                <h1>{statusCount.취소}건</h1>
+                            </div>
+                            <div>
+                                <h3 className="not-yet" style={{color: '#f60707'}}>미배정</h3>
+                                <h1>{statusCount.미배정}건</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/*<div className="content_R">*/}
+                {/*    <div className="content_third">*/}
+                {/*        <Select*/}
+                {/*            defaultValue="name"*/}
+                {/*            onChange={(value) => setSearchField(value)}*/}
+                {/*            style={{width: 120, marginLeft: 20, marginRight: 15}}*/}
+                {/*        >*/}
+                {/*            <Select.Option value="name">예약자명</Select.Option>*/}
+                {/*            <Select.Option value="phone">연락처</Select.Option>*/}
+                {/*            <Select.Option value="driver">배정기사명</Select.Option>*/}
+                {/*        </Select>*/}
+                {/*        <Input*/}
+                {/*            className="custom-search-input"*/}
+                {/*            placeholder="검색어 입력"*/}
+                {/*            value={searchKeyword}*/}
+                {/*            onChange={(e) => setSearchKeyword(e.target.value)}*/}
+                {/*        />*/}
+                {/*        <Button type="primary" onClick={handleSearch}>검색</Button>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
+                <div className="content_middle">
+                    <div className="content_middle_one">
+                        <Button className="button-more" onClick={handleShowCheckbox}>다중관리</Button>
+                        <Select
+                            defaultValue="name"
+                            onChange={(value) => setSearchField(value)}
+                            style={{width: 120, height: 40}}
+                        >
+                            <Select.Option value="name">예약자명</Select.Option>
+                            <Select.Option value="phone">연락처</Select.Option>
+                            <Select.Option value="driver">배정기사명</Select.Option>
+                        </Select>
+                        <Input
+                            className="custom-search-input"
+                            placeholder="검색어 입력"
+                            value={searchKeyword}
+                            onChange={(e) => setSearchKeyword(e.target.value)}
+                        />
+                        <Button type="primary"
+                                onClick={handleSearch}
                                 style={{
-                                    position: 'absolute',
-                                    zIndex: 1000,
-                                    width: 0,
-                                    height: 0,
-                                    opacity: 0,
-                                    pointerEvents: 'none',
+                                    height: 40,
                                 }}
-                                popupStyle={{
-                                    top: '170px',
-                                    left: '750px',
-                                    zIndex: 1500
+                        >검색</Button>
+                        <div className="middle-one-one">
+                            <Select
+                                defaultValue="recent"
+                                style={{
+                                    width: 120,
+                                    height: 40,
+                                    // marginRight: 8
+                                    float: "right",
                                 }}
-                            />
-                        )}
-                    </h2>
-
-                    <Button onClick={handleNextDate} className="button">
-                        <FontAwesomeIcon icon={faChevronRight} />
-                    </Button>
-
-                    <Button type="dashed" onClick={handleToday}>Today</Button>
-                </div>
-
-            </div>
-            <div className="content_R">
-                <div className="content_second">
-                    <h3>전체 예약건수</h3>
-                    <h1>{storageCount + deliveryCount} 건</h1>
-                </div>
-                <div className="content_second_one">
-                    <img src={luggage2} alt="배송캐리어" style={{marginLeft: "30px"}}/>
-                    <div>
-                        <h3>배송예약</h3>
-                        <h1>{deliveryCount}건</h1>
-                    </div>
-                    <img src={luggage1} alt="보관캐리어"/>
-                    <div>
-                        <h3>보관예약</h3>
-                        <h1>{storageCount}건</h1>
-                    </div>
-                    <div className="border-right"></div>
-                    <div className="border-left">
-                        <div className="complete">
-                            <h3>처리완료</h3>
-                            <h1>{statusCount.처리완료}건</h1>
-                        </div>
-                        <div className="cancel">
-                            <h3>취소</h3>
-                            <h1>{statusCount.취소}건</h1>
-                        </div>
-                        <div className="not-yet">
-                            <h3 style={{border: "3px solid red"}}>미배정</h3>
-                            <h1>{statusCount.미배정}건</h1>
+                                onChange={(value) => setSortOption(value)}
+                            >
+                                <Select.Option value="recent">최근등록순</Select.Option>
+                                <Select.Option value="driver">기사이름순</Select.Option>
+                            </Select>
+                            <FloatingBtn onClick={handleExcelDownload}/>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div className="content_R">
-                <div className="content_third">
-                    <Select
-                        defaultValue="name"
-                        onChange={(value) => setSearchField(value)}
-                        style={{ width: 120, marginLeft: 20, marginRight: 15 }}
-                    >
-                        <Select.Option value="name">예약자명</Select.Option>
-                        <Select.Option value="phone">연락처</Select.Option>
-                        <Select.Option value="driver">배정기사명</Select.Option>
-                    </Select>
-                    <Input
-                        placeholder="검색어 입력"
-                        value={searchKeyword}
-                        onChange={(e) => setSearchKeyword(e.target.value)}
-                        style={{ width: 200, marginRight: 8 }}
-                    />
-                    <Button type="primary" onClick={handleSearch}>검색</Button>
-                </div>
-            </div>
-            <div className="content_middle">
-                <div className="content_middle_one">
-                    <Button className="button-more" onClick={handleShowCheckbox}>다중관리</Button>
-                    <div className="downmenu">
+                    <div className="content_middle_two">
+                        <ExcelTable showCheckbox={showCheckbox} combinedSearchData={sortedData}/>
                     </div>
-                    <Select
-                        defaultValue="recent"
-                        style={{ width: 140, height: 40, marginRight: 10 }}
-                        onChange={(value) => setSortOption(value)}
-                    >
-                        <Select.Option value="recent">최근등록순</Select.Option>
-                        <Select.Option value="driver">기사이름순</Select.Option>
-                    </Select>
-                    <FloatingBtn onClick={handleExcelDownload}/>
-                </div>
-                <div className="content_middle_two">
-                    <ExcelTable showCheckbox={showCheckbox} combinedSearchData={sortedData}/>
                 </div>
             </div>
         </div>
