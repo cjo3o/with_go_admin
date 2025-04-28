@@ -1,5 +1,5 @@
 import React, {use, useEffect, useState} from 'react';
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 
 import '../css/Sidebar.css';
 
@@ -19,6 +19,8 @@ function Sidebar(props) {
     const [emName, setEmName] = useState(null);
     const [emRole, setEmRole] = useState(null);
     const screens = useBreakpoint();
+    const location = useLocation();
+
     const toggleMenu = (menu) => {
         setOpenMenu(openMenu === menu ? null : menu);
     };
@@ -45,6 +47,13 @@ function Sidebar(props) {
         }
     }, [screens.md]);
 
+    const handleLinkClick = (e, targetPath) => {
+        if (location.pathname === targetPath) {
+          e.preventDefault();
+          window.location.reload();
+        }
+      };
+
     return (
         <>
             {emRole !== null && (
@@ -53,11 +62,8 @@ function Sidebar(props) {
                         <div className="sidebar-logo">
                             <img src={logoWithgo} alt="WITHGO 로고" className="logo-img"/>
                             <div className="menu-icons">
-                                <Link to="/" className="icon-link" onClick={boolSidebar}>
-                                    <img src={homeIcon} alt="홈으로" className="menu-icon"/>
-                                </Link>
                                 <a href="https://cjo3o.github.io/with_go/index.html" className="icon-link">
-                                    <img src={backIcon} alt="뒤로가기" className="menu-icon"/>
+                                    <img src={homeIcon} alt="뒤로가기" className="menu-icon"/>
                                 </a>
                             </div>
                         </div>
@@ -83,7 +89,7 @@ function Sidebar(props) {
                                 <li className="no-underline"
                                     onClick={boolSidebar}
                                 >
-                                    <Link to="/admin">관리자 메인</Link>
+                                    <Link to="/admin" onClick={(e) => handleLinkClick(e, '/admin')}>모니터링</Link>
                                 </li>
                             )}
 
@@ -96,19 +102,19 @@ function Sidebar(props) {
                                                 <li
                                                     onClick={boolSidebar}
                                                 >
-                                                    <Link to="/Reservation">배송/보관관리</Link>
+                                                    <Link to="/Reservation" onClick={(e) => handleLinkClick(e, '/Reservation')}>배송/보관관리</Link>
                                                 </li>
                                             )}
                                             <li
                                                 onClick={boolSidebar}
                                             >
-                                                <Link to="/ApplicationList">예약신청목록</Link>
+                                                <Link to="/ApplicationList" onClick={(e) => handleLinkClick(e, '/ApplicationList')}>예약신청목록</Link>
                                             </li>
                                             {emRole === '관리자' && (
                                                 <li
                                                     onClick={boolSidebar}
                                                 >
-                                                    <Link to="/NewReservationAddPage">신규예약등록</Link>
+                                                    <Link to="/NewReservationAddPage" onClick={(e) => handleLinkClick(e, '/NewReservationAddPage')}>신규예약등록</Link>
                                                 </li>
                                             )}
                                         </ul>
@@ -124,7 +130,7 @@ function Sidebar(props) {
                                             <li
                                                 onClick={boolSidebar}
                                             >
-                                                <Link to="/Memberlist">회원목록</Link>
+                                                <Link to="/Memberlist" onClick={(e) => handleLinkClick(e, '/Memberlist')}>회원목록</Link>
                                             </li>
                                         </ul>
                                     </div>
@@ -139,13 +145,13 @@ function Sidebar(props) {
                                             <li
                                                 onClick={boolSidebar}
                                             >
-                                                <Link to="/Driverlist">기사목록</Link>
+                                                <Link to="/Driverlist" onClick={(e) => handleLinkClick(e, '/Driverlist')}>기사목록</Link>
                                             </li>
                                             {emRole === '관리자' && (
                                                 <li
                                                     onClick={boolSidebar}
                                                 >
-                                                    <Link to="/DriverRegistration">기사등록</Link>
+                                                    <Link to="/DriverRegistration" onClick={(e) => handleLinkClick(e, '/DriverRegistration')}>기사등록</Link>
                                                 </li>
                                             )}
                                         </ul>
@@ -161,13 +167,13 @@ function Sidebar(props) {
                                             <li
                                                 onClick={boolSidebar}
                                             >
-                                                <Link to="/partner/list">제휴숙소</Link>
+                                                <Link to="/partner/list" onClick={(e) => handleLinkClick(e, '/partner/list')}>제휴숙소</Link>
                                             </li>
                                             {emRole === '관리자' && (
                                                 <li
                                                     onClick={boolSidebar}
                                                 >
-                                                    <Link to="/storage/list">보관장소</Link>
+                                                    <Link to="/storage/list" onClick={(e) => handleLinkClick(e, '/storage/list')}>보관장소</Link>
                                                 </li>
                                             )}
                                         </ul>
@@ -183,27 +189,27 @@ function Sidebar(props) {
                                                 <li
                                                     onClick={boolSidebar}
                                                 >
-                                                    <Link to="/event/list">이벤트/프로모션관리</Link>
+                                                    <Link to="/event/list"  onClick={(e) => handleLinkClick(e, '/event/list')}>이벤트/프로모션관리</Link>
                                                 </li>
                                                 <li
                                                     onClick={boolSidebar}
                                                 >
-                                                    <Link to="/notice-promotion">공지사항관리</Link>
+                                                    <Link to="/notice-promotion" onClick={(e) => handleLinkClick(e, '/notice-promotion')}>공지사항관리</Link>
                                                 </li>
                                                 <li
                                                     onClick={boolSidebar}
                                                 >
-                                                    <Link to="/review">이용후기관리</Link>
+                                                    <Link to="/review" onClick={(e) => handleLinkClick(e, '/review')}>이용후기관리</Link>
                                                 </li>
                                                 <li
                                                     onClick={boolSidebar}
                                                 >
-                                                    <Link to="/faq/list">FAQ 관리</Link>
+                                                    <Link to="/faq/list" onClick={(e) => handleLinkClick(e, '/faq/list')}>FAQ 관리</Link>
                                                 </li>
                                                 <li
                                                     onClick={boolSidebar}
                                                 >
-                                                    <Link to="/inquiry/list">1:1문의관리</Link>
+                                                    <Link to="/inquiry/list" onClick={(e) => handleLinkClick(e, '/inquiry/list')}>1:1문의관리</Link>
                                                 </li>
                                             </ul>
                                         </div>
