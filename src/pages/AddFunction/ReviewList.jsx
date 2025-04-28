@@ -39,15 +39,38 @@ function ReviewList({ filterType, statusFilter, searchKeyword }) {
 
     const formatDate = (dateStr) => new Date(dateStr).toISOString().split('T')[0];
 
+    const filteredReviews = reviews
+        .filter((r) => (filterType ? r.type === filterType : true))
+        .filter((r) => (statusFilter ? r.status === statusFilter : true))
+        .filter((r) => {
+            if (!searchKeyword) return true;
+            const lower = searchKeyword.toLowerCase();
+            return (
+                (r.title && r.title.toLowerCase().includes(lower)) ||
+                (r.review_txt && r.review_txt.toLowerCase().includes(lower))
+            );
+        });
+
+    const totalPages = Math.ceil(filteredReviews.length / itemsPerPage);
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredReviews.slice(indexOfFirstItem, indexOfLastItem);
+
+    const [pageSelectedIds, setPageSelectedIds] = useState([]);
+
+    useEffect(() => {
+        setPageSelectedIds([]);
+    }, [currentPage]);
+
     const handleSelect = (checked, id) => {
-        setSelectedIds((prev) =>
+        setPageSelectedIds((prev) =>
             checked ? [...prev, id] : prev.filter((item) => item !== id)
         );
     };
 
     const handleSelectAll = (checked) => {
-        if (checked) setSelectedIds(currentItems.map((r) => r.review_num));
-        else setSelectedIds([]);
+        if (checked) setPageSelectedIds(currentItems.map((r) => r.review_num));
+        else setPageSelectedIds([]);
     };
 
     const handleDeleteSelected = async () => {
@@ -55,11 +78,11 @@ function ReviewList({ filterType, statusFilter, searchKeyword }) {
         const { error } = await supabase
             .from('review')
             .delete()
-            .in('review_num', selectedIds);
+            .in('review_num', pageSelectedIds);
 
         if (!error) {
-            setReviews(reviews.filter((r) => !selectedIds.includes(r.review_num)));
-            setSelectedIds([]);
+            setReviews(reviews.filter((r) => !pageSelectedIds.includes(r.review_num)));
+            setPageSelectedIds([]);
             alert('삭제 완료되었습니다.');
         }
     };
@@ -89,23 +112,6 @@ function ReviewList({ filterType, statusFilter, searchKeyword }) {
         }
     };
 
-    const filteredReviews = reviews
-        .filter((r) => (filterType ? r.type === filterType : true))
-        .filter((r) => (statusFilter ? r.status === statusFilter : true))
-        .filter((r) => {
-            if (!searchKeyword) return true;
-            const lower = searchKeyword.toLowerCase();
-            return (
-                (r.title && r.title.toLowerCase().includes(lower)) ||
-                (r.review_txt && r.review_txt.toLowerCase().includes(lower))
-            );
-        });
-
-    const totalPages = Math.ceil(filteredReviews.length / itemsPerPage);
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredReviews.slice(indexOfFirstItem, indexOfLastItem);
-
     const groupSize = 7;
     const currentGroup = Math.floor((currentPage - 1) / groupSize);
     const startPage = currentGroup * groupSize + 1;
@@ -120,7 +126,7 @@ function ReviewList({ filterType, statusFilter, searchKeyword }) {
                         <th className="review-col-select">
                             <Checkbox
                                 onChange={(e) => handleSelectAll(e.target.checked)}
-                                checked={selectedIds.length === currentItems.length && currentItems.length > 0}
+                                checked={pageSelectedIds.length === currentItems.length && currentItems.length > 0}
                             />
                         </th>
                         <th className="review-col-title" onClick={() => handleSort('title')}>
@@ -145,7 +151,7 @@ function ReviewList({ filterType, statusFilter, searchKeyword }) {
                             <td className="review-col-select">
                                 <Checkbox
                                     onChange={(e) => handleSelect(e.target.checked, r.review_num)}
-                                    checked={selectedIds.includes(r.review_num)}
+                                    checked={pageSelectedIds.includes(r.review_num)}
                                 />
                             </td>
                             <td className="review-col-title">{r.title || '(제목 없음)'}</td>
@@ -191,9 +197,9 @@ function ReviewList({ filterType, statusFilter, searchKeyword }) {
             </div>
 
             <div className="table-footer bottom-right-btn">
-                {selectedIds.length > 0 && (
+                {pageSelectedIds.length > 0 && (
                     <button className="btn btn-delete" onClick={handleDeleteSelected}>
-                        선택 삭제 ({selectedIds.length})
+                        선택 삭제 ({pageSelectedIds.length})
                     </button>
                 )}
             </div>
