@@ -4,8 +4,8 @@ import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
 import luggage2 from "../../assets/Images/luggage_02.png"
 import luggage1 from "../../assets/Images/luggage_01.png"
-import FloatingBtn from "../../Components/ExcelDownload.jsx";
-import ExcelTable from "../../Components/ExcelTable.jsx";
+import FloatingBtn from "../../components/ExcelDownload.jsx";
+import ExcelTable from "../../components/ExcelTable.jsx";
 import {Button, DatePicker, Select, Input, message, Card} from "antd";
 import dayjs from 'dayjs';
 import supabase from "../../lib/supabase.js";
