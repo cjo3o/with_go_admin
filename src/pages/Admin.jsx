@@ -14,6 +14,7 @@ import {
   faChevronRight,
   faAnglesRight,
 } from "@fortawesome/free-solid-svg-icons";
+import {useNavigate} from "react-router-dom";
 
 function Admin() {
   const selectOptions = {
@@ -36,7 +37,7 @@ function Admin() {
   const [todayCount, setTodayCount] = useState(0);
   const [todayDeliveryCount, setTodayDeliveryCount] = useState(0);
   const [todayStorageCount, setTodayStorageCount] = useState(0);
-
+  const navigate = useNavigate();
   const today = new Date();
   const formatter = new Intl.DateTimeFormat("ko-KR", {
     timeZone: "Asia/Seoul",
@@ -111,6 +112,10 @@ function Admin() {
   };
 
   useEffect(() => {
+    const res = sessionStorage.getItem("name");
+    if (res === null) {
+        navigate("/login");
+    }
     const supaData = async () => {
       const { data: deliveryData, error: deliveryError } = await supabase
         .from("delivery")
