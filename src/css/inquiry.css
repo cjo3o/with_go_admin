@@ -1,8 +1,8 @@
-
 .inquiry-table {
     width: 100%;
-    border-collapse: collapse;
+    min-width: 1100px;
     table-layout: fixed;
+    border-collapse: collapse;
 }
 
 .inquiry-table th,
@@ -17,11 +17,9 @@
     text-align: center;
 }
 
-/* 체크박스 칸 */
 .inquiry-table th:first-child,
 .inquiry-table td:first-child {
-    width: 80px;
-    padding: 0 10px;
+    width: 6%;
     text-align: center;
 }
 .inquiry-table td:first-child .ant-checkbox-wrapper,
@@ -32,40 +30,21 @@
     height: 100%;
 }
 
-/* 제목/내용만 좌측 정렬 */
-.inquiry-col-title {
-    width: 20%;
-    text-align: left !important;
-    padding-left: 10px;
-}
-.inquiry-col-content {
-    width: 30%;
-    text-align: left !important;
-    padding-left: 10px;
-}
-
 .inquiry-table th {
     background-color: #f0f2f5;
     font-weight: bold;
 }
 
-/* 각 열 너비 설정 */
-.inquiry-col-number {
-    width: 8%;
-}
-.inquiry-col-category {
-    width: 10%;
-}
-.inquiry-col-writer,
-.inquiry-col-date,
-.inquiry-col-status {
-    width: 20%;
-}
-.inquiry-col-actions {
-    width: 12%;
-}
+.inquiry-col-number { width: 5%; }
+.inquiry-col-category { width: 6%; }
+.inquiry-col-title { width: 14%; text-align: left !important; padding-left: 10px; }
+.inquiry-col-content { width: 17%; text-align: left !important; padding-left: 10px; }
+.inquiry-col-writer { width: 10%; }
+.inquiry-col-password { width: 6%; }
+.inquiry-col-date { width: 8%; }
+.inquiry-col-status { width: 7%;  }
+.inquiry-col-actions { width: 7%; }
 
-/* 내용 토글 박스 */
 .inquiry-toggle-box {
     cursor: pointer;
     display: block;
@@ -75,9 +54,24 @@
     transition: all 0.3s ease;
 }
 .inquiry-toggle-box.open {
-    white-space: normal;
+    white-space: pre-wrap;
+    word-break: break-word;
     overflow: visible;
     text-overflow: initial;
-    word-break: break-word;
 }
 
+/* 선택삭제 버튼, 페이지네이션 스타일 추가 */
+.table-footer.bottom-right-btn {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    padding-right: 35px;
+    margin-top: 16px;
+}
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}
