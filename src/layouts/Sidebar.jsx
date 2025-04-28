@@ -89,7 +89,7 @@ function Sidebar(props) {
                                 <li className="no-underline"
                                     onClick={boolSidebar}
                                 >
-                                    <Link to="/admin" onClick={(e) => handleLinkClick(e, '/admin')}>모니터링</Link>
+                                    <Link to="/admin" onClick={(e) => handleLinkClick(e, '/admin')}>실시간 모니터링</Link>
                                 </li>
                             )}
 
