@@ -100,7 +100,7 @@
   resize: none;
 }
 
-input[type="text"] {
+.formright > .Group >input[type="text"] {
   width: unset !important;
 }
 
