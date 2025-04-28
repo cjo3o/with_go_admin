@@ -18,6 +18,7 @@ function EmployeeList(props) {
     const [openInsert, setOpenInsert] = useState(false);
     const [openDetail, setOpenDetail] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [detailData, setDetailData] = useState({});
     const [insertedEmployee, setInsertedEmployee] = useState(null);
     const [messageApi, contextHolder] = message.useMessage();
     const [form] = Form.useForm();
@@ -67,9 +68,9 @@ function EmployeeList(props) {
         setOpenInsert(true);
     }
 
-    const showDetail = () => {
+    const showDetail = (item) => {
         setOpenDetail(true);
-        console.log();
+        setDetailData(item);
     }
 
     const initialValues = {
@@ -160,7 +161,9 @@ function EmployeeList(props) {
         setOpenDelete(false);
         setOpenInsert(false);
         setOpenDetail(false);
-        form.resetFields();
+        if (openInsert) {
+            form.resetFields();
+        }
     };
 
     useEffect(() => {
@@ -168,6 +171,7 @@ function EmployeeList(props) {
             const res = await supabase.from('employees').select().order('no', {ascending: true});
             setRowdata(res.data);
         }
+
         fetchEmployees();
     }, [])
 
@@ -202,7 +206,7 @@ function EmployeeList(props) {
                             </thead>
                             <tbody>
                             {rowdata.map(item => (
-                                <tr key={item.no} onClick={showDetail}>
+                                <tr key={item.no} onClick={() => showDetail(item)}>
                                     <td>{item.no}</td>
                                     <td>{item.name}</td>
                                     <td>{item.email}</td>
@@ -211,18 +215,28 @@ function EmployeeList(props) {
                                     <td>{item.role}</td>
                                     <td>{item.created_at.split('T').shift()}</td>
                                     <td>{item.status}</td>
-                                    <td><Button color="default" variant="filled" onClick={() => showMemo(item)}>
+                                    <td><Button color="default" variant="filled" onClick={(e) => {
+                                        e.stopPropagation();
+                                        showMemo(item);
+                                    }}>
                                         메모
                                     </Button></td>
                                     <td>
                                         <div style={{display: "flex", gap: "10px", justifyContent: "center"}}>
                                             <Button icon={<EditOutlined/>} shape="square" size="medium"
-                                                    onClick={() => showEdit(item)}/>
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        showEdit(item);
+                                                    }}
+                                            />
                                             <Button icon={<DeleteOutlined/>} shape="square" size="medium"
-                                                    onClick={() => showDelete(item)}/>
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        showDelete(item)
+                                                    }}
+                                            />
                                         </div>
                                     </td>
-
                                 </tr>
                             ))}
                             </tbody>
@@ -400,8 +414,30 @@ function EmployeeList(props) {
                         </Button>
                     ]}
                 >
-                    <div className="details">
-
+                    <div className="details"
+                         style={{
+                             display: "flex",
+                             flexDirection: "column",
+                             gap: "10px",
+                             fontSize: "1rem",
+                             marginTop: "1rem",
+                         }}>
+                        <span>이름 : {detailData.name}</span>
+                        <span>부서 : {detailData.department}</span>
+                        <span>직위 : {detailData.position}</span>
+                        <span>권한 : {detailData.role}</span>
+                        <span>상태 : {detailData.status}</span>
+                        <span>이메일 : {detailData.email}</span>
+                        <span>가입일 : {detailData.created_at?.split("T").shift()}</span>
+                        <div className="details_memo">
+                            <span>
+                                메모
+                            </span>
+                            <TextArea
+                                value={detailData.memo}
+                                readOnly
+                            />
+                        </div>
                     </div>
                 </Modal>
             </div>
