@@ -36,13 +36,13 @@ function DriverList() {
     fetchDrivers();
 
     const subscription = supabase
-      .channel('driver_list_changes')
+      .channel("driver_list_changes")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*', //
-          schema: 'public',
-          table: 'DriverList',
+          event: "*", //
+          schema: "public",
+          table: "DriverList",
         },
         () => {
           fetchDrivers();
@@ -71,7 +71,6 @@ function DriverList() {
       );
     }
   };
-
 
   const handleDriverCheck = (e, driverId) => {
     const checked = e.target.checked;
@@ -134,7 +133,7 @@ function DriverList() {
   useEffect(() => {
     setIsAllChecked(
       currentDrivers.length > 0 &&
-      currentDrivers.every((driver) => selectedDrivers.includes(driver.id))
+        currentDrivers.every((driver) => selectedDrivers.includes(driver.id))
     );
   }, [currentDrivers, selectedDrivers]);
 
@@ -148,9 +147,8 @@ function DriverList() {
 
   const handlePageChange4 = (page) => {
     setCurrentPage3(page);
-    setSelectedDrivers([]);  // ✅ 페이지 변경 시 선택 초기화
+    setSelectedDrivers([]); // ✅ 페이지 변경 시 선택 초기화
   };
-
 
   const totalPages3 = Math.ceil(filteredDrivers.length / usersPerPage3);
 
@@ -162,11 +160,6 @@ function DriverList() {
           <div className={DlStyle.MainTop}>
             <h3>기사 목록</h3>
             <div>
-              {selectedDrivers.length > 0 && (
-                <button className={DlStyle.btn_delete} onClick={DeleteSelected}>
-                  <span>선택 삭제</span> ({selectedDrivers.length})
-                </button>
-              )}
               <Input.Search
                 placeholder="기사 검색"
                 allowClear
@@ -237,11 +230,20 @@ function DriverList() {
                   })
                 ) : (
                   <tr>
-                    <td className={DlStyle.falsetd} colSpan="11">등록된 기사가 없습니다.</td>
+                    <td className={DlStyle.falsetd} colSpan="11">
+                      등록된 기사가 없습니다.
+                    </td>
                   </tr>
                 )}
               </tbody>
             </table>
+          </div>
+          <div className={DlStyle.delete}>
+            {selectedDrivers.length > 0 && (
+              <button className={DlStyle.btn_delete} onClick={DeleteSelected}>
+                <span>선택 삭제</span> ({selectedDrivers.length})
+              </button>
+            )}
           </div>
           <Pagination
             currentPage2={currentPage3}

@@ -112,14 +112,6 @@ function Memberlist() {
           <div className={MemberStyle.Memberlist_search}>
             <h3>회원 목록</h3>
             <div>
-              {selectedIds.length > 0 && (
-                <button
-                  className={MemberStyle.btn_delete}
-                  onClick={DeleteSelected}
-                >
-                  선택 삭제 ({selectedIds.length})
-                </button>
-              )}
               <Input.Search
                 placeholder="회원 검색"
                 allowClear
@@ -183,6 +175,16 @@ function Memberlist() {
                 {noResultsMessage}
               </tbody>
             </table>
+          </div>
+          <div className={MemberStyle.delete}>
+            {selectedIds.length > 0 && (
+              <button
+                className={MemberStyle.btn_delete}
+                onClick={DeleteSelected}
+              >
+                선택 삭제 ({selectedIds.length})
+              </button>
+            )}
           </div>
           <Pagination
             currentPage2={currentPage2}

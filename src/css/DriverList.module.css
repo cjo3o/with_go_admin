@@ -48,6 +48,12 @@
   font-size: 1.2rem;
 }
 
+.delete {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
 .btn_delete {
   height: 32px;
   padding: 8px 16px;

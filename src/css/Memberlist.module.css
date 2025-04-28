@@ -104,6 +104,12 @@
   padding: 10px 0;
 }
 
+.delete {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .btn_delete {
   height: 32px;
   padding: 8px 16px;

@@ -463,7 +463,7 @@ function Admin() {
                     <th>짐갯수</th>
                     <th>결제금액</th>
                     <th>완료일</th>
-                    <th>진행상태</th>
+                    <th>처리현황</th>
                   </tr>
                 </thead>
                 <tbody>
