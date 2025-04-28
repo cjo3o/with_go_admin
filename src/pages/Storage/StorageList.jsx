@@ -5,8 +5,7 @@ import {Checkbox, Image, Input} from "antd";
 import {useNavigate} from 'react-router-dom';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAnglesLeft, faAnglesRight, faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
-import {CloseOutlined} from "@ant-design/icons";
-import {SearchOutlined} from '@ant-design/icons';
+import {CloseOutlined, SearchOutlined} from "@ant-design/icons";
 
 function StorageList() {
     const [storages, setStorages] = useState([]);
@@ -146,15 +145,6 @@ function StorageList() {
                         </div>
                         <div className='middle-right'>
                             <div className="middle-actions" style={{display: 'flex', alignContent: 'center', gap: '10px'}}>
-                                <div className={`add-button-wrapper delBtnMargin`}>
-                                    <button
-                                        className="btn_P btn-delete"
-                                        disabled={selectedStorages.length === 0}
-                                        onClick={handleBulkDelete}
-                                    >
-                                        삭제 ({selectedStorages.length})
-                                    </button>
-                                </div>
                                 <div className='StorageList_Search'>
                                     <Input.Search
                                         placeholder="보관장소 검색"
@@ -259,6 +249,19 @@ function StorageList() {
                             </div>
                         ))}
                     </div>
+                    <div className="table-footer bottom-right-btn">
+                        {selectedStorages.length > 0 && (
+                            <button className="btn btn-delete" onClick={handleBulkDelete}>
+                                선택 삭제 ({selectedStorages.length})
+                            </button>
+                        )}
+                        <button
+                            className="btn btn-add-confirm"
+                            onClick={() => navigate("/storage/create")}
+                        >
+                            새 제휴숙소 등록
+                        </button>
+                    </div>
                     {/* 페이지네이션 */}
                     <div className="pagination" style={{marginTop: '30px'}}>
                         <button className="group-btn" onClick={goToFirstGroup} disabled={currentGroup === 0}>
@@ -288,12 +291,6 @@ function StorageList() {
                         </button>
                         <button className="group-btn" onClick={goToNextGroup} disabled={endPage === totalPages}>
                             <FontAwesomeIcon icon={faAnglesRight} />
-                        </button>
-                    </div>
-                    <div className={`add-button-wrapper delBtnMargin`}>
-                        <button className="btn btn-add btn-standard" style={{marginRight: '30px'}}
-                                onClick={() => navigate('/storage/create')}>
-                            새 보관장소 등록
                         </button>
                     </div>
                 </div>

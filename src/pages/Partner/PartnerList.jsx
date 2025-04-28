@@ -5,8 +5,7 @@ import {Checkbox, Image, message, Input} from "antd";
 import {useNavigate} from 'react-router-dom';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAnglesLeft, faAnglesRight, faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
-import {CloseOutlined} from "@ant-design/icons";
-import {SearchOutlined} from '@ant-design/icons';
+import {CloseOutlined, SearchOutlined} from "@ant-design/icons";
 
 function PartnerList() {
     const [partners, setPartners] = useState([]);
@@ -14,11 +13,12 @@ function PartnerList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredPartners, setFilteredPartners] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [inputValue, setInputValue] = useState("");
+    const [isAllChecked, setIsAllChecked] = useState(false);
+    const [modalContent, setModalContent] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const itemsPerPage = 4;
     const totalPages = Math.ceil(filteredPartners.length / itemsPerPage);
-
     const groupSize = 10;
     const currentGroup = Math.floor((currentPage - 1) / groupSize);
     const startPage = currentGroup * groupSize + 1;
@@ -28,12 +28,7 @@ function PartnerList() {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = filteredPartners.slice(indexOfFirstItem, indexOfLastItem);
 
-
     const navigate = useNavigate();
-
-    // 이미지/지도 클릭 시 열리는 모달
-    const [modalContent, setModalContent] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = (content) => {
         setModalContent(content);
@@ -47,10 +42,10 @@ function PartnerList() {
 
     // 데이터 불러오기
     const fetchPartners = async () => {
-        const {data, error} = await supabase
+        const { data, error } = await supabase
             .from('partner_place')
             .select('*')
-            .order('created_at', {ascending: false});
+            .order('created_at', { ascending: false });
 
         if (error) {
             console.error('제휴숙소 조회 오류:', error);
@@ -58,6 +53,7 @@ function PartnerList() {
             setPartners(data);
         }
     };
+
 
 // 1. 초기 데이터 로딩
     useEffect(() => {
@@ -81,57 +77,87 @@ function PartnerList() {
 
     const handleSearch = (value) => {
         setSearchTerm(value);
+        handlePageChange(1);
+    };
+
+    const handlePageChange = (pageNum) => {
+        setCurrentPage(pageNum);
+        setSelectedPartners([]);
+        setIsAllChecked(false);
     };
 
     // 체크박스 전체 선택
-    const handleSelectAll = (e) => {
-        if (e.target.checked) {
-            const visibleIds = currentItems.map(p => p.partner_id);
-            setSelectedPartners(prev => [...new Set([...prev, ...visibleIds])]);
+    const handleAllPartnerCheck = (e) => {
+        const checked = e.target.checked;
+        setIsAllChecked(checked);
+        if (checked) {
+            setSelectedPartners((prev) => [
+                ...prev,
+                ...currentItems.filter((partner) => !prev.includes(partner.partner_id)).map((partner) => partner.partner_id)
+            ]);
         } else {
-            const visibleIds = currentItems.map(p => p.partner_id);
-            setSelectedPartners(prev => prev.filter(id => !visibleIds.includes(id)));
+            setSelectedPartners((prev) =>
+                prev.filter((id) => !currentItems.some((partner) => partner.partner_id === id))
+            );
         }
     };
 
+
     // 체크박스 개별 선택
-    const handleCheckboxChange = (id) => {
-        setSelectedPartners(prev =>
-            prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
-        );
+    const handlePartnerCheck = (e, partnerId) => {
+        const checked = e.target.checked;
+        if (checked) {
+            setSelectedPartners((prev) => [...prev, partnerId]);
+        } else {
+            setSelectedPartners((prev) => prev.filter((id) => id !== partnerId));
+        }
     };
 
     // 선택 삭제
     const handleBulkDelete = async () => {
         const res = sessionStorage.getItem("role");
         if (res !== '관리자') {
-            message.error('권한이 없습니다!')
+            message.error('권한이 없습니다!');
             return;
-        } else {
-            if (!window.confirm('선택한 숙소를 삭제하시겠습니까?')) return;
+        }
+        if (!window.confirm('선택한 숙소를 삭제하시겠습니까?')) return;
 
-            const {error} = await supabase
+        try {
+            const { error } = await supabase
                 .from('partner_place')
                 .delete()
                 .in('partner_id', selectedPartners);
 
             if (error) {
-                alert('삭제 중 오류 발생');
-            } else {
-                alert('선택한 숙소가 삭제되었습니다');
-                fetchPartners();
-                setSelectedPartners([]);
+                alert("삭제 중 오류가 발생했습니다.");
+                return;
             }
+
+            setPartners(
+                partners.filter((partner) => !selectedPartners.includes(partner.partner_id))
+            );
+            setSelectedPartners([]);
+            fetchPartners();
+            alert('선택한 숙소가 삭제되었습니다');
+        } catch (err) {
+            console.error(err);
+            alert("삭제 중 오류가 발생했습니다.");
         }
     };
 
-    const goToFirstGroup = () => setCurrentPage(1);
-    const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
-    const goToNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    const goToFirstGroup = () => handlePageChange(1);
+    const goToPrevPage = () => handlePageChange(Math.max(currentPage - 1, 1));
+    const goToNextPage = () => handlePageChange(Math.min(currentPage + 1, totalPages));
     const goToNextGroup = () => {
         const nextGroupPage = Math.min(endPage + 1, totalPages);
-        if (nextGroupPage > currentPage) setCurrentPage(nextGroupPage);
+        if (nextGroupPage > currentPage) handlePageChange(nextGroupPage);
     };
+
+    useEffect(() => {
+        setIsAllChecked(
+            currentItems.length > 0 && currentItems.every((partner) => selectedPartners.includes(partner.partner_id))
+        );
+    }, [currentItems, selectedPartners]);
 
     return (
         <>
@@ -142,37 +168,17 @@ function PartnerList() {
                     <div className='middle'>
                         <div className='middle-left'>
                             <h3 style={{marginBottom: 0}}>제휴숙소목록</h3>
-                            <Checkbox
-                                onChange={handleSelectAll}
-                                checked={
-                                    currentItems.length > 0 &&
-                                    currentItems.every(p => selectedPartners.includes(p.partner_id))
-                                }
-                            ></Checkbox>
+                            <Checkbox onChange={handleAllPartnerCheck} checked={isAllChecked} />
                         </div>
                         <div className='middle-right'>
                             <div className="middle-actions" style={{display: 'flex', alignContent: 'center', gap: '10px'}}>
-                                <div className={`add-button-wrapper delBtnMargin`}>
-                                    <button
-                                        className="btn_P btn-delete"
-                                        disabled={selectedPartners.length === 0}
-                                        onClick={handleBulkDelete}
-                                    >
-                                        삭제 ({selectedPartners.length})
-                                    </button>
-                                </div>
                                 <div className='PartnerList_Search'>
                                     <Input.Search
                                         placeholder="제휴숙소 검색"
                                         allowClear
-                                        enterButton={
-                                            <span>
-                    <SearchOutlined style={{marginRight: 4}}/>
-                    검색
-                  </span>
-                                        }
-                                        value={inputValue}
-                                        onChange={(e) => setInputValue(e.target.value)}
+                                        enterButton={<span><SearchOutlined style={{ marginRight: 4 }} />검색</span>}
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
                                         onSearch={handleSearch}
                                         className="search-input default-style"
                                     />
@@ -188,7 +194,7 @@ function PartnerList() {
                                     <div className='card-top-left'>
                                         <Checkbox
                                             checked={selectedPartners.includes(partner.partner_id)}
-                                            onChange={() => handleCheckboxChange(partner.partner_id)}
+                                            onChange={(e) => handlePartnerCheck(e, partner.partner_id)}
                                         />
                                         <span>ID : {partner.partner_id}</span>
                                     </div>
@@ -272,6 +278,19 @@ function PartnerList() {
                             </div>
                         ))}
                     </div>
+                    <div className="table-footer bottom-right-btn">
+                        {selectedPartners.length > 0 && (
+                            <button className="btn btn-delete" onClick={handleBulkDelete}>
+                                선택 삭제 ({selectedPartners.length})
+                            </button>
+                        )}
+                        <button
+                            className="btn btn-add-confirm"
+                            onClick={() => navigate("/partner/create")}
+                        >
+                            새 제휴숙소 등록
+                        </button>
+                    </div>
                     {/* 페이지네이션 */}
                     <div className="pagination" style={{marginTop: '30px'}}>
                         <button className="group-btn" onClick={goToFirstGroup} disabled={currentGroup === 0}>
@@ -301,12 +320,6 @@ function PartnerList() {
                         </button>
                         <button className="group-btn" onClick={goToNextGroup} disabled={endPage === totalPages}>
                             <FontAwesomeIcon icon={faAnglesRight} />
-                        </button>
-                    </div>
-                    <div className={`add-button-wrapper delBtnMargin`}>
-                        <button className="btn btn-add btn-standard" style={{marginRight: '30px'}}
-                                onClick={() => navigate('/partner/create')}>
-                            새 제휴숙소 등록
                         </button>
                     </div>
                 </div>
