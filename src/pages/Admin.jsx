@@ -3,7 +3,7 @@ import custody from "../assets/Icon/custody.svg";
 import delivery from "../assets/Icon/delivery.svg";
 import AdminStyle from "../css/Admin.module.css";
 import supabase from "../lib/supabase.js";
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined } from "@ant-design/icons";
 
 import Lookup from "../../src/layouts/Lookup.jsx";
 import { Radio, Input } from "antd";
@@ -14,6 +14,7 @@ import {
   faChevronRight,
   faAnglesRight,
 } from "@fortawesome/free-solid-svg-icons";
+import {useNavigate} from "react-router-dom";
 
 function Admin() {
   const selectOptions = {
@@ -24,7 +25,7 @@ function Admin() {
   const [deliveryt, setdelivery] = useState([]);
   const [storage, setstorage] = useState([]);
   const [twoData, settwoData] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusLogs, setStatusLogs] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -36,7 +37,7 @@ function Admin() {
   const [todayCount, setTodayCount] = useState(0);
   const [todayDeliveryCount, setTodayDeliveryCount] = useState(0);
   const [todayStorageCount, setTodayStorageCount] = useState(0);
-
+  const navigate = useNavigate();
   const today = new Date();
   const formatter = new Intl.DateTimeFormat("ko-KR", {
     timeZone: "Asia/Seoul",
@@ -46,8 +47,9 @@ function Admin() {
   });
 
   const parts = formatter.formatToParts(today);
-  const todayStr = `${parts.find((p) => p.type === "year").value}-${parts.find((p) => p.type === "month").value
-    }-${parts.find((p) => p.type === "day").value}`;
+  const todayStr = `${parts.find((p) => p.type === "year").value}-${
+    parts.find((p) => p.type === "month").value
+  }-${parts.find((p) => p.type === "day").value}`;
 
   const [openRow, setOpenRow] = useState(null);
 
@@ -63,6 +65,8 @@ function Admin() {
       const tableName = item.type === "배송" ? "delivery" : "storage";
       const keyValue =
         item[tableName === "delivery" ? "re_num" : "reservation_number"];
+
+      const userName = sessionStorage.getItem("name") || "알 수 없음";
 
       const { data, error } = await supabase
         .from("status_logs")
@@ -85,6 +89,7 @@ function Admin() {
             new_status: "접수",
             updated_at: reserveTime,
             received_at: reserveTime,
+            operator: "",
           },
         ]);
 
@@ -107,6 +112,10 @@ function Admin() {
   };
 
   useEffect(() => {
+    const res = sessionStorage.getItem("name");
+    if (res === null) {
+        navigate("/login");
+    }
     const supaData = async () => {
       const { data: deliveryData, error: deliveryError } = await supabase
         .from("delivery")
@@ -159,13 +168,13 @@ function Admin() {
       const completeCount = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-          todayStr && item.situation === "완료"
+            todayStr && item.situation === "완료"
       ).length;
 
       const cancelCount = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-          todayStr && item.situation === "취소"
+            todayStr && item.situation === "취소"
       ).length;
 
       const totalPrice = AllData.filter(
@@ -177,7 +186,7 @@ function Admin() {
       const canceledPrice = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-          todayStr && item.situation === "취소"
+            todayStr && item.situation === "취소"
       ).reduce((sum, item) => sum + (item.price || 0), 0);
 
       setTotalPrice(totalPrice);
@@ -212,6 +221,8 @@ function Admin() {
       updates.success_time = null;
     }
 
+    const userName = sessionStorage.getItem("name") || "알 수 없음";
+
     const { error } = await supabase
       .from(tableName)
       .update(updates)
@@ -242,6 +253,7 @@ function Admin() {
             new_status: "접수",
             updated_at: reserveTime,
             received_at: reserveTime,
+            operator: userName,
           },
         ]);
 
@@ -259,6 +271,7 @@ function Admin() {
           prev_status: prevStatus,
           new_status: status,
           updated_at: new Date().toISOString(),
+          operator: userName,
         },
       ]);
 
@@ -266,7 +279,7 @@ function Admin() {
       console.error("상태 변경 로그 저장 실패", logStatusError);
     }
 
-    // 상태 변경 로그 추가 후 새로 가져오기
+
     const { data: updatedLogs, error: updatedLogsError } = await supabase
       .from("status_logs")
       .select("*")
@@ -276,7 +289,6 @@ function Admin() {
     if (updatedLogsError) {
       console.error("업데이트된 로그 가져오기 실패", updatedLogsError);
     } else {
-      // 현재 openRow의 인덱스 찾기
       const openIndex = twoData.findIndex((i) => i[keyColumn] === keyValue);
       setStatusLogs((prev) => ({ ...prev, [openIndex]: updatedLogs }));
     }
@@ -285,17 +297,16 @@ function Admin() {
       prevData.map((i) =>
         i[keyColumn] === keyValue
           ? {
-            ...i,
-            situation: status,
-            status_updated_at: new Date().toISOString(),
-            success_time: status === "완료" ? new Date().toISOString() : null,
-          }
+              ...i,
+              situation: status,
+              status_updated_at: new Date().toISOString(),
+              success_time: status === "완료" ? new Date().toISOString() : null,
+            }
           : i
       )
     );
   };
 
-  // 🎯 오늘 + 검색 + 필터까지 다 적용한 상태에서 페이징 기준
   const filteredData = twoData.filter(
     (item) => {
       const dateStr = (item.reservation_time || item.reserve_time)?.slice(
@@ -498,8 +509,8 @@ function Admin() {
                           sizes.length > 0
                             ? sizes.join(", ")
                             : inches.length > 0
-                              ? inches.join(", ")
-                              : "입력된 수량이 없습니다.";
+                            ? inches.join(", ")
+                            : "입력된 수량이 없습니다.";
 
                         return (
                           <React.Fragment key={index}>
@@ -510,8 +521,7 @@ function Admin() {
                               <td>
                                 {item.reservation_time || item.reserve_time
                                   ? (item.reservation_time || item.reserve_time)
-                                    .slice(0, 10)
-                                    .replaceAll("-", ".")
+                                      .slice(0, 10)
                                   : "-"}
                               </td>
                               <td>{item.type}</td>
@@ -519,26 +529,19 @@ function Admin() {
                               <td>{item.phone}</td>
                               <td>
                                 {item.storage_start_date &&
-                                  item.storage_end_date
-                                  ? `${item.storage_start_date.replaceAll(
-                                    "-",
-                                    "."
-                                  )} ~ ${item.storage_end_date.replaceAll(
-                                    "-",
-                                    "."
-                                  )}`
+                                item.storage_end_date
+                                  ? `${item.storage_start_date} ~ ${item.storage_end_date}`
                                   : item.delivery_date
-                                    ? item.delivery_date.replaceAll("-", ".")
-                                    : "-"}
+                                  ? item.delivery_date
+                                  : "-"}
                               </td>
                               <td>{luggageInfo}</td>
                               <td>{`${item.price.toLocaleString()}원`}</td>
                               <td>
                                 {item.situation === "완료" && item.success_time
                                   ? item.success_time
-                                    .slice(0, 16)
-                                    .replace("T", " ")
-                                    .replaceAll("-", ".")
+                                      .slice(0, 16)
+                                      .replace("T", " ")
                                   : "-"}
                               </td>
                               <td>
@@ -568,12 +571,14 @@ function Admin() {
                                             <col style={{ width: "3%" }} />
                                             <col style={{ width: "3%" }} />
                                             <col style={{ width: "4%" }} />
+                                            <col style={{ width: "4%" }} />
                                           </colgroup>
                                           <thead>
                                             <tr>
                                               <th>변경시간</th>
                                               <th>이전상태</th>
                                               <th>변경상태</th>
+                                              <th>처리자</th>
                                             </tr>
                                           </thead>
                                           <tbody>
@@ -581,12 +586,43 @@ function Admin() {
                                               (log, logIndex) => (
                                                 <tr key={logIndex}>
                                                   <td>
-                                                    {new Date(
-                                                      log.updated_at
-                                                    ).toLocaleString()}
+                                                    {(() => {
+                                                      const date = new Date(
+                                                        log.updated_at
+                                                      );
+                                                      const year =
+                                                        date.getFullYear();
+                                                      const month =
+                                                        date.getMonth() + 1;
+                                                      const day =
+                                                        date.getDate();
+                                                      const hour =
+                                                        date.getHours();
+                                                      const minute =
+                                                        date.getMinutes();
+                                                      const second =
+                                                        date.getSeconds();
+                                                      const ampm =
+                                                        hour < 12
+                                                          ? "오전"
+                                                          : "오후";
+                                                      const displayHour =
+                                                        hour % 12 === 0
+                                                          ? 12
+                                                          : hour % 12;
+                                                      return `${year}-${month}-${day} ${ampm} ${displayHour}:${minute
+                                                        .toString()
+                                                        .padStart(
+                                                          2,
+                                                          "0"
+                                                        )}:${second
+                                                        .toString()
+                                                        .padStart(2, "0")}`;
+                                                    })()}
                                                   </td>
                                                   <td>{log.prev_status}</td>
                                                   <td>{log.new_status}</td>
+                                                  <td>{log.operator}</td>
                                                 </tr>
                                               )
                                             )}
@@ -635,8 +671,9 @@ function Admin() {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`${AdminStyle.page_btn} ${currentPage === page ? AdminStyle.page_btn_active : ""
-                    }`}
+                  className={`${AdminStyle.page_btn} ${
+                    currentPage === page ? AdminStyle.page_btn_active : ""
+                  }`}
                 >
                   {page}
                 </button>

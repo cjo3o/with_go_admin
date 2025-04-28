@@ -205,7 +205,6 @@ function NewReservationAddPage() {
 
     const handleServiceTypeChange = (e) => {
         setServiceType(e.target.value);
-        setIsReturnTrip(false); // 서비스 타입 변경 시 왕복 체크 해제
     };
 
     const handleLocationChange = value => {
@@ -349,7 +348,7 @@ function NewReservationAddPage() {
                                         colon={false}
                                         className="separated-form-item"
                                     >
-                                        <ReservationDatePicker/>
+                                        {/*<ReservationDatePicker/>*/}
                                     </Form.Item>
                                     <Divider style={{margin: '12px 0', borderColor: 'rgba(217,217,217,0.5)'}}/>
                                     <Form.Item label="짐갯수" colon={false} className="separated-form-item">

@@ -5,7 +5,7 @@ import supabase from "../../lib/supabase.js";
 import "../../css/layout.css";
 import "../../css/ui.css";
 import "../../css/Event.css";
-import "antd/dist/reset.css";
+// import "antd/dist/reset.css";
 
 function EventList() {
   const [events, setEvents] = useState([]);
