@@ -302,7 +302,7 @@ function Reservation() {
     }, []);
 
     return (
-        <div className="main">
+        <div className="main" id="main">
             <div className="header">
                 <h3>예약관리</h3>
             </div>
@@ -390,26 +390,6 @@ function Reservation() {
                         </div>
                     </div>
                 </div>
-                {/*<div className="content_R">*/}
-                {/*    <div className="content_third">*/}
-                {/*        <Select*/}
-                {/*            defaultValue="name"*/}
-                {/*            onChange={(value) => setSearchField(value)}*/}
-                {/*            style={{width: 120, marginLeft: 20, marginRight: 15}}*/}
-                {/*        >*/}
-                {/*            <Select.Option value="name">예약자명</Select.Option>*/}
-                {/*            <Select.Option value="phone">연락처</Select.Option>*/}
-                {/*            <Select.Option value="driver">배정기사명</Select.Option>*/}
-                {/*        </Select>*/}
-                {/*        <Input*/}
-                {/*            className="custom-search-input"*/}
-                {/*            placeholder="검색어 입력"*/}
-                {/*            value={searchKeyword}*/}
-                {/*            onChange={(e) => setSearchKeyword(e.target.value)}*/}
-                {/*        />*/}
-                {/*        <Button type="primary" onClick={handleSearch}>검색</Button>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
                 <div className="content_middle">
                     <div className="content_middle_one">
                         <Button className="button-more" onClick={handleShowCheckbox}>다중관리</Button>

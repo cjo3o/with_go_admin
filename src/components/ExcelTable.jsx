@@ -218,7 +218,7 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
         {title: '구분', dataIndex: 'division', align: 'center'},
         {title: '예약시간', dataIndex: 'reservationTime', align: 'center'},
         {title: '이용구간', dataIndex: 'section', align: 'center', width: 200},
-        {title: '짐갯수', dataIndex: 'luggageNumber', align: 'center',width: 200},
+        {title: '짐갯수', dataIndex: 'luggageNumber', align: 'center', width: 200},
         {title: '예약자명', dataIndex: 'reservationName', align: 'center', width: 100},
         {title: '연락처', dataIndex: 'reservationPhone', align: 'center', width: 140},
         {title: '신청일자', dataIndex: 'date', align: 'center'},
@@ -318,12 +318,6 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
                             onChange={(e) => setEditingRecord({...editingRecord, section: e.target.value})}
                         />
                     </Form.Item>
-                    {/*<Form.Item label="예약시간">*/}
-                    {/*    <Input*/}
-                    {/*        value={editingRecord?.reservationTime}*/}
-                    {/*        onChange={(e) => setEditingRecord({...editingRecord, reservationTime: e.target.value})}*/}
-                    {/*    />*/}
-                    {/*</Form.Item>*/}
                     <Form.Item label="신청일자">
                         <DatePicker
                             style={{width: '100%'}}
@@ -336,7 +330,7 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
                             defaultValue={editingRecord?.processingStatus}
                             value={editingRecord?.processingStatus}
                             onChange={(val) =>
-                                setEditingRecord({ ...editingRecord, processingStatus: val })
+                                setEditingRecord({...editingRecord, processingStatus: val})
                             }
                         >
                             <Option value="미배정">미배정</Option>
@@ -348,15 +342,17 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
             </Modal>
 
             <Form form={form} component={false}>
-                <Table
-                    components={{body: {cell: EditableCell}}}
-                    bordered
-                    dataSource={currentData}
-                    columns={columns}
-                    pagination={false}
-                    rowKey="key"
-                    onChange={handleTableChange}
-                />
+                <div style={{overflowX: 'auto' }}>
+                    <Table
+                        components={{body: {cell: EditableCell}}}
+                        bordered
+                        dataSource={currentData}
+                        columns={columns}
+                        pagination={false}
+                        rowKey="key"
+                        onChange={handleTableChange}
+                    />
+                </div>
 
                 {showCheckbox && (
                     <div style={{display: 'flex', justifyContent: 'flex-start', padding: '8px 16px'}}>

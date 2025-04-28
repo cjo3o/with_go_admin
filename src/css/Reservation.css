@@ -5,6 +5,10 @@
     font-family: 'KoPub Dotum', sans-serif;
 }
 
+#main{
+    min-width: 1200px;
+}
+
 .content_middle {
     width: 100%;
 }
@@ -85,6 +89,7 @@
 }
 .content_second_one h1{
     color: #4e4e4e;
+    margin: 0;
     text-align: center;
 }
 
@@ -232,4 +237,28 @@
     top: 100%;
     font-size: 12px;
     background-color: #595AD5;
+}
+
+@media (max-width: 768px) {
+    .content_R {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .content_second, .content_second_one {
+        width: 100%;
+    }
+
+    .content_third, .search-bar, .content_middle_one {
+        flex-direction: column;
+    }
+
+    .button-more, .select, .custom-search-input, .downmenu {
+        width: 100% !important;
+        margin-top: 8px;
+    }
+
+    .date-text {
+        font-size: 1.2rem;
+    }
 }
