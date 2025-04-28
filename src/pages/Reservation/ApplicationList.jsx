@@ -1,5 +1,5 @@
 import React from 'react';
-import App from "../../Components/Tab.jsx";
+import App from "../../components/Tab.jsx";
 import {Button, Layout} from "antd";
 
 const {Content} = Layout;

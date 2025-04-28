@@ -224,10 +224,6 @@
   text-align: center;
 }
 
-tr {
-  cursor: pointer;
-}
-
 .status_details {
   /* background: #f9f9f9; */
   padding: 10px;

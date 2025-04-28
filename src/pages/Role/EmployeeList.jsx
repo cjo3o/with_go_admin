@@ -16,6 +16,7 @@ function EmployeeList(props) {
     const [openEdit, setOpenEdit] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
     const [openInsert, setOpenInsert] = useState(false);
+    const [openDetail, setOpenDetail] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [insertedEmployee, setInsertedEmployee] = useState(null);
     const [messageApi, contextHolder] = message.useMessage();
@@ -64,6 +65,11 @@ function EmployeeList(props) {
 
     const showInsert = () => {
         setOpenInsert(true);
+    }
+
+    const showDetail = () => {
+        setOpenDetail(true);
+        console.log();
     }
 
     const initialValues = {
@@ -153,6 +159,7 @@ function EmployeeList(props) {
         setOpenEdit(false);
         setOpenDelete(false);
         setOpenInsert(false);
+        setOpenDetail(false);
         form.resetFields();
     };
 
@@ -160,9 +167,7 @@ function EmployeeList(props) {
         async function fetchEmployees() {
             const res = await supabase.from('employees').select().order('no', {ascending: true});
             setRowdata(res.data);
-            console.log(res.data);
         }
-
         fetchEmployees();
     }, [])
 
@@ -197,7 +202,7 @@ function EmployeeList(props) {
                             </thead>
                             <tbody>
                             {rowdata.map(item => (
-                                <tr key={item.no}>
+                                <tr key={item.no} onClick={showDetail}>
                                     <td>{item.no}</td>
                                     <td>{item.name}</td>
                                     <td>{item.email}</td>
@@ -384,6 +389,20 @@ function EmployeeList(props) {
                             </div>
                         </div>
                     </Form>
+                </Modal>
+                <Modal
+                    title="상세정보"
+                    open={openDetail}
+                    onCancel={handleCancel}
+                    footer={[
+                        <Button key="back" onClick={handleCancel}>
+                            닫기
+                        </Button>
+                    ]}
+                >
+                    <div className="details">
+
+                    </div>
                 </Modal>
             </div>
         </>
