@@ -246,6 +246,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 5px;
 }
 
 .admin_search {
@@ -500,7 +501,7 @@
   .right1 h3 {
     margin: 0;
     margin-bottom: 5px;
-    padding-top: 35px;
+    padding-top: 25px;
   }
 
   .right1 p {

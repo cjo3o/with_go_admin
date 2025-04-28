@@ -26,21 +26,24 @@
 
 .faq-col-select  { width: 4%; }
 .faq-col-type    { width: 4%; }
-.faq-col-title   { width: 26%; }
-.faq-col-content { width: 30%; }
+.faq-col-title   { width: 27%; }
+.faq-col-content { width: 32%; }
 .faq-col-status  { width: 7%; }
 .faq-col-date    { width: 7%; }
-.faq-col-actions { width: 10%; }
+.faq-col-actions { width: 9%; }
 
 .answer-toggle {
   cursor: pointer;
   display: block;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   transition: max-height 0.3s ease;
   max-height: 32px;
   line-height: 1.5;
+  
 }
 
 .answer-toggle.open {
