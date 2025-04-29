@@ -1,7 +1,7 @@
 .common-table {
   width: 100%;
   min-width: 1100px;
-  table-layout: fixed;
+  table-layout: auto;
   border-collapse: collapse;
 }
 
@@ -52,15 +52,6 @@
   max-height: 500px;
   overflow: auto;
   line-height: 1.6;
-}
-
-.table-footer.bottom-right-btn {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 8px;
-  padding-right: 35px;
-  margin-top: 16px;
 }
 
 .pagination-wrapper {
