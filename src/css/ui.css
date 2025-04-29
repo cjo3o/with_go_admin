@@ -157,7 +157,6 @@ textarea {
 
 .form-button-wrapper,
 .notice-add-button-wrapper,
-.table-footer,
 .event-add-button-wrapper {
     display: flex;
     justify-content: flex-end;
@@ -187,10 +186,7 @@ tfoot td .table-footer {
     display: flex;
     justify-content: flex-end;
     width: 100%;
-    padding-right: 35px;
     margin-top: 16px;
-    gap: 10px;
-    flex-wrap: wrap;
 }
 
 .default-style .ant-btn-primary {
