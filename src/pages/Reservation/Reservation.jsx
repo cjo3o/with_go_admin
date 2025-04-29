@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
-import luggage2 from "../../assets/Images/luggage_02.png"
-import luggage1 from "../../assets/Images/luggage_01.png"
+import luggage2 from "../../assets/Images/luggage02.png"
+import luggage1 from "../../assets/Images/luggage01.png"
 import FloatingBtn from "../../components/ExcelDownload.jsx";
 import ExcelTable from "../../components/ExcelTable.jsx";
 import {Button, DatePicker, Select, Input, message, Card} from "antd";
@@ -333,7 +333,6 @@ function Reservation() {
                                     onOpenChange={(open) => {
                                         if (!open) setShowDatePicker(false);
                                     }}
-                                    inputReadOnly
                                     style={{
                                         position: 'absolute',
                                         zIndex: 1000,
@@ -363,15 +362,17 @@ function Reservation() {
                         <h1>{storageCount + deliveryCount} 건</h1>
                     </div>
                     <div className="content_second_one">
-                        <img src={luggage2} alt="배송캐리어" style={{marginLeft: "30px"}}/>
-                        <div>
-                            <h2>배송예약</h2>
-                            <h1>{deliveryCount}건</h1>
-                        </div>
-                        <img src={luggage1} alt="보관캐리어"/>
-                        <div>
-                            <h2>보관예약</h2>
-                            <h1>{storageCount}건</h1>
+                        <div className="content_aa">
+                            <img src={luggage2} alt="배송캐리어" style={{marginLeft: "30px"}}/>
+                            <div>
+                                <h2>배송예약</h2>
+                                <h1>{deliveryCount}건</h1>
+                            </div>
+                            <img src={luggage1} alt="보관캐리어"/>
+                            <div>
+                                <h2>보관예약</h2>
+                                <h1>{storageCount}건</h1>
+                            </div>
                         </div>
                         <div className="border-right"></div>
                         <div className="border-left">

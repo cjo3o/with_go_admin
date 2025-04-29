@@ -6,6 +6,8 @@ import {
 import {DeleteOutlined, EditOutlined} from "@mui/icons-material";
 import {createClient} from '@supabase/supabase-js'; // ✅ Supabase 클라이언트 추가
 import dayjs from 'dayjs';
+import {faAnglesLeft, faAnglesRight, faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 // import('src/lib/supabase.js')
 const {Option} = Select;
@@ -48,12 +50,27 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingRecord, setEditingRecord] = useState(null);
 
+    // const pageSize = 10;  // ✅ pageSize 하나로 통일
+    const totalPages = Math.ceil(combinedData.length / pageSize);
+
+    const groupSize = 7;
+    const currentGroup = Math.floor((currentPage - 1) / groupSize);
+    const startPage = currentGroup * groupSize + 1;
+    const endPage = Math.min(startPage + groupSize - 1, totalPages);
+
+    const goToFirstGroup = () => setCurrentPage(1);
+    const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+    const goToNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    const goToNextGroup = () => {
+        const nextGroupPage = Math.min(endPage + 1, totalPages);
+        if (nextGroupPage > currentPage) setCurrentPage(nextGroupPage);
+    };
+
     useEffect(() => {
-        if (combinedSearchData?.length > 0) {
-            setCombinedData(combinedSearchData);
-            setCurrentPage(1);
-        }
+        setCombinedData(combinedSearchData || []);
+        setCurrentPage(1);
     }, [combinedSearchData]);
+
 
     const updateToSupabase = async (record) => {
         const table = record.division === '보관' ? 'storage' : 'delivery';
@@ -204,6 +221,8 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
             ) : '번호',
             dataIndex: 'number',
             align: 'center',
+            width: 60,
+            fixed: 'left',
             render: (_, record) => showCheckbox ? (
                 <Checkbox
                     checked={checkedRows.includes(record.key)}
@@ -218,11 +237,11 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
         {title: '구분', dataIndex: 'division', align: 'center'},
         {title: '예약시간', dataIndex: 'reservationTime', align: 'center'},
         {title: '이용구간', dataIndex: 'section', align: 'center', width: 200},
-        {title: '짐갯수', dataIndex: 'luggageNumber', align: 'center', width: 200},
+        {title: '짐갯수', dataIndex: 'luggageNumber', align: 'center', width: 200, responsive: ['md']},
         {title: '예약자명', dataIndex: 'reservationName', align: 'center', width: 100},
         {title: '연락처', dataIndex: 'reservationPhone', align: 'center', width: 140},
         {title: '신청일자', dataIndex: 'date', align: 'center'},
-        {title: '배정기사', dataIndex: 'driver', align: 'center', width: 100},
+        {title: '배정기사', dataIndex: 'driver', align: 'center', width: 100, responsive: ['md']},
         {
             title: '처리현황',
             dataIndex: 'processingStatus',
@@ -369,17 +388,44 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
                     </div>
                 )}
 
-                <Pagination
-                    current={currentPage}
-                    pageSize={10}
-                    total={combinedData.length}
-                    showSizeChanger={false}
-                    style={{display: 'flex', justifyContent: 'center', marginTop: 16, marginBottom: 20}}
-                    onChange={(page, newPageSize) => {
-                        setCurrentPage(page);
-                        setPageSize(newPageSize);
-                    }}
-                />
+                <div className="pagination" style={{marginTop: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap'}}>
+                    <button onClick={goToFirstGroup} disabled={currentGroup === 0}>
+                        <FontAwesomeIcon icon={faAnglesLeft} />
+                    </button>
+                    <button onClick={goToPrevPage} disabled={currentPage === 1}>
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                    </button>
+
+                    {Array.from({length: endPage - startPage + 1}).map((_, i) => {
+                        const pageNum = startPage + i;
+                        return (
+                            <button
+                                key={pageNum}
+                                className={`page-btn ${pageNum === currentPage ? 'active' : ''}`}
+                                onClick={() => setCurrentPage(pageNum)}
+                                style={{
+                                    margin: '0 4px',
+                                    padding: '6px 12px',
+                                    fontWeight: pageNum === currentPage ? 'bold' : 'normal',
+                                    backgroundColor: pageNum === currentPage ? '#1e83f1' : 'white',
+                                    color: pageNum === currentPage ? 'white' : '#333',
+                                    border: '1px solid #ddd',
+                                    borderRadius: '4px',
+                                }}
+                            >
+                                {pageNum}
+                            </button>
+                        );
+                    })}
+
+                    <button onClick={goToNextPage} disabled={currentPage === totalPages}>
+                        <FontAwesomeIcon icon={faChevronRight} />
+                    </button>
+                    <button onClick={goToNextGroup} disabled={endPage === totalPages}>
+                        <FontAwesomeIcon icon={faAnglesRight} />
+                    </button>
+                </div>
+
             </Form>
         </>
     );
