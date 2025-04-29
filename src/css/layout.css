@@ -48,6 +48,16 @@ table {
     width: 100%;
 }
 
+tbody > tr {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+tbody > tr:hover {
+    transition: 0.3s;
+    background-color: #fafafa;
+}
+
 th, td {
     text-align: center;
     vertical-align: middle;

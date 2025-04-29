@@ -14,6 +14,7 @@ import {
   faChevronRight,
   faAnglesRight,
 } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 function Admin() {
   const selectOptions = {
@@ -36,7 +37,7 @@ function Admin() {
   const [todayCount, setTodayCount] = useState(0);
   const [todayDeliveryCount, setTodayDeliveryCount] = useState(0);
   const [todayStorageCount, setTodayStorageCount] = useState(0);
-
+  const navigate = useNavigate();
   const today = new Date();
   const formatter = new Intl.DateTimeFormat("ko-KR", {
     timeZone: "Asia/Seoul",
@@ -111,6 +112,10 @@ function Admin() {
   };
 
   useEffect(() => {
+    const res = sessionStorage.getItem("name");
+    if (res === null) {
+      navigate("/login");
+    }
     const supaData = async () => {
       const { data: deliveryData, error: deliveryError } = await supabase
         .from("delivery")
@@ -273,7 +278,6 @@ function Admin() {
     if (logStatusError) {
       console.error("상태 변경 로그 저장 실패", logStatusError);
     }
-
 
     const { data: updatedLogs, error: updatedLogsError } = await supabase
       .from("status_logs")
@@ -515,8 +519,9 @@ function Admin() {
                             >
                               <td>
                                 {item.reservation_time || item.reserve_time
-                                  ? (item.reservation_time || item.reserve_time)
-                                      .slice(0, 10)
+                                  ? (
+                                      item.reservation_time || item.reserve_time
+                                    ).slice(0, 10)
                                   : "-"}
                               </td>
                               <td>{item.type}</td>
@@ -567,12 +572,20 @@ function Admin() {
                                             <col style={{ width: "3%" }} />
                                             <col style={{ width: "4%" }} />
                                             <col style={{ width: "4%" }} />
+                                            <col style={{ width: "4%" }} />
                                           </colgroup>
                                           <thead>
                                             <tr>
                                               <th>변경시간</th>
                                               <th>이전상태</th>
                                               <th>변경상태</th>
+                                              <th>
+                                                {item.type === "배송"
+                                                  ? "배송기사"
+                                                  : item.type === "보관"
+                                                  ? "보관장소"
+                                                  : "배송기사/보관장소"}
+                                              </th>
                                               <th>처리자</th>
                                             </tr>
                                           </thead>
@@ -617,6 +630,7 @@ function Admin() {
                                                   </td>
                                                   <td>{log.prev_status}</td>
                                                   <td>{log.new_status}</td>
+                                                  <td></td>
                                                   <td>{log.operator}</td>
                                                 </tr>
                                               )

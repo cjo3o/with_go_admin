@@ -60,7 +60,7 @@ function App() {
             <BrowserRouter>
                 <Sidebar />
                 <Routes>
-                    <Route path="/" element={<Home/>}/>
+                    <Route path="/" element={<Admin/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/Admin" element={<Admin/>}/>
                     <Route path="/Memberlist" element={<Memberlist/>}/>

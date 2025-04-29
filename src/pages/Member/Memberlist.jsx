@@ -76,14 +76,13 @@ function Memberlist() {
   const deleteUser = async (userId) => {
     const { error } = await supabaseRole.auth.admin.deleteUser(userId);
     if (error) {
-      console.error("삭제 실패:", error);
+      console.error("탈퇴 실패:", error);
       throw error;
     }
-    console.log("사용자 삭제 완료");
   };
 
   const DeleteSelected = async () => {
-    if (!window.confirm("선택한 회원을 삭제하시겠습니까?")) return;
+    if (!window.confirm("선택한 회원을 탈퇴 처리하시겠습니까?")) return;
 
     try {
       for (const userId of selectedIds) {
@@ -92,10 +91,10 @@ function Memberlist() {
 
       setUsers(users.filter((user) => !selectedIds.includes(user.id)));
       setSelectedIds([]);
-      alert("삭제 완료되었습니다.");
+      alert("탈퇴 완료되었습니다.");
     } catch (err) {
       console.error(err);
-      alert("삭제 중 오류가 발생했습니다.");
+      alert("탈퇴 중 오류가 발생했습니다.");
     }
   };
 
@@ -182,7 +181,7 @@ function Memberlist() {
                 className={MemberStyle.btn_delete}
                 onClick={DeleteSelected}
               >
-                선택 삭제 ({selectedIds.length})
+                회원 탈퇴({selectedIds.length})
               </button>
             )}
           </div>
