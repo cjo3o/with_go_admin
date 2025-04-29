@@ -5,6 +5,10 @@
     font-family: 'KoPub Dotum', sans-serif;
 }
 
+#main{
+    min-width: 70%;
+}
+
 .content_middle {
     width: 100%;
 }
@@ -41,7 +45,7 @@
 .content_second{
     min-width: 22%;
     /*position: absolute;*/
-    height: 150px;
+    height: auto;
     background-color: #595AD5;
     border-radius: 8px;
     color: white;
@@ -59,14 +63,21 @@
 }
 
 .content_second_one{
-    width: 1200px;
-    min-width: 75%;
-    height: 150px;
+    width: 100%;
+    min-width: 0;
+    height: auto;
     display: flex;
+    flex-wrap: wrap;
     place-items: center;
     justify-content: space-around;
     border-radius: 8px;
     background-color: #F9F9F9;
+    /*padding: 20px;*/
+    /*flex-direction: column;*/
+}
+
+.content_aa{
+    display: flex;
 }
 
 .content_second_one > img {
@@ -85,6 +96,7 @@
 }
 .content_second_one h1{
     color: #4e4e4e;
+    margin: 0;
     text-align: center;
 }
 
@@ -96,6 +108,7 @@
 
 .border-left{
     width: 40%;
+    min-width: 20%;
     display: flex;
     justify-content: space-around;
     text-align: center
@@ -194,10 +207,10 @@
 
 /*.content_middle_one .downmenu{*/
 /*    width: 100%;*/
-    /*margin-right: 5px;*/
-    /*display: flex;*/
-    /*justify-content: end;*/
-    /*align-items: center;*/
+/*margin-right: 5px;*/
+/*display: flex;*/
+/*justify-content: end;*/
+/*align-items: center;*/
 /*}*/
 
 .content_middle .button-more{
@@ -232,4 +245,35 @@
     top: 100%;
     font-size: 12px;
     background-color: #595AD5;
+}
+
+@media (max-width: 768px) {
+    .content_R {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .content_second, .content_second_one {
+        width: 100%;
+        min-width: 80%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .border-right{
+        display: none;
+    }
+
+    .content_third, .search-bar, .content_middle_one {
+        flex-direction: column;
+    }
+
+    .button-more, .select, .custom-search-input, .downmenu {
+        width: 100% !important;
+        margin-top: 8px;
+    }
+
+    .date-text {
+        font-size: 1.2rem;
+    }
 }

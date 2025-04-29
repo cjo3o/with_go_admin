@@ -17,7 +17,7 @@
 .separated-form-item {
     display: flex; /* Flex 컨테이너로 설정하여 label과 control을 가로로 배치 */
     align-items: flex-start; /* label과 control의 세로 정렬을 시작점으로 맞춤 (필요에 따라 변경) */
-    margin-bottom: 20px; /* 각 Form.Item 간의 간격 */
+    margin-bottom: 15px; /* 각 Form.Item 간의 간격 */
     margin-left: 25px;
     width: 100%;
     gap: 5px;

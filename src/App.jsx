@@ -6,7 +6,7 @@ import { faArrowLeft, faCheck, faPlay, faCircleStop, faArrowDown } from '@fortaw
 library.add(faArrowLeft, faCheck, faPlay, faCircleStop, faArrowDown);
 
 import './App.css';
-import 'antd/dist/reset.css';
+// import 'antd/dist/reset.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import Home from "./pages/Home.jsx";
@@ -60,7 +60,7 @@ function App() {
             <BrowserRouter>
                 <Sidebar />
                 <Routes>
-                    <Route path="/" element={<Home/>}/>
+                    <Route path="/" element={<Admin/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/Admin" element={<Admin/>}/>
                     <Route path="/Memberlist" element={<Memberlist/>}/>

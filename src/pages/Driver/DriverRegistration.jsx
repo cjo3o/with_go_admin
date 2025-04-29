@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import DrStyle from "../../css/DriverRegistration.module.css";
 import { Button } from "antd";
 import { supabase } from "../../lib/supabase.js";
@@ -31,15 +31,19 @@ function DriverRegistration() {
   const [attachFile2, setAttachFile2] = useState(null);
   const location = useLocation();
   const editDriver = location.state?.driver;
+  const nameInputRef = useRef(null);
+
 
   const [formData2, setFormData2] = useState({
     name: editDriver?.name || "",
     phone: editDriver?.phone || "",
+    birthday: editDriver?.birthday || "",
     email: editDriver?.email || "",
     address: editDriver?.address || "",
     memo: editDriver?.memo || "",
     photo_url: editDriver?.photo_url || "",
     file_url: editDriver?.file_url || "",
+    gender: editDriver?.gender || "",
   });
 
   const handleImageChange2 = (e) => {
@@ -60,6 +64,11 @@ function DriverRegistration() {
 
   const handleChange2 = (e) => {
     const { name, value } = e.target;
+
+    if (name === "birthday") {
+      if (!/^\d*$/.test(value) || value.length > 6) return;
+    }
+
     setFormData2((prev) => ({
       ...prev,
       [name]: value,
@@ -83,10 +92,10 @@ function DriverRegistration() {
       ...formData2,
       photo_url: photoUrl,
       file_url: fileUrl,
+      password: formData2.birthday
     };
 
     if (editDriver) {
-      // ✅ 수정 모드: update
       const { error } = await supabase
         .from("DriverList")
         .update(dataToSave)
@@ -99,7 +108,6 @@ function DriverRegistration() {
         navigate2("/DriverList");
       }
     } else {
-      // ✅ 등록 모드: insert
       const { error } = await supabase.from("DriverList").insert([dataToSave]);
 
       if (error) {
@@ -119,56 +127,109 @@ function DriverRegistration() {
     if (editDriver?.photo_url) {
       setPreviewImage2(editDriver.photo_url);
     }
+
+    if (nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
   }, [editDriver]);
 
   return (
     <>
-      <div className={DrStyle.content}>
+      <div className='main'>
         <div className={DrStyle.DR_top}>기사 관리</div>
-        <div className={`${DrStyle.DR_main} card`}>
+        <div className={`${DrStyle.DR_main} ${DrStyle.card} card`}>
           <div className={DrStyle.MainTop}>
-            <h3>기사 등록</h3>
-            <Button type="primary" onClick={goToDriverList}>
-              목록
-            </Button>
+            <div>
+              <h3>기사 등록</h3>
+            </div>
+            <div>
+              <Button type="primary" onClick={goToDriverList}>
+                목록
+              </Button>
+            </div>
           </div>
           <form className={DrStyle.DriverForm} onSubmit={handleSubmit2}>
             <div className={DrStyle.FormUp}>
               <div className={DrStyle.imge}>
                 {previewImage2 ? (
                   <div className={DrStyle.preview}>
-                    <img src={previewImage2} alt="미리보기" width="150" />
+                    <img src={previewImage2} alt="미리보기" />
                   </div>
                 ) : (
                   <div className={DrStyle.nopreview}>
                     등록된 사진이 없습니다.
                   </div>
                 )}
-                <div style={{ width: "150px", overflow: "visible" }}>
+                <div className={DrStyle.imgefile}>
                   <input type="file" onChange={handleImageChange2} />
                 </div>
               </div>
               <div className={DrStyle.formright}>
                 <div className={`${DrStyle.Group} ${DrStyle.name}`}>
-                  <label htmlFor="name">이름</label>
-                  <input type="text" name="name" value={formData2.name} onChange={handleChange2} />
+                  <label htmlFor="name"><em className={DrStyle.fem}>*</em>
+                    이름
+                  </label>
+                  <input type="text" name="name" value={formData2.name} onChange={handleChange2} ref={nameInputRef} autoComplete="off" required />
                 </div>
-                <div className={`${DrStyle.Group} ${DrStyle.name}`}>
-                  <label htmlFor="phone">연락처</label>
-                  <input type="number" name="phone" value={formData2.phone} onChange={handleChange2} />
+                <div className={`${DrStyle.Group} ${DrStyle.birthday}`}>
+                  <label htmlFor="birthday" mar><em className={DrStyle.fem}>*</em>생년월일</label>
+                  <input type="number"
+                    name="birthday"
+                    value={formData2.birthday}
+                    onChange={handleChange2}
+                    onKeyDown={(e) => {
+                      const invalidChars = ["e", "E", "+", "-", "."];
+                      if (invalidChars.includes(e.key)) {
+                        e.preventDefault();
+                      }
+                    }}
+                    onPaste={(e) => {
+                      const paste = e.clipboardData.getData("text");
+                      if (!/^\d{1,6}$/.test(paste)) {
+                        e.preventDefault();
+                      }
+                    }}
+                    placeholder="생년월일 6자리"
+                    autoComplete="off"
+                    inputMode="numeric"
+                    required />
                 </div>
-                <div className={`${DrStyle.Group} ${DrStyle.email}`}>
-                  <label htmlFor="email">이메일</label>
-                  <input type="email" name="email"  value={formData2.email} onChange={handleChange2} />
+                <div className={`${DrStyle.Group} ${DrStyle.gender4}`}>
+                  <label htmlFor="gender3"><em className={DrStyle.fem}>*</em>
+                    성별
+                  </label>
+                  <div className={DrStyle.gender2}>
+                    <input type="radio" name="gender" id="male" value="남"
+                      checked={formData2.gender === "남"}
+                      onChange={handleChange2} required />
+                    <label htmlFor="male" style={{ paddingLeft: "10px", width: "35px" }}>남</label>
+                    <input type="radio" name="gender" id="female" value="여"
+                      checked={formData2.gender === "여"}
+                      onChange={handleChange2} required />
+                    <label htmlFor="female" style={{ paddingLeft: "10px", width: "35px" }}>여</label>
+                  </div>
                 </div>
               </div>
             </div>
+            <div className={`${DrStyle.Group} ${DrStyle.phone}`}>
+              <label htmlFor="phone"><em className={DrStyle.fem}>*</em>연락처</label>
+              <input type="number" name="phone" value={formData2.phone} onChange={handleChange2} placeholder="- 없이 입력하세요." autoComplete="off" required />
+            </div>
+            <div className={`${DrStyle.Group} ${DrStyle.email}`}>
+              <label htmlFor="email"><em className={DrStyle.fem}>*</em>이메일</label>
+              <input type="email" name="email" value={formData2.email} onChange={handleChange2} autoComplete="off" required />
+            </div>
             <div className={`${DrStyle.Group} ${DrStyle.address}`}>
-              <label htmlFor="address">주소</label>
-              <input type="text" name="address" value={formData2.address} onChange={handleChange2} />
+              <label htmlFor="address"><em className={DrStyle.fem}>*</em>
+                주소
+              </label>
+              <input type="text" name="address" value={formData2.address} onChange={handleChange2} autoComplete="off" required />
             </div>
             <div className={`${DrStyle.Group} ${DrStyle.memo}`}>
-              <label htmlFor="memo">메모</label>
+              <label htmlFor="memo">
+                <span style={{ marginLeft: '8px' }}>메</span>
+                <span>모</span>
+              </label>
               <textarea name="memo" value={formData2.memo} onChange={handleChange2}></textarea>
             </div>
             <div className={`${DrStyle.Group} ${DrStyle.file}`}>

@@ -1,11 +1,12 @@
 import React, {use, useEffect, useState} from 'react';
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 
 import '../css/Sidebar.css';
 
 import logoWithgo from '../assets/Icon/logo_withgo.png';
 import homeIcon from '../assets/Icon/home.png';
 import backIcon from '../assets/Icon/back.png';
+import profileIcon from '../assets/Icon/profile.png';
 import {RightOutlined, LeftOutlined} from "@ant-design/icons";
 import useBreakpoint from "antd/es/grid/hooks/useBreakpoint.js";
 import {Button} from "antd";
@@ -18,6 +19,8 @@ function Sidebar(props) {
     const [emName, setEmName] = useState(null);
     const [emRole, setEmRole] = useState(null);
     const screens = useBreakpoint();
+    const location = useLocation();
+
     const toggleMenu = (menu) => {
         setOpenMenu(openMenu === menu ? null : menu);
     };
@@ -44,6 +47,13 @@ function Sidebar(props) {
         }
     }, [screens.md]);
 
+    const handleLinkClick = (e, targetPath) => {
+        if (location.pathname === targetPath) {
+          e.preventDefault();
+          window.location.reload();
+        }
+      };
+
     return (
         <>
             {emRole !== null && (
@@ -51,46 +61,62 @@ function Sidebar(props) {
                     <div className="sidebar-content">
                         <div className="sidebar-logo">
                             <img src={logoWithgo} alt="WITHGO 로고" className="logo-img"/>
-                        </div>
-                        <div className="sidebar-title">
-                            <h2 className="menu-title">관리자 메뉴</h2>
                             <div className="menu-icons">
-                                <Link to="/" className="icon-link" onClick={boolSidebar}>
-                                    <img src={homeIcon} alt="홈으로" className="menu-icon"/>
-                                </Link>
                                 <a href="https://cjo3o.github.io/with_go/index.html" className="icon-link">
-                                    <img src={backIcon} alt="뒤로가기" className="menu-icon"/>
+                                    <img src={homeIcon} alt="뒤로가기" className="menu-icon"/>
                                 </a>
+                            </div>
+                        </div>
+                        {/*<div className="sidebar-title">*/}
+                        {/*    <h2 className="menu-title">관리자 메뉴</h2>*/}
 
+                        {/*</div>*/}
+                        <div className="sidebar-footer">
+                            <div className="footer-profile-row">
+                                <div className="profile-left">
+                                    <img src={profileIcon} alt="프로필" className="profile-icon"/>
+                                    <div className="profile-label">{emRole}</div>
+                                </div>
+                                <div className="profile-right">
+                                    <p className="profile-name">{emName} 님</p>
+                                    <p className="profile-greeting">안녕하세요</p>
+                                    <button className="logout-btn" onClick={logout}>로그아웃</button>
+                                </div>
                             </div>
                         </div>
                         <ul>
-                            <li className="no-underline"
-                                onClick={boolSidebar}
-                            >
-                                <Link to="/admin">관리자 메인</Link>
-                            </li>
+                            {emRole === '관리자' && (
+                                <li className="no-underline"
+                                    onClick={boolSidebar}
+                                >
+                                    <Link to="/admin" onClick={(e) => handleLinkClick(e, '/admin')}>실시간 모니터링</Link>
+                                </li>
+                            )}
 
                             <li>
                                 <div onClick={() => toggleMenu('reservation')} className="menu-toggle">예약관리</div>
                                 {openMenu === 'reservation' && (
                                     <div className="sub-menu">
                                         <ul>
+                                            {emRole === '관리자' && (
+                                                <li
+                                                    onClick={boolSidebar}
+                                                >
+                                                    <Link to="/Reservation" onClick={(e) => handleLinkClick(e, '/Reservation')}>배송/보관관리</Link>
+                                                </li>
+                                            )}
                                             <li
                                                 onClick={boolSidebar}
                                             >
-                                                <Link to="/Reservation">배송/보관관리</Link>
+                                                <Link to="/ApplicationList" onClick={(e) => handleLinkClick(e, '/ApplicationList')}>예약신청목록</Link>
                                             </li>
-                                            <li
-                                                onClick={boolSidebar}
-                                            >
-                                                <Link to="/ApplicationList">예약신청목록</Link>
-                                            </li>
-                                            <li
-                                                onClick={boolSidebar}
-                                            >
-                                                <Link to="/NewReservationAddPage">신규예약등록</Link>
-                                            </li>
+                                            {emRole === '관리자' && (
+                                                <li
+                                                    onClick={boolSidebar}
+                                                >
+                                                    <Link to="/NewReservationAddPage" onClick={(e) => handleLinkClick(e, '/NewReservationAddPage')}>신규예약등록</Link>
+                                                </li>
+                                            )}
                                         </ul>
                                     </div>
                                 )}
@@ -104,7 +130,7 @@ function Sidebar(props) {
                                             <li
                                                 onClick={boolSidebar}
                                             >
-                                                <Link to="/Memberlist">회원목록</Link>
+                                                <Link to="/Memberlist" onClick={(e) => handleLinkClick(e, '/Memberlist')}>회원목록</Link>
                                             </li>
                                         </ul>
                                     </div>
@@ -119,117 +145,97 @@ function Sidebar(props) {
                                             <li
                                                 onClick={boolSidebar}
                                             >
-                                                <Link to="/Driverlist">기사목록</Link>
+                                                <Link to="/Driverlist" onClick={(e) => handleLinkClick(e, '/Driverlist')}>기사목록</Link>
                                             </li>
-                                            <li
-                                                onClick={boolSidebar}
-                                            >
-                                                <Link to="/DriverRegistration">기사등록</Link>
-                                            </li>
+                                            {emRole === '관리자' && (
+                                                <li
+                                                    onClick={boolSidebar}
+                                                >
+                                                    <Link to="/DriverRegistration" onClick={(e) => handleLinkClick(e, '/DriverRegistration')}>기사등록</Link>
+                                                </li>
+                                            )}
                                         </ul>
                                     </div>
                                 )}
                             </li>
 
                             <li>
-                                <div onClick={() => toggleMenu('partner')} className="menu-toggle">제휴숙소관리</div>
-                                {openMenu === 'partner' && (
+                                <div onClick={() => toggleMenu('place')} className="menu-toggle">숙소/장소관리</div>
+                                {openMenu === 'place' && (
                                     <div className="sub-menu">
                                         <ul>
                                             <li
                                                 onClick={boolSidebar}
                                             >
-                                                <Link to="/partner/list">제휴숙소목록</Link>
+                                                <Link to="/partner/list" onClick={(e) => handleLinkClick(e, '/partner/list')}>제휴숙소</Link>
                                             </li>
-                                            <li
-                                                onClick={boolSidebar}
-                                            >
-                                                <Link to="/partner/create">제휴숙소등록</Link>
-                                            </li>
+                                            {emRole === '관리자' && (
+                                                <li
+                                                    onClick={boolSidebar}
+                                                >
+                                                    <Link to="/storage/list" onClick={(e) => handleLinkClick(e, '/storage/list')}>보관장소</Link>
+                                                </li>
+                                            )}
                                         </ul>
                                     </div>
                                 )}
                             </li>
+                            {emRole === '관리자' && (
+                                <li>
+                                    <div onClick={() => toggleMenu('feature')} className="menu-toggle">부가기능</div>
+                                    {openMenu === 'feature' && (
+                                        <div className="sub-menu">
+                                            <ul>
+                                                <li
+                                                    onClick={boolSidebar}
+                                                >
+                                                    <Link to="/event/list"  onClick={(e) => handleLinkClick(e, '/event/list')}>이벤트/프로모션관리</Link>
+                                                </li>
+                                                <li
+                                                    onClick={boolSidebar}
+                                                >
+                                                    <Link to="/notice-promotion" onClick={(e) => handleLinkClick(e, '/notice-promotion')}>공지사항관리</Link>
+                                                </li>
+                                                <li
+                                                    onClick={boolSidebar}
+                                                >
+                                                    <Link to="/review" onClick={(e) => handleLinkClick(e, '/review')}>이용후기관리</Link>
+                                                </li>
+                                                <li
+                                                    onClick={boolSidebar}
+                                                >
+                                                    <Link to="/faq/list" onClick={(e) => handleLinkClick(e, '/faq/list')}>FAQ 관리</Link>
+                                                </li>
+                                                <li
+                                                    onClick={boolSidebar}
+                                                >
+                                                    <Link to="/inquiry/list" onClick={(e) => handleLinkClick(e, '/inquiry/list')}>1:1문의관리</Link>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    )}
+                                </li>
+                            )}
 
-                            <li>
-                                <div onClick={() => toggleMenu('storage')} className="menu-toggle">보관장소관리</div>
-                                {openMenu === 'storage' && (
-                                    <div className="sub-menu">
-                                        <ul>
-                                            <li
-                                                onClick={boolSidebar}
-                                            >
-                                                <Link to="/storage/list">보관장소목록</Link>
-                                            </li>
-                                            <li
-                                                onClick={boolSidebar}
-                                            >
-                                                <Link to="/storage/create">보관장소등록</Link>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                )}
-                            </li>
-
-                            <li>
-                                <div onClick={() => toggleMenu('feature')} className="menu-toggle">부가기능</div>
-                                {openMenu === 'feature' && (
-                                    <div className="sub-menu">
-                                        <ul>
-                                            <li
-                                                onClick={boolSidebar}
-                                            >
-                                                <Link to="/event/list">이벤트/프로모션관리</Link>
-                                            </li>
-                                            <li
-                                                onClick={boolSidebar}
-                                            >
-                                                <Link to="/notice-promotion">공지사항관리</Link>
-                                            </li>
-                                            <li
-                                                onClick={boolSidebar}
-                                            >
-                                                <Link to="/review">이용후기관리</Link>
-                                            </li>
-                                            <li
-                                                onClick={boolSidebar}
-                                            >
-                                                <Link to="/faq/list">FAQ 관리</Link>
-                                            </li>
-                                            <li
-                                                onClick={boolSidebar}
-                                            >
-                                                <Link to="/inquiry/list">1:1문의관리</Link>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                )}
-                            </li>
-
-                            <li>
-                                <div onClick={() => toggleMenu('role')} className="menu-toggle">권한설정</div>
-                                {openMenu === 'role' && (
-                                    <div className="sub-menu">
-                                        <ul>
-                                            <li
-                                                onClick={boolSidebar}
-                                            >
-                                                <Link to="/employee-list">직원목록</Link>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                )}
-                            </li>
+                            {emRole === '관리자' && (
+                                <li>
+                                    <div onClick={() => toggleMenu('role')} className="menu-toggle">권한설정</div>
+                                    {openMenu === 'role' && (
+                                        <div className="sub-menu">
+                                            <ul>
+                                                <li
+                                                    onClick={boolSidebar}
+                                                >
+                                                    <Link to="/employee-list">직원목록</Link>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    )}
+                                </li>
+                            )}
 
                         </ul>
-                        <div className="emName">
-                            <ul>
-                                {emName !== null && (
-                                    <li><span>{`${emName} 님 안녕하세요`}</span></li>
-                                )}
-                                <li><Button onClick={logout}>로그아웃</Button></li>
-                            </ul>
-                        </div>
+
                     </div>
                     {
                         !screens.md && (

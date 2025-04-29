@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
-import luggage2 from "../../Images/luggage02.png"
-import luggage1 from "../../Images/luggage01.png"
-import FloatingBtn from "../../Components/ExcelDownload.jsx";
-import ExcelTable from "../../Components/ExcelTable.jsx";
+import luggage2 from "../../assets/Images/luggage02.png"
+import luggage1 from "../../assets/Images/luggage01.png"
+import FloatingBtn from "../../components/ExcelDownload.jsx";
+import ExcelTable from "../../components/ExcelTable.jsx";
 import {Button, DatePicker, Select, Input, message, Card} from "antd";
 import dayjs from 'dayjs';
 import supabase from "../../lib/supabase.js";
@@ -302,7 +302,7 @@ function Reservation() {
     }, []);
 
     return (
-        <div className="main">
+        <div className="main" id="main">
             <div className="header">
                 <h3>예약관리</h3>
             </div>
@@ -333,7 +333,6 @@ function Reservation() {
                                     onOpenChange={(open) => {
                                         if (!open) setShowDatePicker(false);
                                     }}
-                                    inputReadOnly
                                     style={{
                                         position: 'absolute',
                                         zIndex: 1000,
@@ -363,15 +362,17 @@ function Reservation() {
                         <h1>{storageCount + deliveryCount} 건</h1>
                     </div>
                     <div className="content_second_one">
-                        <img src={luggage2} alt="배송캐리어" style={{marginLeft: "30px"}}/>
-                        <div>
-                            <h2>배송예약</h2>
-                            <h1>{deliveryCount}건</h1>
-                        </div>
-                        <img src={luggage1} alt="보관캐리어"/>
-                        <div>
-                            <h2>보관예약</h2>
-                            <h1>{storageCount}건</h1>
+                        <div className="content_aa">
+                            <img src={luggage2} alt="배송캐리어" style={{marginLeft: "30px"}}/>
+                            <div>
+                                <h2>배송예약</h2>
+                                <h1>{deliveryCount}건</h1>
+                            </div>
+                            <img src={luggage1} alt="보관캐리어"/>
+                            <div>
+                                <h2>보관예약</h2>
+                                <h1>{storageCount}건</h1>
+                            </div>
                         </div>
                         <div className="border-right"></div>
                         <div className="border-left">
@@ -390,26 +391,6 @@ function Reservation() {
                         </div>
                     </div>
                 </div>
-                {/*<div className="content_R">*/}
-                {/*    <div className="content_third">*/}
-                {/*        <Select*/}
-                {/*            defaultValue="name"*/}
-                {/*            onChange={(value) => setSearchField(value)}*/}
-                {/*            style={{width: 120, marginLeft: 20, marginRight: 15}}*/}
-                {/*        >*/}
-                {/*            <Select.Option value="name">예약자명</Select.Option>*/}
-                {/*            <Select.Option value="phone">연락처</Select.Option>*/}
-                {/*            <Select.Option value="driver">배정기사명</Select.Option>*/}
-                {/*        </Select>*/}
-                {/*        <Input*/}
-                {/*            className="custom-search-input"*/}
-                {/*            placeholder="검색어 입력"*/}
-                {/*            value={searchKeyword}*/}
-                {/*            onChange={(e) => setSearchKeyword(e.target.value)}*/}
-                {/*        />*/}
-                {/*        <Button type="primary" onClick={handleSearch}>검색</Button>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
                 <div className="content_middle">
                     <div className="content_middle_one">
                         <Button className="button-more" onClick={handleShowCheckbox}>다중관리</Button>

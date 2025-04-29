@@ -98,14 +98,28 @@ function NewReservationAddPage() {
     // const [deliveryDates, setDeliveryDates] = useState(null);
     const [detailAddress, setDetailAddress] = useState('');
     const [cascaderValue, setCascaderValue] = useState([]);
+    const [isReturnTrip, setIsReturnTrip] = useState(false);
+
+
+    const [isComposing, setIsComposing] = useState(false);
 
     const handleCascaderChange = (value) => {
         setCascaderValue(value); // 선택한 지역구 값 저장
     };
 
     const handleDetailAddressChange = (e) => {
-        setDetailAddress(e.target.value);
+        const val = e.target.value;
+            setDetailAddress(val);
+    }
+
+    const handleCompositionStart = () => {
+        setIsComposing(true);
     };
+
+    const handleCompositionEnd = (e) => {
+        setIsComposing(false);
+        setDetailAddress(e.target.value);
+    }
 
     const locationOptions = [
         {
@@ -125,6 +139,16 @@ function NewReservationAddPage() {
     const largePrice = 5000;
     const middlePrice = 3000;
     const smallPrice = 1000;
+    const deliveryPrices = {
+        same: {
+            under: 10000,
+            over: 15000,
+        },
+        different: {
+            under: 20000,
+            over: 25000,
+        }
+    };
 
     const handleLargeCountChange = (count) => {
         setLargeCount(count);
@@ -139,9 +163,31 @@ function NewReservationAddPage() {
     };
 
     useEffect(() => {
-        const total = (largeCount * largePrice) + (middleCount * middlePrice) + (smallCount * smallPrice);
+        let total;
+        if (serviceType === 'delivery') {
+            const startRegion = storageLocation.includes('경주') ? 'gyeongju' : 'daegu';
+            const arriveRegion = cascaderValue?.[0]; // daegu, gyeongju
+            const isSameRegion = startRegion === arriveRegion;
+
+            const priceSet = isSameRegion ? deliveryPrices.same : deliveryPrices.different;
+
+            total = (smallCount * priceSet.under) + (largeCount * priceSet.over);
+        } else {
+            // 🏢 보관 계산 (기존)
+            total = (largeCount * largePrice) + (middleCount * middlePrice) + (smallCount * smallPrice);
+        }
         setTotalPayment(total);
-    }, [largeCount, middleCount, smallCount, largePrice, middlePrice, smallPrice]);
+    }, [
+        largeCount,
+        middleCount,
+        smallCount,
+        largePrice,
+        middlePrice,
+        smallPrice,
+        serviceType,  // ✅ 추가
+        storageLocation,  // ✅ 추가
+        cascaderValue  // ✅ 추가
+    ]);
 
 
     const onFinish = async (values) => {
@@ -180,14 +226,19 @@ function NewReservationAddPage() {
                     setLoading(false);
                     return;
                 }
-                const deliveryArriveAddress = cascaderValue.join(' / ') + (detailAddress ? ` ${detailAddress}` : '');
+                const deliveryArriveAddress = cascaderValue.join(' / ') + ` ${detailAddress}`;
 
                 const deliveryData = {
-                    ...commonData,
+                    name,
+                    // mail: email || null,
+                    phone,
+                    price: totalPayment,
+                    // reservation_country: 'Korea',
                     delivery_date: storageDates[0].format('YYYY-MM-DD'),
                     delivery_start: storageLocation,
                     delivery_arrive: deliveryArriveAddress,
-                };
+                }; // ✅ small, medium, large 빼줌
+
                 const { error } = await supabase.from('delivery').insert([deliveryData]);
                 if (error) throw error;
             }
@@ -251,59 +302,9 @@ function NewReservationAddPage() {
                 }}
                     onChange={(dates) => setStorageDates(dates)}
                 />
-                <Select
-                    className="select"
-                    value={storageLocation}
-                    style={{width: 120}}
-                    onChange={handleLocationChange}
-                    options={locationOptions}
-                />
 
-                {serviceType === 'delivery' && (
-                    <>
-                        <Cascader
-                            options={[{
-                                value: 'daegu', label: '대구', children: [
-                                    { value: 'junggu', label: '중구' },
-                                    { value: 'donggu', label: '동구' },
-                                    { value: 'seogu', label: '서구' },
-                                    { value: 'bukgu', label: '북구' },
-                                    { value: 'suseonggu', label: '수성구' },
-                                    { value: 'dalseogu', label: '달서구' },
-                                    { value: 'dalseonggun', label: '달성군' },
-                                ]
-                            }, {
-                                value: 'gyeongju', label: '경주', children: [
-                                    { value: 'andong', label: '안강읍' },
-                                    { value: 'gangdong', label: '강동면' },
-                                    { value: 'yangbuk', label: '양북면' },
-                                    { value: 'naenam', label: '내남면' },
-                                ]
-                            }]}
-                            value={cascaderValue}
-                            onChange={handleCascaderChange}
-                            displayRender={(labels) => labels.join(' / ')}
-                            placeholder="지역 선택"
-                            style={{ width: 150 }}
-                        />
-                        <Input
-                            placeholder="상세주소"
-                            style={{ width: '100px', marginLeft: '10px' }}
-                            value={detailAddress || ''}
-                            onChange={handleDetailAddressChange}
-                            allowClear
-                        />
-                    </>
-                )}
 
             </div>
-            {serviceType === 'delivery' && (
-                <RangePicker
-                    renderExtraFooter={() => '※'}
-                    showTime
-                    placeholder={['PICK UP', 'DROP OFF']}
-                />
-            )}
         </Space>
     );
 
@@ -350,20 +351,81 @@ function NewReservationAddPage() {
                                         className="separated-form-item"
                                     >
                                         <ReservationDatePicker/>
+                                        <Select
+                                            className="select"
+                                            value={storageLocation}
+                                            style={{width: 120}}
+                                            onChange={handleLocationChange}
+                                            options={locationOptions}
+                                        />
+
+                                        {serviceType === 'delivery' && (
+                                            <>
+                                                <Cascader
+                                                    options={[{
+                                                        value: 'daegu', label: '대구', children: [
+                                                            { value: 'junggu', label: '중구' },
+                                                            { value: 'donggu', label: '동구' },
+                                                            { value: 'seogu', label: '서구' },
+                                                            { value: 'bukgu', label: '북구' },
+                                                            { value: 'suseonggu', label: '수성구' },
+                                                            { value: 'dalseogu', label: '달서구' },
+                                                            { value: 'dalseonggun', label: '달성군' },
+                                                        ]
+                                                    }, {
+                                                        value: 'gyeongju', label: '경주', children: [
+                                                            { value: 'andong', label: '안강읍' },
+                                                            { value: 'gangdong', label: '강동면' },
+                                                            { value: 'yangbuk', label: '양북면' },
+                                                            { value: 'naenam', label: '내남면' },
+                                                        ]
+                                                    }]}
+                                                    value={cascaderValue}
+                                                    onChange={handleCascaderChange}
+                                                    displayRender={(labels) => labels.join(' / ')}
+                                                    placeholder="지역 선택"
+                                                    style={{ width: 150 }}
+                                                />
+                                                <Input
+                                                    placeholder="상세주소"
+                                                    style={{width: '200px', marginLeft: '10px'}}
+                                                    value={detailAddress}
+                                                    onChange={handleDetailAddressChange}
+                                                    onCompositionStart={handleCompositionStart}
+                                                    onCompositionEnd={handleCompositionEnd}
+                                                    allowClear
+                                                />
+                                            </>
+                                        )}
                                     </Form.Item>
                                     <Divider style={{margin: '12px 0', borderColor: 'rgba(217,217,217,0.5)'}}/>
                                     <Form.Item label="짐갯수" colon={false} className="separated-form-item">
-                                        {[
-                                            {label: '대(30인치 이상)', onChange: handleLargeCountChange},
-                                            {label: '중(21~29인치)', onChange: handleMiddleCountChange},
-                                            {label: '소(20인치 이하)', onChange: handleSmallCountChange}
-                                        ].map((item, i) => (
-                                            <div key={i}
-                                                 style={{display: "flex", alignItems: "center", marginBottom: '8px'}}>
-                                                <span style={{width: '120px'}}>{item.label}</span>
-                                                <Counter onCountChange={item.onChange}/>
-                                            </div>
-                                        ))}
+                                        {serviceType === 'delivery' ? (
+                                            // 🚚 배송일 때 (over, under만)
+                                            [
+                                                { label: '26인치 이상', onChange: handleLargeCountChange },
+                                                { label: '26인치 미만', onChange: handleSmallCountChange }
+                                            ].map((item, i) => (
+                                                <div key={i}
+                                                     style={{display: "flex", alignItems: "center", marginBottom: '8px'}}>
+                                                    <span style={{width: '120px'}}>{item.label}</span>
+                                                    <Counter onCountChange={item.onChange}/>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            // 🏢 보관일 때 (대, 중, 소)
+                                            [
+                                                { label: '대(30인치 이상)', onChange: handleLargeCountChange },
+                                                { label: '중(21~29인치)', onChange: handleMiddleCountChange },
+                                                { label: '소(20인치 이하)', onChange: handleSmallCountChange }
+                                            ].map((item, i) => (
+                                                <div key={i}
+                                                     style={{display: "flex", alignItems: "center", marginBottom: '8px'}}>
+                                                    <span style={{width: '120px'}}>{item.label}</span>
+                                                    <Counter onCountChange={item.onChange}/>
+                                                </div>
+                                            ))
+                                        )}
                                     </Form.Item>
                                     <Divider style={{margin: '12px 0', borderColor: 'rgba(217,217,217,0.5)'}}/>
                                     <Form.Item

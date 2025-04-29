@@ -3,9 +3,10 @@ import custody from "../assets/Icon/custody.svg";
 import delivery from "../assets/Icon/delivery.svg";
 import AdminStyle from "../css/Admin.module.css";
 import supabase from "../lib/supabase.js";
+import { SearchOutlined } from "@ant-design/icons";
 
 import Lookup from "../../src/layouts/Lookup.jsx";
-import { Radio } from "antd";
+import { Radio, Input } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAnglesLeft,
@@ -13,6 +14,7 @@ import {
   faChevronRight,
   faAnglesRight,
 } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 function Admin() {
   const selectOptions = {
@@ -23,6 +25,7 @@ function Admin() {
   const [deliveryt, setdelivery] = useState([]);
   const [storage, setstorage] = useState([]);
   const [twoData, settwoData] = useState([]);
+  const [inputValue, setInputValue] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusLogs, setStatusLogs] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -34,7 +37,7 @@ function Admin() {
   const [todayCount, setTodayCount] = useState(0);
   const [todayDeliveryCount, setTodayDeliveryCount] = useState(0);
   const [todayStorageCount, setTodayStorageCount] = useState(0);
-
+  const navigate = useNavigate();
   const today = new Date();
   const formatter = new Intl.DateTimeFormat("ko-KR", {
     timeZone: "Asia/Seoul",
@@ -63,6 +66,8 @@ function Admin() {
       const keyValue =
         item[tableName === "delivery" ? "re_num" : "reservation_number"];
 
+      const userName = sessionStorage.getItem("name") || "알 수 없음";
+
       const { data, error } = await supabase
         .from("status_logs")
         .select("*")
@@ -84,6 +89,7 @@ function Admin() {
             new_status: "접수",
             updated_at: reserveTime,
             received_at: reserveTime,
+            operator: "",
           },
         ]);
 
@@ -106,6 +112,10 @@ function Admin() {
   };
 
   useEffect(() => {
+    const res = sessionStorage.getItem("name");
+    if (res === null) {
+      navigate("/login");
+    }
     const supaData = async () => {
       const { data: deliveryData, error: deliveryError } = await supabase
         .from("delivery")
@@ -211,6 +221,8 @@ function Admin() {
       updates.success_time = null;
     }
 
+    const userName = sessionStorage.getItem("name") || "알 수 없음";
+
     const { error } = await supabase
       .from(tableName)
       .update(updates)
@@ -241,6 +253,7 @@ function Admin() {
             new_status: "접수",
             updated_at: reserveTime,
             received_at: reserveTime,
+            operator: userName,
           },
         ]);
 
@@ -258,6 +271,7 @@ function Admin() {
           prev_status: prevStatus,
           new_status: status,
           updated_at: new Date().toISOString(),
+          operator: userName,
         },
       ]);
 
@@ -265,7 +279,6 @@ function Admin() {
       console.error("상태 변경 로그 저장 실패", logStatusError);
     }
 
-    // 상태 변경 로그 추가 후 새로 가져오기
     const { data: updatedLogs, error: updatedLogsError } = await supabase
       .from("status_logs")
       .select("*")
@@ -275,7 +288,6 @@ function Admin() {
     if (updatedLogsError) {
       console.error("업데이트된 로그 가져오기 실패", updatedLogsError);
     } else {
-      // 현재 openRow의 인덱스 찾기
       const openIndex = twoData.findIndex((i) => i[keyColumn] === keyValue);
       setStatusLogs((prev) => ({ ...prev, [openIndex]: updatedLogs }));
     }
@@ -294,7 +306,6 @@ function Admin() {
     );
   };
 
-  // 🎯 오늘 + 검색 + 필터까지 다 적용한 상태에서 페이징 기준
   const filteredData = twoData.filter(
     (item) => {
       const dateStr = (item.reservation_time || item.reserve_time)?.slice(
@@ -330,7 +341,7 @@ function Admin() {
 
   return (
     <>
-      <div className={AdminStyle.content}>
+      <div className="main">
         <div className={AdminStyle.Admin_top}>관리자 메인</div>
         <div className={AdminStyle.Admin_content}>
           <div className={AdminStyle.top}>
@@ -391,37 +402,52 @@ function Admin() {
         <div className={AdminStyle.Admin_list}>
           <div className={`${AdminStyle.list} card`}>
             <div className={AdminStyle.list_up}>
-              <h3>실시간 예약현황</h3>
+              <div className={AdminStyle.list_title}>
+                <h3>실시간 예약현황</h3>
+              </div>
               <div className={AdminStyle.admin_search}>
-                <Radio.Group
-                  value={filterType}
-                  buttonStyle="solid"
-                  onChange={(e) => setFilterType(e.target.value)}
-                  style={{ marginRight: "16px" }}
-                >
-                  <Radio.Button
-                    value=""
-                    className={AdminStyle.custom_radio_button}
+                <div>
+                  <Radio.Group
+                    value={filterType}
+                    buttonStyle="solid"
+                    onChange={(e) => setFilterType(e.target.value)}
                   >
-                    전체
-                  </Radio.Button>
-                  <Radio.Button
-                    value="보관"
-                    className={AdminStyle.custom_radio_button}
-                  >
-                    보관
-                  </Radio.Button>
-                  <Radio.Button
-                    value="배송"
-                    className={AdminStyle.custom_radio_button}
-                  >
-                    배송
-                  </Radio.Button>
-                </Radio.Group>
-                <Lookup
-                  onSearch={handleSearch}
-                  placeholder="검색어를 입력하세요"
-                />
+                    <Radio.Button
+                      value=""
+                      className={AdminStyle.custom_radio_button}
+                    >
+                      전체
+                    </Radio.Button>
+                    <Radio.Button
+                      value="보관"
+                      className={AdminStyle.custom_radio_button}
+                    >
+                      보관
+                    </Radio.Button>
+                    <Radio.Button
+                      value="배송"
+                      className={AdminStyle.custom_radio_button}
+                    >
+                      배송
+                    </Radio.Button>
+                  </Radio.Group>
+                </div>
+                <div>
+                  <Input.Search
+                    placeholder="검색"
+                    allowClear
+                    enterButton={
+                      <span>
+                        <SearchOutlined style={{ marginRight: 4 }} />
+                        검색
+                      </span>
+                    }
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onSearch={handleSearch}
+                    className={`${AdminStyle.searchin} search-input default-style`}
+                  />
+                </div>
               </div>
             </div>
             <div className={AdminStyle.table_over}>
@@ -447,7 +473,7 @@ function Admin() {
                     <th>짐갯수</th>
                     <th>결제금액</th>
                     <th>완료일</th>
-                    <th>진행상태</th>
+                    <th>처리현황</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -493,9 +519,9 @@ function Admin() {
                             >
                               <td>
                                 {item.reservation_time || item.reserve_time
-                                  ? (item.reservation_time || item.reserve_time)
-                                      .slice(0, 10)
-                                      .replaceAll("-", ".")
+                                  ? (
+                                      item.reservation_time || item.reserve_time
+                                    ).slice(0, 10)
                                   : "-"}
                               </td>
                               <td>{item.type}</td>
@@ -504,15 +530,9 @@ function Admin() {
                               <td>
                                 {item.storage_start_date &&
                                 item.storage_end_date
-                                  ? `${item.storage_start_date.replaceAll(
-                                      "-",
-                                      "."
-                                    )} ~ ${item.storage_end_date.replaceAll(
-                                      "-",
-                                      "."
-                                    )}`
+                                  ? `${item.storage_start_date} ~ ${item.storage_end_date}`
                                   : item.delivery_date
-                                  ? item.delivery_date.replaceAll("-", ".")
+                                  ? item.delivery_date
                                   : "-"}
                               </td>
                               <td>{luggageInfo}</td>
@@ -522,7 +542,6 @@ function Admin() {
                                   ? item.success_time
                                       .slice(0, 16)
                                       .replace("T", " ")
-                                      .replaceAll("-", ".")
                                   : "-"}
                               </td>
                               <td>
@@ -552,12 +571,22 @@ function Admin() {
                                             <col style={{ width: "3%" }} />
                                             <col style={{ width: "3%" }} />
                                             <col style={{ width: "4%" }} />
+                                            <col style={{ width: "4%" }} />
+                                            <col style={{ width: "4%" }} />
                                           </colgroup>
                                           <thead>
                                             <tr>
                                               <th>변경시간</th>
                                               <th>이전상태</th>
                                               <th>변경상태</th>
+                                              <th>
+                                                {item.type === "배송"
+                                                  ? "배송기사"
+                                                  : item.type === "보관"
+                                                  ? "보관장소"
+                                                  : "배송기사/보관장소"}
+                                              </th>
+                                              <th>처리자</th>
                                             </tr>
                                           </thead>
                                           <tbody>
@@ -565,12 +594,44 @@ function Admin() {
                                               (log, logIndex) => (
                                                 <tr key={logIndex}>
                                                   <td>
-                                                    {new Date(
-                                                      log.updated_at
-                                                    ).toLocaleString()}
+                                                    {(() => {
+                                                      const date = new Date(
+                                                        log.updated_at
+                                                      );
+                                                      const year =
+                                                        date.getFullYear();
+                                                      const month =
+                                                        date.getMonth() + 1;
+                                                      const day =
+                                                        date.getDate();
+                                                      const hour =
+                                                        date.getHours();
+                                                      const minute =
+                                                        date.getMinutes();
+                                                      const second =
+                                                        date.getSeconds();
+                                                      const ampm =
+                                                        hour < 12
+                                                          ? "오전"
+                                                          : "오후";
+                                                      const displayHour =
+                                                        hour % 12 === 0
+                                                          ? 12
+                                                          : hour % 12;
+                                                      return `${year}-${month}-${day} ${ampm} ${displayHour}:${minute
+                                                        .toString()
+                                                        .padStart(
+                                                          2,
+                                                          "0"
+                                                        )}:${second
+                                                        .toString()
+                                                        .padStart(2, "0")}`;
+                                                    })()}
                                                   </td>
                                                   <td>{log.prev_status}</td>
                                                   <td>{log.new_status}</td>
+                                                  <td></td>
+                                                  <td>{log.operator}</td>
                                                 </tr>
                                               )
                                             )}
@@ -589,7 +650,7 @@ function Admin() {
                       })
                   ) : (
                     <tr>
-                      <td colSpan="9">
+                      <td className={AdminStyle.falsetext} colSpan="9">
                         {searchTerm
                           ? "일치하는 접수건이 없습니다."
                           : "접수된 이력이 없습니다."}

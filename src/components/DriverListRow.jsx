@@ -1,5 +1,5 @@
-import React from "react";
-import { Checkbox } from "antd";
+import React, {useEffect} from "react";
+import {Checkbox, message} from "antd";
 import DlStyle from "../css/DriverList.module.css";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +13,12 @@ function DriverListRow({
   const navigate = useNavigate();
 
   const handleEditClick2 = (e) => {
-    e.stopPropagation(); // 행의 클릭 이벤트 막기
+      const res = sessionStorage.getItem("role");
+      if (res !== '관리자') {
+          message.error('권한이 없습니다!');
+          return;
+      }
+    e.stopPropagation();
     navigate("/DriverRegistration", { state: { driver } });
   };
 
@@ -30,7 +35,6 @@ function DriverListRow({
     const ignoredTds = ["tdCenter", "noPointer"];
     const targetTd = e.target.closest("td");
 
-    // 클릭된 <td>의 className이 무시 대상이라면 return
     if (
       targetTd &&
       ignoredTds.some((className) =>
@@ -40,12 +44,11 @@ function DriverListRow({
       return;
     }
 
-    // 체크박스와 링크는 기존대로 무시
     if (e.target.closest('input[type="checkbox"]') || e.target.closest("a") || e.target.closest("button")) {
       return;
     }
 
-    onDriverClick(); // 모달 열기
+    onDriverClick();
   };
 
   return (
@@ -63,6 +66,8 @@ function DriverListRow({
       </td>
       <td>{driver.driver_id}</td>
       <td>{driver.name}</td>
+      <td>{driver.birthday}</td>
+      <td>{driver.gender}</td>
       <td>
         {driver.phone
           ? driver.phone.length === 11
@@ -71,7 +76,6 @@ function DriverListRow({
           : "없음"}
       </td>
       <td>{driver.email}</td>
-      <td>{driver.address}</td>
       <td className={DlStyle.noPointer}>
         {driver.file_url ? (
           <a

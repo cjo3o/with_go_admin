@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Radio, Input } from 'antd';
-import { SearchOutlined } from '@ant-design/icons'; // ✅ 돋보기 아이콘 직접 가져옴
+import { SearchOutlined } from '@ant-design/icons';
 import InquiryList from './InquiryList.jsx';
 import '../../css/layout.css';
 import '../../css/ui.css';
@@ -11,22 +11,17 @@ const InquiryTabspage = () => {
     const [inputValue, setInputValue] = useState('');
     const [searchValue, setSearchValue] = useState('');
 
-    const handleFilterChange = (e) => {
-        setFilterType(e.target.value);
-    };
-
-    const handleSearch = (value) => {
-        setSearchValue(value);
-    };
+    const handleFilterChange = (e) => setFilterType(e.target.value);
+    const handleSearch = (value) => setSearchValue(value);
 
     return (
+        <div className="inquiry-tabs-wrapper">
             <div className="main">
                 <div className="header">1:1 문의 관리</div>
 
-                <div className="card inquiry-card">
+                <div className="card">
                     <div className="top-bar">
                         <div className="title">문의 리스트</div>
-
                         <div className="tab-and-search">
                             <Radio.Group
                                 value={filterType}
@@ -61,6 +56,7 @@ const InquiryTabspage = () => {
                     />
                 </div>
             </div>
+        </div>
     );
 };
 

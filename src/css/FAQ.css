@@ -1,7 +1,7 @@
 .common-table {
   width: 100%;
   min-width: 1100px;
-  table-layout: fixed;
+  table-layout: auto;
   border-collapse: collapse;
 }
 
@@ -26,21 +26,24 @@
 
 .faq-col-select  { width: 4%; }
 .faq-col-type    { width: 4%; }
-.faq-col-title   { width: 26%; }
-.faq-col-content { width: 30%; }
+.faq-col-title   { width: 27%; }
+.faq-col-content { width: 32%; }
 .faq-col-status  { width: 7%; }
 .faq-col-date    { width: 7%; }
-.faq-col-actions { width: 10%; }
+.faq-col-actions { width: 9%; }
 
 .answer-toggle {
   cursor: pointer;
   display: block;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   transition: max-height 0.3s ease;
   max-height: 32px;
   line-height: 1.5;
+  
 }
 
 .answer-toggle.open {
@@ -49,15 +52,6 @@
   max-height: 500px;
   overflow: auto;
   line-height: 1.6;
-}
-
-.table-footer.bottom-right-btn {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 8px;
-  padding-right: 35px;
-  margin-top: 16px;
 }
 
 .pagination-wrapper {
