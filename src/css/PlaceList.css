@@ -110,7 +110,7 @@
 }
 
 /* 추가/삭제 버튼 영역 */
-.add-button-wrapper {
+.bottom-right-btn {
     display: flex;
     gap: 8px;
     justify-content: flex-end;
