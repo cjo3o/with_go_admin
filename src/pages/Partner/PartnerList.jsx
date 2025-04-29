@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import supabase from "../../lib/supabase.js";
-import "../../css/PartnerList.css"
+import "../../css/PlaceList.css"
 import {Checkbox, Image, message, Input} from "antd";
 import {useNavigate} from 'react-router-dom';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -42,10 +42,10 @@ function PartnerList() {
 
     // 데이터 불러오기
     const fetchPartners = async () => {
-        const { data, error } = await supabase
+        const {data, error} = await supabase
             .from('partner_place')
             .select('*')
-            .order('created_at', { ascending: false });
+            .order('created_at', {ascending: false});
 
         if (error) {
             console.error('제휴숙소 조회 오류:', error);
@@ -90,11 +90,9 @@ function PartnerList() {
     const handleAllPartnerCheck = (e) => {
         const checked = e.target.checked;
         setIsAllChecked(checked);
+
         if (checked) {
-            setSelectedPartners((prev) => [
-                ...prev,
-                ...currentItems.filter((partner) => !prev.includes(partner.partner_id)).map((partner) => partner.partner_id)
-            ]);
+            setSelectedPartners(currentItems.map((partner) => partner.partner_id));
         } else {
             setSelectedPartners((prev) =>
                 prev.filter((id) => !currentItems.some((partner) => partner.partner_id === id))
@@ -107,7 +105,10 @@ function PartnerList() {
     const handlePartnerCheck = (e, partnerId) => {
         const checked = e.target.checked;
         if (checked) {
-            setSelectedPartners((prev) => [...prev, partnerId]);
+            setSelectedPartners((prev) => {
+                const newSelected = [...prev, partnerId];
+                return newSelected.filter(id => currentItems.some(partner => partner.partner_id === id));
+            });
         } else {
             setSelectedPartners((prev) => prev.filter((id) => id !== partnerId));
         }
@@ -123,7 +124,7 @@ function PartnerList() {
         if (!window.confirm('선택한 숙소를 삭제하시겠습니까?')) return;
 
         try {
-            const { error } = await supabase
+            const {error} = await supabase
                 .from('partner_place')
                 .delete()
                 .in('partner_id', selectedPartners);
@@ -168,15 +169,16 @@ function PartnerList() {
                     <div className='middle'>
                         <div className='middle-left'>
                             <h3 style={{marginBottom: 0}}>제휴숙소목록</h3>
-                            <Checkbox onChange={handleAllPartnerCheck} checked={isAllChecked} />
+                            <Checkbox onChange={handleAllPartnerCheck} checked={isAllChecked}/>
                         </div>
                         <div className='middle-right'>
-                            <div className="middle-actions" style={{display: 'flex', alignContent: 'center', gap: '10px'}}>
-                                <div className='PartnerList_Search'>
+                            <div className="middle-actions"
+                                 style={{display: 'flex', alignContent: 'center', gap: '10px'}}>
+                                <div className='placeList_Search'>
                                     <Input.Search
                                         placeholder="제휴숙소 검색"
                                         allowClear
-                                        enterButton={<span><SearchOutlined style={{ marginRight: 4 }} />검색</span>}
+                                        enterButton={<span><SearchOutlined style={{marginRight: 4}}/>검색</span>}
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         onSearch={handleSearch}
@@ -189,7 +191,7 @@ function PartnerList() {
 
                     <div className="card-container">
                         {currentItems.map((partner) => (
-                            <div className="partner-card" key={partner.partner_id}>
+                            <div className="place-card" key={partner.partner_id}>
                                 <div className="card-top">
                                     <div className='card-top-left'>
                                         <Checkbox
@@ -216,22 +218,22 @@ function PartnerList() {
                                 </div>
 
                                 <div className="card-content">
-                                        <div className='card-content-text'>
-                                            <p className='strong'><strong>숙소명</strong></p>
-                                            <p className='content-txt'>{partner.name}</p>
-                                        </div>
+                                    <div className='card-content-text'>
+                                        <p className='strong'><strong>숙소명</strong></p>
+                                        <p className='content-txt'>{partner.name}</p>
+                                    </div>
 
 
-                                        <div className='card-content-text'>
-                                            <p className='strong'><strong>주 소</strong></p>
-                                            <p className='content-txt partner-add'>{partner.address}</p>
-                                        </div>
+                                    <div className='card-content-text'>
+                                        <p className='strong'><strong>주 소</strong></p>
+                                        <p className='content-txt place-add'>{partner.address}</p>
+                                    </div>
 
 
-                                        <div className='card-content-text'>
-                                            <p className='strong'><strong>연락처</strong></p>
-                                            <p className='content-txt'>{partner.phone}</p>
-                                        </div>
+                                    <div className='card-content-text'>
+                                        <p className='strong'><strong>연락처</strong></p>
+                                        <p className='content-txt'>{partner.phone}</p>
+                                    </div>
 
                                     <div className="card-image">
                                         <Image
@@ -239,7 +241,7 @@ function PartnerList() {
                                             alt="제휴숙소 이미지"
                                             width="100%"
                                             height={150}
-                                            style={{ objectFit: 'cover', borderRadius: '6px' }}
+                                            style={{objectFit: 'cover', borderRadius: '6px'}}
                                             fallback="data:image/png;base64,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iAARCjXbUHMCRMjZqBQiQIRCzTbUnAARcjYqhQgQoVCzDTUnQIScjUohAkQo1GxDzQkQIWejUogAEQo121BzAkTI2agUIkCEQs021JwAEXI2KoUIEKFQsw01J0CEnI1KIQJEKNRsQ80JECFno1KIABEKNdtQcwJEyNmoFCJAhELNNtScABFyNiqFCBChULMNNSdAhJyNSiECRCjUbEPNCRAhZ6NSiAARCjXbUHMCRMjZqBQiQIRCzTbUnAARcjYqhQgQoVCzDTUnQIScjUohAkQo1GxDzQkQIWejUogAEQo121BzAkTI2agUIkCEQs021JwAEXI2KoUIEKFQsw01J0CEnI1KIQJEKNRsQ80JECFno1KIABEKNdtQcwJEyNmoFCJAhELNNtScABFyNiqFCBChULMNNSdAhJyNSiECRCjUbEPNCRAhZ6NSiAARCjXbUHMCRMjZqBQiQIRCzTbUnAARcjYqhQgQoVCzDTUnQIScjUohAkQo1GxDzQkQIWejUogAEQo121BzAkTI2agUIkCEQs021JwAEXI2KoUIEKFQsw01J0CEnI1KIQJEKNRsQ80JECFno1KIABEKNdtQcwJEyNmoFCJAhELNNtScABFyNiqFCBChULMNNSdAhJyNSiEC/wGgKKC4YMA4TAAAAABJRU5ErkJggg=="
                                         />
                                     </div>
@@ -294,20 +296,20 @@ function PartnerList() {
                     {/* 페이지네이션 */}
                     <div className="pagination" style={{marginTop: '30px'}}>
                         <button className="group-btn" onClick={goToFirstGroup} disabled={currentGroup === 0}>
-                            <FontAwesomeIcon icon={faAnglesLeft} />
+                            <FontAwesomeIcon icon={faAnglesLeft}/>
                         </button>
                         <button className="arrow-btn" onClick={goToPrevPage} disabled={currentPage === 1}>
-                            <FontAwesomeIcon icon={faChevronLeft} />
+                            <FontAwesomeIcon icon={faChevronLeft}/>
                         </button>
 
                         <div className="page-btns">
-                            {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
+                            {Array.from({length: endPage - startPage + 1}).map((_, i) => {
                                 const pageNum = startPage + i;
                                 return (
                                     <button
                                         key={pageNum}
                                         className={`page-btn ${pageNum === currentPage ? 'active' : ''}`}
-                                        onClick={() => setCurrentPage(pageNum)}
+                                        onClick={() => handlePageChange(pageNum)}
                                     >
                                         {pageNum}
                                     </button>
@@ -316,10 +318,10 @@ function PartnerList() {
                         </div>
 
                         <button className="arrow-btn" onClick={goToNextPage} disabled={currentPage === totalPages}>
-                            <FontAwesomeIcon icon={faChevronRight} />
+                            <FontAwesomeIcon icon={faChevronRight}/>
                         </button>
                         <button className="group-btn" onClick={goToNextGroup} disabled={endPage === totalPages}>
-                            <FontAwesomeIcon icon={faAnglesRight} />
+                            <FontAwesomeIcon icon={faAnglesRight}/>
                         </button>
                     </div>
                 </div>
@@ -328,7 +330,7 @@ function PartnerList() {
             {isModalOpen && (
                 <div className="modal-overlay" onClick={closeModal}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <button className="modal-close" onClick={closeModal}><CloseOutlined /></button>
+                        <button className="modal-close" onClick={closeModal}><CloseOutlined/></button>
                         {modalContent}
                     </div>
                 </div>

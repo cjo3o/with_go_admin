@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {supabase} from "../../lib/supabase.js";
-import '../../css/StorageCreate.css';
+import '../../css/placeCreate.css';
 import DrStyle from "../../css/DriverRegistration.module.css";
 
 function StorageCreate() {
