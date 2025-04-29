@@ -4,9 +4,10 @@ import delivery from "../assets/Icon/delivery.svg";
 import AdminStyle from "../css/Admin.module.css";
 import supabase from "../lib/supabase.js";
 import { SearchOutlined } from "@ant-design/icons";
+import ExcelDownBtn from "../components/ExcelDownBtn.jsx";
 
 import Lookup from "../../src/layouts/Lookup.jsx";
-import { Radio, Input } from "antd";
+import { Radio, Input, Button } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAnglesLeft,
@@ -406,6 +407,9 @@ function Admin() {
                 <h3>실시간 예약현황</h3>
               </div>
               <div className={AdminStyle.admin_search}>
+                <div className={AdminStyle.excel}>
+                  <ExcelDownBtn data={currentItems} />
+                </div>
                 <div>
                   <Radio.Group
                     value={filterType}
