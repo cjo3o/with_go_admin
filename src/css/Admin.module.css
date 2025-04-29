@@ -251,9 +251,18 @@
 
 .admin_search {
   display: flex;
-  gap: 16px;
+  gap: 10px;
   align-items: center;
   margin-bottom: 10px;
+}
+
+.excelbtn{
+  width: 32px ;
+  margin-top: 3px;
+}
+
+.excelimg {
+  width: 30px;
 }
 
 .pagination {
@@ -532,9 +541,11 @@
     font-size: 0.9rem;
   }
 
-  /* .custom_radio_button {
-    display: none;
-  } */
+  .custom_radio_button {
+    font-size: 13px;
+    padding-inline: 10px;
+    /* width: 50px; */
+  }
 
   .table_over {
     overflow: hidden;
