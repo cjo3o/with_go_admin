@@ -139,7 +139,7 @@ function NewReservationAddPage() {
     const largePrice = 5000;
     const middlePrice = 3000;
     const smallPrice = 1000;
-    const deliveryPrices = {
+    const deliveryPrices ={
         same: {
             under: 10000,
             over: 15000,
@@ -230,13 +230,13 @@ function NewReservationAddPage() {
 
                 const deliveryData = {
                     name,
-                    // mail: email || null,
                     phone,
                     price: totalPayment,
-                    // reservation_country: 'Korea',
                     delivery_date: storageDates[0].format('YYYY-MM-DD'),
                     delivery_start: storageLocation,
                     delivery_arrive: deliveryArriveAddress,
+                    under: smallCount,
+                    over: largeCount
                 }; // ✅ small, medium, large 빼줌
 
                 const { error } = await supabase.from('delivery').insert([deliveryData]);
@@ -363,21 +363,21 @@ function NewReservationAddPage() {
                                             <>
                                                 <Cascader
                                                     options={[{
-                                                        value: 'daegu', label: '대구', children: [
-                                                            { value: 'junggu', label: '중구' },
-                                                            { value: 'donggu', label: '동구' },
-                                                            { value: 'seogu', label: '서구' },
-                                                            { value: 'bukgu', label: '북구' },
-                                                            { value: 'suseonggu', label: '수성구' },
-                                                            { value: 'dalseogu', label: '달서구' },
-                                                            { value: 'dalseonggun', label: '달성군' },
+                                                        value: '대구', label: '대구', children: [
+                                                            { value: '중구', label: '중구' },
+                                                            { value: '동구', label: '동구' },
+                                                            { value: '서구', label: '서구' },
+                                                            { value: '북구', label: '북구' },
+                                                            { value: '수성구', label: '수성구' },
+                                                            { value: '달서구', label: '달서구' },
+                                                            { value: '달성군', label: '달성군' },
                                                         ]
                                                     }, {
-                                                        value: 'gyeongju', label: '경주', children: [
-                                                            { value: 'andong', label: '안강읍' },
-                                                            { value: 'gangdong', label: '강동면' },
-                                                            { value: 'yangbuk', label: '양북면' },
-                                                            { value: 'naenam', label: '내남면' },
+                                                        value: '경주', label: '경주', children: [
+                                                            { value: '안강읍', label: '안강읍' },
+                                                            { value: '강동면', label: '강동면' },
+                                                            { value: '양북면', label: '양북면' },
+                                                            { value: '내남면', label: '내남면' },
                                                         ]
                                                     }]}
                                                     value={cascaderValue}
@@ -496,8 +496,6 @@ function NewReservationAddPage() {
                                     >
                                         <Input placeholder="010-1234-5678" style={{ width: '100%' }} />
                                     </Form.Item>
-                                    {/*<Form.Item style={{ textAlign: 'center', marginTop: 40 }}>*/}
-                                    {/*</Form.Item>*/}
                                 </Form>
                             </Card>
                             <div style={{
@@ -506,14 +504,10 @@ function NewReservationAddPage() {
                             }}>
                                 <Button type="primary"
                                         onClick={()=>form.submit()}
-                                        // htmlType="submit"
                                         loading={loading}
                                         style={{
                                             width: '100px',
                                             height: '40px',
-                                            // marginTop: 10,
-                                            // marginBottom: 20,
-                                            // textAlign: 'center'
                                         }}>
                                     등록
                                 </Button>
