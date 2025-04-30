@@ -357,7 +357,7 @@ function Admin() {
   return (
     <>
       <div className="main">
-        <div className={AdminStyle.Admin_top}>관리자 메인</div>
+        <div className={AdminStyle.Admin_top}>실시간 모니터링</div>
         <div className={AdminStyle.Admin_content}>
           <div className={AdminStyle.top}>
             <div className={AdminStyle.left}>
