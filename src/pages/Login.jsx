@@ -29,8 +29,13 @@ function Login(props) {
         message.success('로그인 성공');
         sessionStorage.setItem("name",data.name);
         sessionStorage.setItem("role",data.role);
+        const checkRole = sessionStorage.getItem("role");
         setTimeout(() => {
-            window.location.replace("/");
+            if (checkRole === "관리자") {
+                window.location.replace("/");
+            } else {
+                window.location.replace("/ApplicationList");
+            }
         }, 700);
     }
     return (

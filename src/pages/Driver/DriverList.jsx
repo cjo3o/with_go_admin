@@ -172,7 +172,7 @@ function DriverList() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onSearch={handleSearch3}
-                className="search-input default-style"
+                className={`${DlStyle.searchin} search-input default-style`}
               />
             </div>
           </div>

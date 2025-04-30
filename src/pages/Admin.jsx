@@ -494,9 +494,9 @@ function Admin() {
                       })
                       .map((item, index) => {
                         const sizes = [
-                          Number(item.small) > 0 ? `S ${item.small}개` : null,
-                          Number(item.medium) > 0 ? `M ${item.medium}개` : null,
-                          Number(item.large) > 0 ? `L ${item.large}개` : null,
+                          Number(item.small) > 0 ? `소 ${item.small}` : null,
+                          Number(item.medium) > 0 ? `중 ${item.medium}` : null,
+                          Number(item.large) > 0 ? `대 ${item.large}` : null,
                         ].filter(Boolean);
 
                         const inches = [
@@ -510,9 +510,9 @@ function Admin() {
 
                         const luggageInfo =
                           sizes.length > 0
-                            ? sizes.join(", ")
+                            ? sizes.join(" / ")
                             : inches.length > 0
-                            ? inches.join(", ")
+                            ? inches.join(" / ")
                             : "입력된 수량이 없습니다.";
 
                         return (
