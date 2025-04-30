@@ -20,6 +20,7 @@ function Sidebar(props) {
     const [emRole, setEmRole] = useState(null);
     const screens = useBreakpoint();
     const location = useLocation();
+    const navigate = useNavigate();
 
     const toggleMenu = (menu) => {
         setOpenMenu(openMenu === menu ? null : menu);
@@ -31,7 +32,8 @@ function Sidebar(props) {
 
     const logout = () => {
         sessionStorage.clear();
-        window.location.replace("/login");
+        navigate("/login");
+        window.location.reload();
     }
 
     useEffect(() => {
