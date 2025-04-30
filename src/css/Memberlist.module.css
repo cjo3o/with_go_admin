@@ -149,4 +149,8 @@ tfoot td {
     overflow-x: auto;
     width: 100%;
   }
+
+  .searchin {
+    width: 180px !important;
+  }
 }
