@@ -116,6 +116,7 @@ function Admin() {
     const res = sessionStorage.getItem("name");
     if (res === null) {
       navigate("/login");
+      window.location.reload();
     }
     const supaData = async () => {
       const { data: deliveryData, error: deliveryError } = await supabase
