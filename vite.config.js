@@ -10,7 +10,7 @@ export default defineConfig({
             registerType: 'autoUpdate',
             includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'robots.txt'],
             manifest: {
-                name: 'My PWA App',
+                name: 'WITHGO 관리자',
                 short_name: 'PWAApp',
                 description: 'My Vite + React PWA!',
                 theme_color: '#ffffff',

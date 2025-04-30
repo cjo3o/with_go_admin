@@ -290,7 +290,14 @@ function PartnerList() {
                         )}
                         <button
                             className="btn btn-add-confirm"
-                            onClick={() => navigate("/partner/create")}
+                            onClick={() => {
+                                const checkRole = sessionStorage.getItem('role');
+                                if (checkRole === '관리자') {
+                                    navigate("/partner/create");
+                                } else {
+                                    message.error('권한이 없습니다!');
+                                }
+                            }}
                         >
                             새 제휴숙소 등록
                         </button>
