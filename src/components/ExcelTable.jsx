@@ -145,7 +145,7 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
             division: '보관',
             reservationTime: item.storage_start_date,
             section: '-',
-            luggageNumber: item.small + item.medium + item.large,
+            luggageNumber: `소 ${item.small} / 중 ${item.medium} / 대 ${item.large}`, // ✅ 보관은 소/중/대
             reservationName: item.name,
             reservationPhone: item.phone,
             date: item.storage_start_date,
@@ -161,7 +161,7 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
             division: '배송',
             reservationTime: item.delivery_date,
             section: `${item.delivery_start} → ${item.delivery_arrive}`,
-            luggageNumber: item.small + item.medium + item.large,
+            luggageNumber: `under ${item.small || 0} / over ${item.large || 0}`, // ✅ 배송은 under/over (중간 없음)
             reservationName: item.name,
             reservationPhone: item.phone,
             date: item.delivery_date,

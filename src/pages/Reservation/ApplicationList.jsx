@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Layout, Tabs, DatePicker, Select, Input, Space, message } from 'antd';
+import { Button, Layout, Tabs, DatePicker, Select, Input, message } from 'antd';
 import ExcelTable from "../../components/ExcelTable.jsx";
+import supabase from "../../lib/supabase.js";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -14,75 +15,60 @@ function ApplicationList() {
     const [dateRange, setDateRange] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
 
+    // ✅ 데이터 가공 함수
+    const formatStorageData = (item, index) => ({
+        division: '보관',
+        reservationTime: item.storage_start_date,
+        section: '-',
+        luggageNumber: `소 ${item.small || 0} / 중 ${item.medium || 0} / 대 ${item.large || 0}`,
+        reservationName: item.name,
+        reservationPhone: item.phone,
+        date: item.storage_start_date,
+        driver: '-',
+        processingStatus: item.situation || '미배정',
+        key: `storage-${item.reservation_number}`,
+        id: item.reservation_number,
+        number: index + 1,
+    });
+
+    const formatDeliveryData = (item, index) => ({
+        division: '배송',
+        reservationTime: item.delivery_date,
+        section: `${item.delivery_start} → ${item.delivery_arrive}`,
+        luggageNumber: `under ${item.small || 0} / over ${item.large || 0}`,
+        reservationName: item.name,
+        reservationPhone: item.phone,
+        date: item.delivery_date,
+        driver: item.driver || '-',
+        processingStatus: item.situation || '미배정',
+        key: `delivery-${item.re_num}`,
+        id: item.re_num,
+        number: index + 1,
+    });
+
+    // ✅ Supabase에서 데이터 불러오기
     useEffect(() => {
         const fetchData = async () => {
-            const mockData = [
-                {
-                    id: 1,
-                    division: '배송',
-                    processingStatus: '미배정',
-                    reservationName: '홍길동',
-                    reservationPhone: '010-1234-5678',
-                    date: '2025-04-29',
-                    driver: '김기사'
-                },
-                {
-                    id: 2,
-                    division: '보관',
-                    processingStatus: '처리완료',
-                    reservationName: '이순신',
-                    reservationPhone: '010-2345-6789',
-                    date: '2025-04-28',
-                    driver: '-'
-                },
-                {
-                    id: 3,
-                    division: '배송',
-                    processingStatus: '취소',
-                    reservationName: '강감찬',
-                    reservationPhone: '010-3456-7890',
-                    date: '2025-04-27',
-                    driver: '박기사'
-                }
-            ];
+            const [storageRes, deliveryRes] = await Promise.all([
+                supabase.from('storage').select('*'),
+                supabase.from('delivery').select('*')
+            ]);
 
-            const dataWithKey = mockData.map((item, index) => ({
-                ...item,
-                key: item.id || `mock-${index}`
-            }));
+            const storageData = (storageRes.data || []).map((item, i) => formatStorageData(item, i));
+            const deliveryData = (deliveryRes.data || []).map((item, i) => formatDeliveryData(item, i));
 
-            setCombinedData(dataWithKey);
+            // 전체를 한번에 정렬된 인덱스로 번호 다시 매기기
+            const allData = [...storageData, ...deliveryData].map((d, i) => ({ ...d, number: i + 1 }));
+
+            setCombinedData(allData);
         };
 
         fetchData();
     }, []);
 
-
-    const getFilteredResults = (tabKey) => {
-        const baseData = searchResults.length > 0 ? searchResults : combinedData;
-
-        if (tabKey === 'delivery') {
-            return baseData.filter(d => d.division === '배송' && d.processingStatus !== '취소');
-        }
-        if (tabKey === 'storage') {
-            return baseData.filter(d => d.division === '보관' && d.processingStatus !== '취소');
-        }
-        if (tabKey === 'cancel') {
-            return baseData.filter(d => d.processingStatus === '취소');
-        }
-        return baseData.filter(d => d.processingStatus !== '취소');
-    };
-
-    const counts = {
-        all: combinedData.filter(d => d.processingStatus !== '취소').length,
-        delivery: combinedData.filter(d => d.division === '배송' && d.processingStatus !== '취소').length,
-        storage: combinedData.filter(d => d.division === '보관' && d.processingStatus !== '취소').length,
-        cancel: combinedData.filter(d => d.processingStatus === '취소').length
-    };
-
+    // ✅ 검색 필터링
     const handleSearch = () => {
         const keyword = searchKeyword.toLowerCase();
-
         const filtered = combinedData.filter(item => {
             const inDateRange = !dateRange.length || (
                 item.date >= dateRange[0].format('YYYY-MM-DD') &&
@@ -106,32 +92,41 @@ function ApplicationList() {
         setSearchResults(filtered);
     };
 
+    // ✅ 탭 필터링
+    const getFilteredResults = (tabKey) => {
+        const baseData = searchResults.length > 0 ? searchResults : combinedData;
+
+        if (tabKey === 'delivery') return baseData.filter(d => d.division === '배송' && d.processingStatus !== '취소');
+        if (tabKey === 'storage') return baseData.filter(d => d.division === '보관' && d.processingStatus !== '취소');
+        if (tabKey === 'cancel') return baseData.filter(d => d.processingStatus === '취소');
+        return baseData.filter(d => d.processingStatus !== '취소'); // all
+    };
+
+    // ✅ 탭별 개수
+    const counts = {
+        all: combinedData.filter(d => d.processingStatus !== '취소').length,
+        delivery: combinedData.filter(d => d.division === '배송' && d.processingStatus !== '취소').length,
+        storage: combinedData.filter(d => d.division === '보관' && d.processingStatus !== '취소').length,
+        cancel: combinedData.filter(d => d.processingStatus === '취소').length
+    };
+
     return (
         <Content>
             <div className="main">
                 <div className="header">
-                    <h3>예약관리</h3>
+                    <div>예약관리</div>
                 </div>
                 <div className="card">
-                    <div
-                        className="title"
-                        style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
-                    >
-                        <h1 style={{ fontSize: '1.5rem', margin: 0 }}>예약신청목록</h1>
-                        <Button type="primary" href="/NewReservationAddPage">신규예약등록</Button>
+                    <div className="title" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <h4>예약신청목록</h4>
+                        {/*<Button type="primary" href="/NewReservationAddPage">신규예약등록</Button>*/}
                     </div>
-                    <div className="content_middle" style={{ padding: '0 20px' }}>
+
+                    <div className="content_middle">
                         <div className="content_middle_two" style={{ marginTop: '15px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: 20 }}>
-                                <RangePicker
-                                    onChange={(dates) => setDateRange(dates)}
-                                    style={{ width: 240 }}
-                                />
-                                <Select
-                                    value={searchField}
-                                    onChange={setSearchField}
-                                    style={{ width: 140 }}
-                                >
+                                <RangePicker onChange={(dates) => setDateRange(dates)} style={{ width: 240 }} />
+                                <Select value={searchField} onChange={setSearchField} style={{ width: 140 }}>
                                     <Option value="예약자명">예약자명</Option>
                                     <Option value="연락처">연락처</Option>
                                     <Option value="배정기사명">배정기사명</Option>
@@ -148,28 +143,32 @@ function ApplicationList() {
                             <Tabs
                                 activeKey={currentTab}
                                 onChange={setCurrentTab}
-                                items={[
-                                    {
-                                        label: `전체 (${counts.all})`,
-                                        key: 'all',
-                                        children: <ExcelTable showCheckbox={false} combinedSearchData={getFilteredResults('all')} />,
-                                    },
-                                    {
-                                        label: `배송 (${counts.delivery})`,
-                                        key: 'delivery',
-                                        children: <ExcelTable showCheckbox={false} combinedSearchData={getFilteredResults('delivery')} />,
-                                    },
-                                    {
-                                        label: `보관 (${counts.storage})`,
-                                        key: 'storage',
-                                        children: <ExcelTable showCheckbox={false} combinedSearchData={getFilteredResults('storage')} />,
-                                    },
-                                    {
-                                        label: `취소 (${counts.cancel})`,
-                                        key: 'cancel',
-                                        children: <ExcelTable showCheckbox={false} combinedSearchData={getFilteredResults('cancel')} />,
-                                    },
-                                ]}
+                                items={
+                                    combinedData.length > 0
+                                        ? [
+                                            {
+                                                label: `전체 (${counts.all})`,
+                                                key: 'all',
+                                                children: <ExcelTable showCheckbox={false} combinedSearchData={getFilteredResults('all')} />,
+                                            },
+                                            {
+                                                label: `배송 (${counts.delivery})`,
+                                                key: 'delivery',
+                                                children: <ExcelTable showCheckbox={false} combinedSearchData={getFilteredResults('delivery')} />,
+                                            },
+                                            {
+                                                label: `보관 (${counts.storage})`,
+                                                key: 'storage',
+                                                children: <ExcelTable showCheckbox={false} combinedSearchData={getFilteredResults('storage')} />,
+                                            },
+                                            {
+                                                label: `취소 (${counts.cancel})`,
+                                                key: 'cancel',
+                                                children: <ExcelTable showCheckbox={false} combinedSearchData={getFilteredResults('cancel')} />,
+                                            },
+                                        ]
+                                        : []
+                                }
                             />
                         </div>
                     </div>
