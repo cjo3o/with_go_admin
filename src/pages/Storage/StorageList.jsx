@@ -247,7 +247,8 @@ function StorageList() {
 
                                     <div className="card-map">
                                         {storage.map_url ? (
-                                            <div onClick={() =>
+                                            <div className="map-hover-wrapper"
+                                                onClick={() =>
                                                 openModal(
                                                     <iframe
                                                         src={storage.map_url.match(/src="([^"]+)"/)?.[1] || storage.map_url}
@@ -260,6 +261,7 @@ function StorageList() {
                                                         title="지도"
                                                     ></iframe>
                                                 )}>
+                                                <div className="map-overlay">👁 Preview</div>
                                                 <iframe
                                                     src={storage.map_url.match(/src="([^"]+)"/)?.[1] || storage.map_url}
                                                     width="100%"

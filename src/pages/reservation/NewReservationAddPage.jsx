@@ -312,7 +312,7 @@ function NewReservationAddPage() {
         <Content>
             <div className="main">
                 <div className="header">
-                    <h3>예약관리</h3>
+                    <div>예약관리</div>
                 </div>
                 <div className="card">
                     <div className="title"

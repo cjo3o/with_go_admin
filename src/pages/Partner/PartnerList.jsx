@@ -248,12 +248,13 @@ function PartnerList() {
 
                                     <div className="card-map">
                                         {partner.map_url ? (
-                                            <div onClick={() =>
+                                            <div className="map-hover-wrapper"
+                                                onClick={() =>
                                                 openModal(
                                                     <iframe
                                                         src={partner.map_url.match(/src="([^"]+)"/)?.[1] || partner.map_url}
-                                                        width="600"
-                                                        height="400"
+                                                        width="800vw"
+                                                        height="600vh"
                                                         style={{border: 'none'}}
                                                         allowFullScreen=""
                                                         loading="lazy"
@@ -261,6 +262,7 @@ function PartnerList() {
                                                         title="지도"
                                                     ></iframe>
                                                 )}>
+                                                <div className="map-overlay">👁 Preview</div>
                                                 <iframe
                                                     src={partner.map_url.match(/src="([^"]+)"/)?.[1] || partner.map_url}
                                                     width="100%"
