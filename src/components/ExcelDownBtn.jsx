@@ -4,7 +4,7 @@ import { Button } from "antd";
 import excelIcon from "../assets/Icon/excelicon.svg";
 import AdminStyle from "../css/Admin.module.css";
 
-const ExcelDownBtn = ({ data, filename = "일일결산.xlsx" }) => {
+const ExcelDownBtn = ({ data, filename = "제목없음.xlsx" }) => {
   const handleExport = () => {
     if (!data || data.length === 0) {
       alert("다운로드할 데이터가 없습니다.");
@@ -28,17 +28,13 @@ const ExcelDownBtn = ({ data, filename = "일일결산.xlsx" }) => {
       처리현황: item.situation || "접수",
     }));
 
-    // 시트 데이터는 A4부터 넣기 위해 dummy rows 3개 추가
-    const blankRows = [[], [], []];
     const sheetData = [
-      ["일일결산", "", "", "", "", "", "담당자", "", "부서장", ""], // 병합 셀에 들어갈 값들 (0행)
-      [], // 병합 연속 행
-      [], // 병합 연속 행
-      Object.keys(exportData[0]),
-      ...exportData.map((row) => Object.values(row)),
+      Object.keys(exportData[0]), // 헤더
+      ...exportData.map((row) => Object.values(row)), // 데이터
     ];
 
     const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
+
     // 열 너비 자동 설정
     worksheet["!cols"] = Object.keys(exportData[0]).map((key) => {
       const max = Math.max(
@@ -48,40 +44,8 @@ const ExcelDownBtn = ({ data, filename = "일일결산.xlsx" }) => {
       return { wch: max + 2 };
     });
 
-    // 병합 설정 (셀 값 설정 전에 해야 함)
-    worksheet["!merges"] = [
-      { s: { r: 0, c: 0 }, e: { r: 2, c: 5 } }, // A1:F3
-      { s: { r: 0, c: 6 }, e: { r: 0, c: 7 } }, // G1:H1
-      { s: { r: 0, c: 8 }, e: { r: 0, c: 9 } }, // I1:J1
-      { s: { r: 1, c: 6 }, e: { r: 2, c: 7 } }, // G2:H3
-      { s: { r: 1, c: 8 }, e: { r: 2, c: 9 } }, // I2:J3
-    ];
-
-    const centerAlignStyle = {
-        t: "s",
-        v: "일일결산",
-        s: {
-          alignment: {
-            horizontal: "center",
-            vertical: "center",
-          },
-        },
-      };
-
-      worksheet["A1"] = centerAlignStyle;
-      worksheet["G1"] = {
-        t: "s",
-        v: "담당자",
-        s: centerAlignStyle.s,
-      };
-      worksheet["I1"] = {
-        t: "s",
-        v: "부서장",
-        s: centerAlignStyle.s,
-      };
-
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "결산");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
     XLSX.writeFile(workbook, filename);
   };
 
