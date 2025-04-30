@@ -186,7 +186,198 @@ function EmployeeList(props) {
                         </div>
                     </div>
                 </div>
-
+                <Modal
+                    title="메모"
+                    open={openMemo}
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                    footer={[
+                        <Button key="back" onClick={handleCancel}>
+                            닫기
+                        </Button>,
+                        <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
+                            저장
+                        </Button>
+                    ]}>
+                    <TextArea
+                        rows={4}
+                        value={memoValue}
+                        onChange={(e) => setMemoValue(e.target.value)}
+                    />
+                </Modal>
+                <Modal
+                    title="수정"
+                    open={openEdit}
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                    footer={[
+                        <Button key="back" onClick={handleCancel}>
+                            닫기
+                        </Button>,
+                        <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
+                            저장
+                        </Button>
+                    ]}>
+                    <div className="editContent" style={{display: "flex", flexDirection: "column", gap: "20px"}}>
+                        <Input
+                            placeholder="이름"
+                            value={selectedEmployee?.name}
+                            onChange={(e) => setSelectedEmployee({...selectedEmployee, name: e.target.value})}
+                        />
+                        <Input
+                            placeholder="이메일"
+                            value={selectedEmployee?.email}
+                            onChange={(e) => setSelectedEmployee({...selectedEmployee, email: e.target.value})}
+                        />
+                        <Input
+                            placeholder="부서"
+                            value={selectedEmployee?.department}
+                            onChange={(e) => setSelectedEmployee({...selectedEmployee, department: e.target.value})}
+                        />
+                        <Input
+                            placeholder="직위"
+                            value={selectedEmployee?.position}
+                            onChange={(e) => setSelectedEmployee({...selectedEmployee, position: e.target.value})}
+                        />
+                        <div style={{display: "flex", gap: "20px"}}>
+                            <div style={{display: "flex", flexDirection: "column", gap: "0.5rem"}}>
+                                <span>권한</span>
+                                <Select value={selectedEmployee?.role}
+                                        style={{'width': '100px'}}
+                                        onChange={(value) => setSelectedEmployee({...selectedEmployee, role: value})}
+                                        options={[
+                                            {value: '읽기전용', label: <span>읽기전용</span>},
+                                            {value: '수정가능', label: <span>수정가능</span>},
+                                            {value: '관리자', label: <span>관리자</span>}
+                                        ]}
+                                />
+                            </div>
+                            <div style={{display: "flex", flexDirection: "column", gap: "0.5rem"}}>
+                                <span>상태</span>
+                                <Select value={selectedEmployee?.status}
+                                        style={{'width': '90px'}}
+                                        onChange={(value) => setSelectedEmployee({...selectedEmployee, status: value})}
+                                        options={[
+                                            {value: '인증중', label: <span>인증중</span>},
+                                            {value: '사용중', label: <span>사용중</span>},
+                                            {value: '차단', label: <span>차단</span>}
+                                        ]}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </Modal>
+                <Modal
+                    title="삭제 후에는 복원하실 수 없습니다!"
+                    open={openDelete}
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                    footer={[
+                        <Button key="back" onClick={handleCancel}>
+                            닫기
+                        </Button>,
+                        <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
+                            확인
+                        </Button>
+                    ]}>
+                    <span>삭제를 원하시면 확인을 눌러주세요</span>
+                </Modal>
+                <Modal
+                    title="신규등록"
+                    open={openInsert}
+                    onOk={() => form.submit()}
+                    onCancel={handleCancel}
+                    footer={[
+                        <Button key="back" onClick={handleCancel}>
+                            닫기
+                        </Button>,
+                        <Button key="submit" type="primary" loading={loading} onClick={() => form.submit()}>
+                            등록
+                        </Button>
+                    ]}>
+                    <Form
+                        form={form}
+                        layout="vertical"
+                        initialValues={initialValues}
+                        onFinish={onFinish}
+                    >
+                        <Form.Item label="이름" name="name" rules={[{required: true, message: '이름을 입력해주세요'}]}>
+                            <Input/>
+                        </Form.Item>
+                        <Form.Item label="이메일" name="email"
+                                   rules={[{required: true, type: 'email', message: '올바른 이메일을 입력해주세요'}]}>
+                            <Input/>
+                        </Form.Item>
+                        <Form.Item label="부서" name="department" rules={[{required: true, message: '부서를 입력해주세요'}]}>
+                            <Input/>
+                        </Form.Item>
+                        <Form.Item label="직위" name="position" rules={[{required: true, message: '직위를 입력해주세요'}]}>
+                            <Input/>
+                        </Form.Item>
+                        <Form.Item label="비밀번호" name="password" rules={[{required: true, message: '비밀번호를 입력해주세요'}]}>
+                            <Input.Password/>
+                        </Form.Item>
+                        <div style={{display: "flex", gap: "20px"}}>
+                            <div style={{width: '50%'}}>
+                                <Form.Item label="권한" name="role" rules={[{required: true, message: '권한을 선택해주세요'}]}>
+                                    <Select
+                                        options={[
+                                            {value: "읽기전용", label: <span>읽기전용</span>},
+                                            {value: "수정가능", label: <span>수정가능</span>},
+                                            {value: "관리자", label: <span>관리자</span>}
+                                        ]}
+                                    />
+                                </Form.Item>
+                            </div>
+                            <div style={{width: '50%'}}>
+                                <Form.Item label="상태" name="status" rules={[{required: true, message: '상태를 설정해주세요'}]}>
+                                    <Select
+                                        options={[
+                                            {value: "사용중", label: <span>사용중</span>},
+                                            {value: "차단", label: <span>차단</span>},
+                                        ]}
+                                    />
+                                </Form.Item>
+                            </div>
+                        </div>
+                    </Form>
+                </Modal>
+                <Modal
+                    title="상세정보"
+                    open={openDetail}
+                    onCancel={handleCancel}
+                    footer={[
+                        <Button key="back" onClick={handleCancel}>
+                            닫기
+                        </Button>
+                    ]}
+                >
+                    <div className="details"
+                         style={{
+                             display: "flex",
+                             flexDirection: "column",
+                             gap: "10px",
+                             fontSize: "1rem",
+                             marginTop: "1rem",
+                         }}>
+                        <span>이름 : {detailData.name}</span>
+                        <span>부서 : {detailData.department}</span>
+                        <span>직위 : {detailData.position}</span>
+                        <span>권한 : {detailData.role}</span>
+                        <span>상태 : {detailData.status}</span>
+                        <span>이메일 : {detailData.email}</span>
+                        <span>가입일 : {detailData.created_at?.split("T").shift()}</span>
+                        <div className="details_memo">
+                            <span>
+                                메모
+                            </span>
+                            <TextArea
+                                value={detailData.memo}
+                                readOnly
+                            />
+                        </div>
+                    </div>
+                </Modal>
             </div>
         </>
     );
