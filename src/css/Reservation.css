@@ -55,7 +55,7 @@
 }
 
 .content_second > h2{
-    padding-top: 30px;
+    padding-top: 40px;
 }
 
 .content_second > h1{
@@ -78,9 +78,14 @@
 
 .content_aa{
     display: flex;
+    gap: 15px;
 }
 
-.content_second_one > img {
+.content_aa h2{
+font-size: 18px;
+}
+
+.content_aa > img {
     width: 100px;
     height: 100px;
     background-color: white;
@@ -89,7 +94,7 @@
 }
 
 .content_second_one h2{
-    margin-top: 35px;
+    margin-top: 15px;
     /*font-size: 16px;*/
     color: #6e6e6e;
     font-weight: bold;
@@ -115,7 +120,7 @@
 }
 
 .border-left h3{
-    margin-top: 25px;
+    margin-top: 10px;
     line-height: 30px;
     font-size: 16px;
     color: white;
