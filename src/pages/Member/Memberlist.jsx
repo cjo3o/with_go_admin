@@ -123,7 +123,7 @@ function Memberlist() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onSearch={handleSearch2}
-                className="search-input default-style"
+                className={`${MemberStyle.searchin} search-input default-style`}
               />
             </div>
           </div>

@@ -137,7 +137,7 @@ tfoot td {
   }
 
   .DL_main {
-    width: 400px;
+    width: 100%;
     min-width: 100%;
   }
   .dtable {
