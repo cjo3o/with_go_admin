@@ -304,7 +304,7 @@ function Reservation() {
     return (
         <div className="main" id="main">
             <div className="header">
-                <h3>예약관리</h3>
+                예약관리
             </div>
             <div className="card">
                 <div className="title">금일배송 / 보관 관리</div>
