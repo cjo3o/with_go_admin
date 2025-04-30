@@ -154,4 +154,8 @@ tfoot td {
     text-align: left;
     padding-left: 200px;
   }
+
+  .searchin {
+    width: 180px !important;
+  }
 }
