@@ -39,18 +39,14 @@ const EditableCell = ({editing, dataIndex, title, inputType, record, index, chil
 const ExcelTable = ({showCheckbox, combinedSearchData}) => {
     const [form] = Form.useForm();
     const [combinedData, setCombinedData] = useState([]);
-    // const [editingKey, setEditingKey] = useState('');
     const [checkedRows, setCheckedRows] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [selectAllChecked, setSelectAllChecked] = useState(false);
     const [currentData, setCurrentData] = useState([]);
-    // const [sortOrder, setSortOrder] = useState(null);
-    // const [sortField, setSortField] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingRecord, setEditingRecord] = useState(null);
 
-    // const pageSize = 10;  // ✅ pageSize 하나로 통일
     const totalPages = Math.ceil(combinedData.length / pageSize);
 
     const groupSize = 7;
@@ -137,7 +133,7 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
 
     const fetchData = async () => {
         const {data: storage} = await supabase.from('storage').select('*');
-        const {data: delivery} = await supabase.from('delivery').select('*');
+
 
         const formattedStorage = (storage || []).map((item, idx) => ({
             ...item,
@@ -155,13 +151,15 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
             number: idx + 1
         }));
 
+        const {data: delivery} = await supabase.from('delivery').select('*');
+
         const formattedDelivery = (delivery || []).map((item, idx) => ({
             ...item,
             id: item.re_num,
             division: '배송',
             reservationTime: item.delivery_date,
             section: `${item.delivery_start} → ${item.delivery_arrive}`,
-            luggageNumber: `under ${item.small || 0} / over ${item.large || 0}`, // ✅ 배송은 under/over (중간 없음)
+            luggageNumber: `under ${item.under ?? item.small ?? 0} / over ${item.over ?? item.large ?? 0}`, // ✅ 배송은 under/over (중간 없음)
             reservationName: item.name,
             reservationPhone: item.phone,
             date: item.delivery_date,
@@ -174,11 +172,6 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
         setCombinedData([...formattedStorage, ...formattedDelivery]);
     };
 
-
-    // ✅ 바로 이 위치에 useEffect 추가
-    useEffect(() => {
-        fetchData(); // 페이지 진입 시 자동 실행
-    }, []);
 
     useEffect(() => {
         const startIndex = (currentPage - 1) * pageSize;
@@ -361,7 +354,7 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
             </Modal>
 
             <Form form={form} component={false}>
-                <div style={{overflowX: 'auto' }}>
+                <div style={{overflowX: 'auto'}}>
                     <Table
                         components={{body: {cell: EditableCell}}}
                         bordered
@@ -388,12 +381,18 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
                     </div>
                 )}
 
-                <div className="pagination" style={{marginTop: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap'}}>
+                <div className="pagination" style={{
+                    marginTop: '30px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexWrap: 'wrap'
+                }}>
                     <button onClick={goToFirstGroup} disabled={currentGroup === 0}>
-                        <FontAwesomeIcon icon={faAnglesLeft} />
+                        <FontAwesomeIcon icon={faAnglesLeft}/>
                     </button>
                     <button onClick={goToPrevPage} disabled={currentPage === 1}>
-                        <FontAwesomeIcon icon={faChevronLeft} />
+                        <FontAwesomeIcon icon={faChevronLeft}/>
                     </button>
 
                     {Array.from({length: endPage - startPage + 1}).map((_, i) => {
@@ -419,10 +418,10 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
                     })}
 
                     <button onClick={goToNextPage} disabled={currentPage === totalPages}>
-                        <FontAwesomeIcon icon={faChevronRight} />
+                        <FontAwesomeIcon icon={faChevronRight}/>
                     </button>
                     <button onClick={goToNextGroup} disabled={endPage === totalPages}>
-                        <FontAwesomeIcon icon={faAnglesRight} />
+                        <FontAwesomeIcon icon={faAnglesRight}/>
                     </button>
                 </div>
 
