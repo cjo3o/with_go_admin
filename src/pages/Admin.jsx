@@ -337,6 +337,19 @@ function Admin() {
   const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const goToNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  const pagesPerGroup = 10;
+
+  const goToLastGroup = () => {
+    const nextGroupFirstPage =
+      Math.floor(currentPage / pagesPerGroup) * pagesPerGroup + 1;
+
+    if (nextGroupFirstPage < totalPages) {
+      setCurrentPage(nextGroupFirstPage);
+    } else {
+      setCurrentPage(totalPages);
+    }
+  };
+
   const pageNumbers =
     totalPages > 0 ? Array.from({ length: totalPages }, (_, i) => i + 1) : [1];
 
@@ -698,6 +711,13 @@ function Admin() {
                 disabled={currentPage === totalPages || totalPages === 0}
               >
                 <FontAwesomeIcon icon={faChevronRight} />
+              </button>
+              <button
+                className={AdminStyle.arrow_btn}
+                onClick={goToLastGroup}
+                disabled={currentPage === totalPages}
+              >
+                <FontAwesomeIcon icon={faAnglesRight} />
               </button>
             </div>
           </div>
