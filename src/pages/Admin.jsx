@@ -456,7 +456,7 @@ function Admin() {
                     allowClear
                     enterButton={
                       <span>
-                        <SearchOutlined style={{ marginRight: 4 }} />
+                        <SearchOutlined style={{ marginRight: 4}} />
                         검색
                       </span>
                     }

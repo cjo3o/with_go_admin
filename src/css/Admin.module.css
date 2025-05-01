@@ -561,11 +561,16 @@
     gap: 5px;
   }
   .searchin {
-    width: 177px !important;
+    font-size: 10px;
+    width: 160px !important;
   }
 
-  .searchin button {
-    width: 60px;
+  .custom-search-input input::placeholder {
+    font-size: 15px;
+  }
+
+  .ant-input-group-addon{
+    width: 70px;
   }
 
   .page_btn,
