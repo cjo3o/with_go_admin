@@ -568,10 +568,7 @@
   .custom-search-input input::placeholder {
     font-size: 15px;
   }
-
-  .ant-input-group-addon{
-    width: 70px;
-  }
+  
 
   .page_btn,
   .arrow_btn {
