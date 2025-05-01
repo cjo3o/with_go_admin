@@ -360,11 +360,11 @@
 
 @media (max-width: 767px) {
   .Admin_top {
-    min-width: 445px;
+    min-width: 100%;
   }
 
   .Admin_content {
-    width: 445px;
+    width: 100%;
     min-width: 100%;
     margin-top: 10px;
     flex-direction: column;
@@ -372,7 +372,6 @@
   }
 
   .list {
-    width: 445px;
     min-width: 100%;
   }
 
@@ -421,7 +420,7 @@
 
   .left3 {
     display: flex;
-    margin: 10px 15px 0 15px;
+    margin: 0 auto;
     width: 95%;
     height: 65px;
     position: static;
