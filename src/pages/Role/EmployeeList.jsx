@@ -1,15 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import supabase from "../../lib/supabase.js";
 import bcrypt from 'bcryptjs';
-import {Button, Select, Input, Modal, message, Form, Card, Table} from "antd";
-import {EditOutlined, DeleteOutlined, EditFilled, DeleteFilled} from '@ant-design/icons';
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faAnglesLeft, faAnglesRight, faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
-import '../../css/layout.css';
+import { Button, Select, Input, Modal, message, Form } from "antd";
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAnglesLeft, faAnglesRight, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
-
-const {TextArea} = Input;
-
+const { TextArea } = Input;
 
 function EmployeeList(props) {
     const [rowdata, setRowdata] = useState([]);
@@ -143,8 +140,16 @@ function EmployeeList(props) {
                         <table>
                             <thead>
                             <tr>
-                                <th>번호</th><th>이름</th><th>이메일</th><th>부서</th><th>직위</th>
-                                <th>권한</th><th>가입일</th><th>상태</th><th>메모</th><th>관리</th>
+                                <th>번호</th>
+                                <th>이름</th>
+                                <th>이메일</th>
+                                <th>부서</th>
+                                <th>직위</th>
+                                <th>권한</th>
+                                <th>가입일</th>
+                                <th>상태</th>
+                                <th>메모</th>
+                                <th>관리</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -158,7 +163,9 @@ function EmployeeList(props) {
                                     <td>{item.role}</td>
                                     <td>{item.created_at?.split('T').shift()}</td>
                                     <td>{item.status}</td>
-                                    <td><Button onClick={(e) => { e.stopPropagation(); showMemo(item); }}>메모</Button></td>
+                                    <td>
+                                        <Button onClick={(e) => { e.stopPropagation(); showMemo(item); }}>메모</Button>
+                                    </td>
                                     <td>
                                         <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
                                             <Button icon={<EditOutlined />} onClick={(e) => { e.stopPropagation(); showEdit(item); }} />
@@ -175,18 +182,64 @@ function EmployeeList(props) {
                     </div>
                     <div className="pagination-wrapper">
                         <div className="pagination">
-                            <button className="group-btn" onClick={() => setCurrentPage(1)} disabled={currentGroup === 0}><FontAwesomeIcon icon={faAnglesLeft} /></button>
-                            <button className="arrow-btn" onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}><FontAwesomeIcon icon={faChevronLeft} /></button>
+                            <button onClick={() => setCurrentPage(1)} disabled={currentGroup === 0}><FontAwesomeIcon icon={faAnglesLeft} /></button>
+                            <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}><FontAwesomeIcon icon={faChevronLeft} /></button>
                             {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
                                 const pageNum = startPage + i;
                                 return <button key={pageNum} className={pageNum === currentPage ? 'active' : ''} onClick={() => setCurrentPage(pageNum)}>{pageNum}</button>
                             })}
-                            <button className="group-btn" onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}><FontAwesomeIcon icon={faChevronRight} /></button>
-                            <button className="group-btn" onClick={() => setCurrentPage(totalPages)} disabled={endPage === totalPages}><FontAwesomeIcon icon={faAnglesRight} /></button>
+                            <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}><FontAwesomeIcon icon={faChevronRight} /></button>
+                            <button onClick={() => setCurrentPage(totalPages)} disabled={endPage === totalPages}><FontAwesomeIcon icon={faAnglesRight} /></button>
                         </div>
                     </div>
                 </div>
 
+                {/* Modal: Memo */}
+                <Modal title="메모" open={openMemo} onOk={handleOk} onCancel={handleCancel} footer={[
+                    <Button key="back" onClick={handleCancel}>닫기</Button>,
+                    <Button key="submit" type="primary" loading={loading} onClick={handleOk}>저장</Button>
+                ]}>
+                    <TextArea rows={4} value={memoValue} onChange={(e) => setMemoValue(e.target.value)} />
+                </Modal>
+
+                {/* Modal: Edit */}
+                <Modal title="수정" open={openEdit} onOk={handleOk} onCancel={handleCancel} footer={[
+                    <Button key="back" onClick={handleCancel}>닫기</Button>,
+                    <Button key="submit" type="primary" loading={loading} onClick={handleOk}>저장</Button>
+                ]}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                        <Input placeholder="이름" value={selectedEmployee?.name} onChange={(e) => setSelectedEmployee({ ...selectedEmployee, name: e.target.value })} />
+                        <Input placeholder="이메일" value={selectedEmployee?.email} onChange={(e) => setSelectedEmployee({ ...selectedEmployee, email: e.target.value })} />
+                        <Input placeholder="부서" value={selectedEmployee?.department} onChange={(e) => setSelectedEmployee({ ...selectedEmployee, department: e.target.value })} />
+                        <Input placeholder="직위" value={selectedEmployee?.position} onChange={(e) => setSelectedEmployee({ ...selectedEmployee, position: e.target.value })} />
+                        <div style={{ display: "flex", gap: "20px" }}>
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                                <span>권한</span>
+                                <Select value={selectedEmployee?.role} style={{ width: '100px' }} onChange={(value) => setSelectedEmployee({ ...selectedEmployee, role: value })} options={[
+                                    { value: '읽기전용', label: <span>읽기전용</span> },
+                                    { value: '수정가능', label: <span>수정가능</span> },
+                                    { value: '관리자', label: <span>관리자</span> }
+                                ]} />
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                                <span>상태</span>
+                                <Select value={selectedEmployee?.status} style={{ width: '90px' }} onChange={(value) => setSelectedEmployee({ ...selectedEmployee, status: value })} options={[
+                                    { value: '인증중', label: <span>인증중</span> },
+                                    { value: '사용중', label: <span>사용중</span> },
+                                    { value: '차단', label: <span>차단</span> }
+                                ]} />
+                            </div>
+                        </div>
+                    </div>
+                </Modal>
+
+                {/* Modal: Delete */}
+                <Modal title="삭제 후에는 복원하실 수 없습니다!" open={openDelete} onOk={handleOk} onCancel={handleCancel} footer={[
+                    <Button key="back" onClick={handleCancel}>닫기</Button>,
+                    <Button key="submit" type="primary" loading={loading} onClick={handleOk}>확인</Button>
+                ]}>
+                    <span>삭제를 원하시면 확인을 눌러주세요</span>
+                </Modal>
             </div>
         </>
     );
