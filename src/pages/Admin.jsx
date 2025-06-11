@@ -116,6 +116,10 @@ function Admin() {
     const res = sessionStorage.getItem("name");
     if (res === null) {
       navigate("/login");
+<<<<<<< HEAD
+=======
+      window.location.reload();
+>>>>>>> main
     }
     const supaData = async () => {
       const { data: deliveryData, error: deliveryError } = await supabase
@@ -337,13 +341,33 @@ function Admin() {
   const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const goToNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+<<<<<<< HEAD
+=======
+  const pagesPerGroup = 10;
+
+  const goToLastGroup = () => {
+    const nextGroupFirstPage =
+      Math.floor(currentPage / pagesPerGroup) * pagesPerGroup + 1;
+
+    if (nextGroupFirstPage < totalPages) {
+      setCurrentPage(nextGroupFirstPage);
+    } else {
+      setCurrentPage(totalPages);
+    }
+  };
+
+>>>>>>> main
   const pageNumbers =
     totalPages > 0 ? Array.from({ length: totalPages }, (_, i) => i + 1) : [1];
 
   return (
     <>
       <div className="main">
+<<<<<<< HEAD
         <div className={AdminStyle.Admin_top}>관리자 메인</div>
+=======
+        <div className={AdminStyle.Admin_top}>실시간 모니터링</div>
+>>>>>>> main
         <div className={AdminStyle.Admin_content}>
           <div className={AdminStyle.top}>
             <div className={AdminStyle.left}>
@@ -442,7 +466,11 @@ function Admin() {
                     allowClear
                     enterButton={
                       <span>
+<<<<<<< HEAD
                         <SearchOutlined style={{ marginRight: 4 }} />
+=======
+                        <SearchOutlined style={{ marginRight: 4}} />
+>>>>>>> main
                         검색
                       </span>
                     }
@@ -699,6 +727,16 @@ function Admin() {
               >
                 <FontAwesomeIcon icon={faChevronRight} />
               </button>
+<<<<<<< HEAD
+=======
+              <button
+                className={AdminStyle.arrow_btn}
+                onClick={goToLastGroup}
+                disabled={currentPage === totalPages}
+              >
+                <FontAwesomeIcon icon={faAnglesRight} />
+              </button>
+>>>>>>> main
             </div>
           </div>
         </div>
