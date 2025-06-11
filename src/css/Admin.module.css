@@ -420,11 +420,8 @@
 
   .left3 {
     display: flex;
-<<<<<<< HEAD
-    margin: 10px 15px 0 15px;
-=======
+    /* margin: 10px 15px 0 15px; */
     margin: 0 auto;
->>>>>>> main
     width: 95%;
     height: 65px;
     position: static;
@@ -565,14 +562,11 @@
     gap: 5px;
   }
   .searchin {
-<<<<<<< HEAD
     width: 177px !important;
   }
 
   .searchin button {
     width: 60px;
-  }
-=======
     font-size: 10px;
     width: 160px !important;
   }
@@ -581,7 +575,6 @@
     font-size: 15px;
   }
   
->>>>>>> main
 
   .page_btn,
   .arrow_btn {

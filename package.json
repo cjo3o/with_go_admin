@@ -30,10 +30,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.5.0",
     "styled-components": "^6.1.17",
-<<<<<<< HEAD
-=======
     "sweetalert2": "^11.19.1",
->>>>>>> main
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
