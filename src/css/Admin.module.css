@@ -393,8 +393,12 @@
     padding-top: 20px;
   }
 
+  .picker {
+    margin-top: 5px;
+  }
+
   .left {
-    height: 200px;
+    height: auto;
   }
 
   .left1 {
@@ -425,7 +429,7 @@
 
   .left3 {
     display: flex;
-    margin: 0 auto;
+    margin: 10px auto;
     width: 95%;
     height: 65px;
     position: static;

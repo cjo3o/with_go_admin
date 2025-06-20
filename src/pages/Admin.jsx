@@ -20,10 +20,23 @@ import { useNavigate } from "react-router-dom";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
 
+function AsyncLocation({ reservation_number, fetchLocation }) {
+  const [location, setLocation] = useState("");
+  useEffect(() => {
+    let isMounted = true;
+    fetchLocation(reservation_number).then((loc) => {
+      if (isMounted) setLocation(loc || "-");
+    });
+    return () => { isMounted = false; };
+  }, [reservation_number, fetchLocation]);
+  return <span>{location}</span>;
+}
+
+
 function Admin() {
   const selectOptions = {
-    배송: ["접수", "배송중", "완료", "취소"],
-    보관: ["접수", "보관중", "완료", "취소"],
+    배송: ["접수", "배송대기", "배송중", "배송완료", "취소"],
+    보관: ["접수", "보관중", "보관완료", "취소"],
   };
 
   const [deliveryt, setdelivery] = useState([]);
@@ -42,6 +55,7 @@ function Admin() {
   const [todayDeliveryCount, setTodayDeliveryCount] = useState(0);
   const [todayStorageCount, setTodayStorageCount] = useState(0);
   const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [locationCache, setLocationCache] = useState({});
 
   const navigate = useNavigate();
 
@@ -120,6 +134,23 @@ function Admin() {
     }
   };
 
+  const fetchLocation = async (reservation_number) => {
+    if (locationCache[reservation_number])
+      return locationCache[reservation_number];
+
+    const { data, error } = await supabase
+      .from("storage")
+      .select("location")
+      .eq("reservation_number", reservation_number)
+      .single();
+    if (error) return "";
+    setLocationCache((prev) => ({
+      ...prev,
+      [reservation_number]: data.location,
+    }));
+    return data.location;
+  };
+
   useEffect(() => {
     const res = sessionStorage.getItem("name");
     if (res === null) {
@@ -178,7 +209,8 @@ function Admin() {
       const completeCount = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-            selectedDateStr && item.situation === "완료"
+            selectedDateStr &&
+          (item.situation === "배송완료" || item.situation === "보관완료")
       ).length;
 
       const cancelCount = AllData.filter(
@@ -225,7 +257,7 @@ function Admin() {
       status_updated_at: new Date().toISOString(),
     };
 
-    if (status === "완료") {
+    if (status === "배송완료" || status === "보관완료") {
       updates.success_time = new Date().toISOString();
     } else {
       updates.success_time = null;
@@ -355,7 +387,6 @@ function Admin() {
   const goToLastGroup = () => {
     setCurrentPage(totalPages);
   };
-  
 
   const pageNumbers =
     totalPages > 0 ? Array.from({ length: totalPages }, (_, i) => i + 1) : [1];
@@ -371,11 +402,14 @@ function Admin() {
                 <h3>금일 신규예약</h3>
                 <DatePicker
                   value={selectedDate}
-                  onChange={(date) => setSelectedDate(date)}
+                  onChange={setSelectedDate}
                   format="YYYY-MM-DD"
                   allowClear={false}
                   getPopupContainer={(trigger) => document.body}
                   className={AdminStyle.picker}
+                  disabledDate={(current) =>
+                    current && current > dayjs().endOf("day")
+                  }
                 />
               </div>
               <div className={AdminStyle.left2}>
@@ -509,167 +543,193 @@ function Admin() {
                 </thead>
                 <tbody>
                   {currentItems.length > 0 ? (
-                    currentItems
-                      .map((item, index) => {
-                        const sizes = [
-                          Number(item.small) > 0 ? `소 ${item.small}` : null,
-                          Number(item.medium) > 0 ? `중 ${item.medium}` : null,
-                          Number(item.large) > 0 ? `대 ${item.large}` : null,
-                        ].filter(Boolean);
+                    currentItems.map((item, index) => {
+                      const sizes = [
+                        Number(item.small) > 0 ? `소 ${item.small}` : null,
+                        Number(item.medium) > 0 ? `중 ${item.medium}` : null,
+                        Number(item.large) > 0 ? `대 ${item.large}` : null,
+                      ].filter(Boolean);
 
-                        const inches = [
-                          Number(item.under) > 0
-                            ? `26"이하 : ${item.under}개`
-                            : null,
-                          Number(item.over) > 0
-                            ? `26"이상 : ${item.over}개`
-                            : null,
-                        ].filter(Boolean);
+                      const inches = [
+                        Number(item.under) > 0
+                          ? `26"이하 : ${item.under}개`
+                          : null,
+                        Number(item.over) > 0
+                          ? `26"이상 : ${item.over}개`
+                          : null,
+                      ].filter(Boolean);
 
-                        const luggageInfo =
-                          sizes.length > 0
-                            ? sizes.join(" / ")
-                            : inches.length > 0
-                            ? inches.join(" / ")
-                            : "입력된 수량이 없습니다.";
+                      const luggageInfo =
+                        sizes.length > 0
+                          ? sizes.join(" / ")
+                          : inches.length > 0
+                          ? inches.join(" / ")
+                          : "입력된 수량이 없습니다.";
 
-                        return (
-                          <React.Fragment key={index}>
-                            <tr
-                              className={AdminStyle.trpointer}
-                              onClick={() => toggleRow(index, item)}
-                            >
-                              <td>
-                                {item.reservation_time || item.reserve_time
-                                  ? (
-                                      item.reservation_time || item.reserve_time
-                                    ).slice(0, 10)
-                                  : "-"}
-                              </td>
-                              <td>{item.type}</td>
-                              <td>{item.name}</td>
-                              <td>{item.phone}</td>
-                              <td>
-                                {item.storage_start_date &&
-                                item.storage_end_date
-                                  ? `${item.storage_start_date} ~ ${item.storage_end_date}`
-                                  : item.delivery_date
-                                  ? item.delivery_date
-                                  : "-"}
-                              </td>
-                              <td>{luggageInfo}</td>
-                              <td>{`${item.price.toLocaleString()}원`}</td>
-                              <td>
-                                {item.situation === "완료" && item.success_time
-                                  ? item.success_time
-                                      .slice(0, 16)
-                                      .replace("T", " ")
-                                  : "-"}
-                              </td>
-                              <td>
-                                <select
-                                  className={AdminStyle.select}
-                                  value={item.situation || "접수"}
-                                  onChange={(e) => eChange(e, item)}
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  {selectOptions[item.type].map((status) => (
-                                    <option key={status} value={status}>
+                      return (
+                        <React.Fragment key={index}>
+                          <tr
+                            className={AdminStyle.trpointer}
+                            onClick={() => toggleRow(index, item)}
+                          >
+                            <td>
+                              {item.reservation_time || item.reserve_time
+                                ? (
+                                    item.reservation_time || item.reserve_time
+                                  ).slice(0, 10)
+                                : "-"}
+                            </td>
+                            <td>{item.type}</td>
+                            <td>{item.name}</td>
+                            <td>{item.phone}</td>
+                            <td>
+                              {item.storage_start_date && item.storage_end_date
+                                ? `${item.storage_start_date} ~ ${item.storage_end_date}`
+                                : item.delivery_date
+                                ? item.delivery_date
+                                : "-"}
+                            </td>
+                            <td>{luggageInfo}</td>
+                            <td>{`${item.price.toLocaleString()}원`}</td>
+                            <td>
+                              {(item.situation === "배송완료" ||
+                                item.situation === "보관완료") &&
+                              item.success_time
+                                ? item.success_time
+                                    .slice(0, 16)
+                                    .replace("T", " ")
+                                : "-"}
+                            </td>
+                            <td>
+                              <select
+                                className={AdminStyle.select}
+                                value={item.situation || "접수"}
+                                onChange={(e) => eChange(e, item)}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {selectOptions[item.type].map((status) => {
+                                  // 배송만 선택 불가 옵션 처리
+                                  const disabledStatuses =
+                                    item.type === "배송"
+                                      ? ["배송대기", "배송중", "배송완료"]
+                                      : [];
+                                  const isCurrent = item.situation === status;
+                                  return (
+                                    <option
+                                      key={status}
+                                      value={status}
+                                      disabled={
+                                        disabledStatuses.includes(status) &&
+                                        !isCurrent
+                                      }
+                                    >
                                       {status}
                                     </option>
-                                  ))}
-                                </select>
+                                  );
+                                })}
+                              </select>
+                            </td>
+                          </tr>
+
+                          {openRow === index && (
+                            <tr>
+                              <td colSpan="9">
+                                <div className={AdminStyle.status_details}>
+                                  <div className={AdminStyle.status_log_list}>
+                                    {statusLogs[index]?.length > 0 ? (
+                                      <table className={AdminStyle.log_table}>
+                                        <colgroup>
+                                          <col style={{ width: "3%" }} />
+                                          <col style={{ width: "3%" }} />
+                                          <col style={{ width: "4%" }} />
+                                          <col style={{ width: "4%" }} />
+                                          <col style={{ width: "4%" }} />
+                                        </colgroup>
+                                        <thead>
+                                          <tr>
+                                            <th>변경시간</th>
+                                            <th>이전상태</th>
+                                            <th>변경상태</th>
+                                            <th>
+                                              {item.type === "배송"
+                                                ? "배송기사"
+                                                : item.type === "보관"
+                                                ? "보관장소"
+                                                : "배송기사/보관장소"}
+                                            </th>
+                                            <th>처리자</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {statusLogs[index].map(
+                                            (log, logIndex) => (
+                                              <tr key={logIndex}>
+                                                <td>
+                                                  {(() => {
+                                                    const date = new Date(
+                                                      log.updated_at
+                                                    );
+                                                    const year =
+                                                      date.getFullYear();
+                                                    const month =
+                                                      date.getMonth() + 1;
+                                                    const day = date.getDate();
+                                                    const hour =
+                                                      date.getHours();
+                                                    const minute =
+                                                      date.getMinutes();
+                                                    const second =
+                                                      date.getSeconds();
+                                                    const ampm =
+                                                      hour < 12
+                                                        ? "오전"
+                                                        : "오후";
+                                                    const displayHour =
+                                                      hour % 12 === 0
+                                                        ? 12
+                                                        : hour % 12;
+                                                    return `${year}-${month}-${day} ${ampm} ${displayHour}:${minute
+                                                      .toString()
+                                                      .padStart(
+                                                        2,
+                                                        "0"
+                                                      )}:${second
+                                                      .toString()
+                                                      .padStart(2, "0")}`;
+                                                  })()}
+                                                </td>
+                                                <td>{log.prev_status}</td>
+                                                <td>{log.new_status}</td>
+                                                <td>
+                                                  {log.table_name ===
+                                                  "storage" ? (
+                                                    <AsyncLocation
+                                                      reservation_number={
+                                                        log.key_value
+                                                      }
+                                                      fetchLocation={
+                                                        fetchLocation
+                                                      }
+                                                    />
+                                                  ) : null}
+                                                </td>
+                                                <td>{log.operator}</td>
+                                              </tr>
+                                            )
+                                          )}
+                                        </tbody>
+                                      </table>
+                                    ) : (
+                                      <p>변경 이력이 없습니다.</p>
+                                    )}
+                                  </div>
+                                </div>
                               </td>
                             </tr>
-
-                            {openRow === index && (
-                              <tr>
-                                <td colSpan="9">
-                                  <div className={AdminStyle.status_details}>
-                                    <div className={AdminStyle.status_log_list}>
-                                      {statusLogs[index]?.length > 0 ? (
-                                        <table className={AdminStyle.log_table}>
-                                          <colgroup>
-                                            <col style={{ width: "3%" }} />
-                                            <col style={{ width: "3%" }} />
-                                            <col style={{ width: "4%" }} />
-                                            <col style={{ width: "4%" }} />
-                                            <col style={{ width: "4%" }} />
-                                          </colgroup>
-                                          <thead>
-                                            <tr>
-                                              <th>변경시간</th>
-                                              <th>이전상태</th>
-                                              <th>변경상태</th>
-                                              <th>
-                                                {item.type === "배송"
-                                                  ? "배송기사"
-                                                  : item.type === "보관"
-                                                  ? "보관장소"
-                                                  : "배송기사/보관장소"}
-                                              </th>
-                                              <th>처리자</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            {statusLogs[index].map(
-                                              (log, logIndex) => (
-                                                <tr key={logIndex}>
-                                                  <td>
-                                                    {(() => {
-                                                      const date = new Date(
-                                                        log.updated_at
-                                                      );
-                                                      const year =
-                                                        date.getFullYear();
-                                                      const month =
-                                                        date.getMonth() + 1;
-                                                      const day =
-                                                        date.getDate();
-                                                      const hour =
-                                                        date.getHours();
-                                                      const minute =
-                                                        date.getMinutes();
-                                                      const second =
-                                                        date.getSeconds();
-                                                      const ampm =
-                                                        hour < 12
-                                                          ? "오전"
-                                                          : "오후";
-                                                      const displayHour =
-                                                        hour % 12 === 0
-                                                          ? 12
-                                                          : hour % 12;
-                                                      return `${year}-${month}-${day} ${ampm} ${displayHour}:${minute
-                                                        .toString()
-                                                        .padStart(
-                                                          2,
-                                                          "0"
-                                                        )}:${second
-                                                        .toString()
-                                                        .padStart(2, "0")}`;
-                                                    })()}
-                                                  </td>
-                                                  <td>{log.prev_status}</td>
-                                                  <td>{log.new_status}</td>
-                                                  <td></td>
-                                                  <td>{log.operator}</td>
-                                                </tr>
-                                              )
-                                            )}
-                                          </tbody>
-                                        </table>
-                                      ) : (
-                                        <p>변경 이력이 없습니다.</p>
-                                      )}
-                                    </div>
-                                  </div>
-                                </td>
-                              </tr>
-                            )}
-                          </React.Fragment>
-                        );
-                      })
+                          )}
+                        </React.Fragment>
+                      );
+                    })
                   ) : (
                     <tr>
                       <td className={AdminStyle.falsetext} colSpan="9">
