@@ -17,6 +17,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
+
 function Admin() {
   const selectOptions = {
     배송: ["접수", "배송중", "완료", "취소"],
@@ -38,7 +41,12 @@ function Admin() {
   const [todayCount, setTodayCount] = useState(0);
   const [todayDeliveryCount, setTodayDeliveryCount] = useState(0);
   const [todayStorageCount, setTodayStorageCount] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+
   const navigate = useNavigate();
+
+  const selectedDateStr = selectedDate.format("YYYY-MM-DD");
+
   const today = new Date();
   const formatter = new Intl.DateTimeFormat("ko-KR", {
     timeZone: "Asia/Seoul",
@@ -160,35 +168,35 @@ function Admin() {
       settwoData(AllData);
 
       const todayDeliveryCount = deliveryData.filter(
-        (item) => item.reserve_time?.slice(0, 10) === todayStr
+        (item) => item.reserve_time?.slice(0, 10) === selectedDateStr
       ).length;
 
       const todayStorageCount = storageData.filter(
-        (item) => item.reservation_time?.slice(0, 10) === todayStr
+        (item) => item.reservation_time?.slice(0, 10) === selectedDateStr
       ).length;
 
       const completeCount = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-            todayStr && item.situation === "완료"
+            selectedDateStr && item.situation === "완료"
       ).length;
 
       const cancelCount = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-            todayStr && item.situation === "취소"
+            selectedDateStr && item.situation === "취소"
       ).length;
 
       const totalPrice = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-          todayStr
+          selectedDateStr
       ).reduce((sum, item) => sum + (item.price || 0), 0);
 
       const canceledPrice = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-            todayStr && item.situation === "취소"
+            selectedDateStr && item.situation === "취소"
       ).reduce((sum, item) => sum + (item.price || 0), 0);
 
       setTotalPrice(totalPrice);
@@ -202,7 +210,7 @@ function Admin() {
       setTodayStorageCount(todayStorageCount);
     };
     supaData();
-  }, [todayStr, twoData]);
+  }, [selectedDateStr, twoData]);
 
   const eChange = async (e, item) => {
     const status = e.target.value;
@@ -314,15 +322,19 @@ function Admin() {
         0,
         10
       );
-      const isToday = dateStr === todayStr;
+      const isSelectedDate = dateStr === selectedDateStr;
 
-      const phoneClean = item.phone.replace(/-/g, "");
+      const phoneClean = item.phone?.replace(/-/g, "");
       const isTypeMatch = filterType === "" || item.type === filterType;
       const searchLower = searchTerm.toLowerCase();
-      const nameMatch = item.name.toLowerCase().includes(searchLower);
-      const phoneMatch = phoneClean.includes(searchLower);
+      const nameMatch = item.name?.toLowerCase().includes(searchLower);
+      const phoneMatch = phoneClean?.includes(searchLower);
 
-      return isToday && isTypeMatch && (nameMatch || phoneMatch);
+      if (!searchTerm) {
+        return isSelectedDate && isTypeMatch;
+      } else {
+        return isSelectedDate && isTypeMatch && (nameMatch || phoneMatch);
+      }
     },
     [twoData, searchTerm, filterType, todayStr]
   );
@@ -341,15 +353,9 @@ function Admin() {
   const pagesPerGroup = 10;
 
   const goToLastGroup = () => {
-    const nextGroupFirstPage =
-      Math.floor(currentPage / pagesPerGroup) * pagesPerGroup + 1;
-
-    if (nextGroupFirstPage < totalPages) {
-      setCurrentPage(nextGroupFirstPage);
-    } else {
-      setCurrentPage(totalPages);
-    }
+    setCurrentPage(totalPages);
   };
+  
 
   const pageNumbers =
     totalPages > 0 ? Array.from({ length: totalPages }, (_, i) => i + 1) : [1];
@@ -363,7 +369,14 @@ function Admin() {
             <div className={AdminStyle.left}>
               <div className={AdminStyle.left1}>
                 <h3>금일 신규예약</h3>
-                <p>{today.toLocaleDateString()}</p>
+                <DatePicker
+                  value={selectedDate}
+                  onChange={(date) => setSelectedDate(date)}
+                  format="YYYY-MM-DD"
+                  allowClear={false}
+                  getPopupContainer={(trigger) => document.body}
+                  className={AdminStyle.picker}
+                />
               </div>
               <div className={AdminStyle.left2}>
                 <span className={AdminStyle.left2_1}>{todayCount}</span>
@@ -456,7 +469,7 @@ function Admin() {
                     allowClear
                     enterButton={
                       <span>
-                        <SearchOutlined style={{ marginRight: 4}} />
+                        <SearchOutlined style={{ marginRight: 4 }} />
                         검색
                       </span>
                     }
@@ -497,15 +510,6 @@ function Admin() {
                 <tbody>
                   {currentItems.length > 0 ? (
                     currentItems
-                      .filter((item) => {
-                        const dateStr = (
-                          item.reservation_time || item.reserve_time
-                        )?.slice(0, 10);
-                        const isToday = dateStr === todayStr;
-                        const isTypeMatch =
-                          filterType === "" || item.type === filterType;
-                        return isToday && isTypeMatch;
-                      })
                       .map((item, index) => {
                         const sizes = [
                           Number(item.small) > 0 ? `소 ${item.small}` : null,
@@ -716,7 +720,7 @@ function Admin() {
               <button
                 className={AdminStyle.arrow_btn}
                 onClick={goToLastGroup}
-                disabled={currentPage === totalPages}
+                disabled={totalPages === 0 || currentPage === totalPages}
               >
                 <FontAwesomeIcon icon={faAnglesRight} />
               </button>
