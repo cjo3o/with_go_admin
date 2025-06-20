@@ -6,7 +6,6 @@ import supabase from "../lib/supabase.js";
 import { SearchOutlined } from "@ant-design/icons";
 import ExcelDownBtn from "../components/ExcelDownBtn.jsx";
 
-import Lookup from "../../src/layouts/Lookup.jsx";
 import { Radio, Input, Button } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -289,27 +288,6 @@ function Admin() {
       // 네가 원하는 "상태 바꾸고, select 비활성화"는 아래 update 반영 후에 할 것임
     }
 
-
-    // 취소 선택 시 confirm 사용
-    if (status === "취소") {
-      const ok = window.confirm("삭제하시겠습니까?");
-      if (ok) {
-        const { error } = await supabase
-          .from(tableName)
-          .delete()
-          .eq(keyColumn, keyValue);
-
-        if (error) {
-          alert("삭제 실패. 다시 시도해주세요.");
-          return;
-        }
-
-        settwoData((prev) => prev.filter((i) => i[keyColumn] !== keyValue));
-        alert("삭제되었습니다.");
-      }
-      return; // 취소 처리 후 하단 업데이트 코드 실행 안함
-    }
-
     const updates = {
       situation: status,
       status_updated_at: new Date().toISOString(),
@@ -391,8 +369,8 @@ function Admin() {
       setStatusLogs((prev) => ({ ...prev, [keyValue]: updatedLogs }));
     }
 
-    settwoData((prevData) =>
-      prevData.map((i) =>
+    settwoData((prevData) => {
+      const newData = prevData.map((i) =>
         i[keyColumn] === keyValue
           ? {
             ...i,
@@ -403,8 +381,10 @@ function Admin() {
               : null,
           }
           : i
-      )
-    );
+      );
+      recalcTodayStats(newData);
+      return newData;
+    });
 
     if (status === "보관완료") {
       setTimeout(() => {
@@ -447,7 +427,6 @@ function Admin() {
   const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const goToNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  const pagesPerGroup = 10;
 
   const goToLastGroup = () => {
     setCurrentPage(totalPages);
@@ -455,6 +434,48 @@ function Admin() {
 
   const pageNumbers =
     totalPages > 0 ? Array.from({ length: totalPages }, (_, i) => i + 1) : [1];
+
+  function recalcTodayStats(data) {
+    const selectedDateStr = selectedDate.format("YYYY-MM-DD");
+    const todayDeliveryCount = data.filter(
+      (item) => item.type === "배송" && item.reserve_time?.slice(0, 10) === selectedDateStr
+    ).length;
+    const todayStorageCount = data.filter(
+      (item) => item.type === "보관" && item.reservation_time?.slice(0, 10) === selectedDateStr
+    ).length;
+
+    const completeCount = data.filter(
+      (item) =>
+        (item.reservation_time || item.reserve_time)?.slice(0, 10) === selectedDateStr &&
+        (item.situation === "배송완료" || item.situation === "보관완료")
+    ).length;
+
+    const cancelCount = data.filter(
+      (item) =>
+        (item.reservation_time || item.reserve_time)?.slice(0, 10) === selectedDateStr &&
+        item.situation === "취소"
+    ).length;
+
+    const totalPrice = data.filter(
+      (item) =>
+        (item.reservation_time || item.reserve_time)?.slice(0, 10) === selectedDateStr
+    ).reduce((sum, item) => sum + (item.price || 0), 0);
+
+    const canceledPrice = data.filter(
+      (item) =>
+        (item.reservation_time || item.reserve_time)?.slice(0, 10) === selectedDateStr &&
+        item.situation === "취소"
+    ).reduce((sum, item) => sum + (item.price || 0), 0);
+
+    setTotalPrice(totalPrice);
+    setCanceledPrice(canceledPrice);
+    setCompleteCount(completeCount);
+    setCancelCount(cancelCount);
+    setTodayCount(todayDeliveryCount + todayStorageCount);
+    setTodayDeliveryCount(todayDeliveryCount);
+    setTodayStorageCount(todayStorageCount);
+  }
+
 
   return (
     <>
@@ -777,7 +798,7 @@ function Admin() {
                     })
                   ) : (
                     <tr>
-                      <td className={AdminStyle.falsetext} colSpan="9">
+                      <td className={AdminStyle.falsetext} colSpan="10">
                         {searchTerm
                           ? "일치하는 접수건이 없습니다."
                           : "접수된 이력이 없습니다."}
