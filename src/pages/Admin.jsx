@@ -44,7 +44,7 @@ function Admin() {
   const [twoData, settwoData] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusLogs, setStatusLogs] = useState(0);
+  const [statusLogs, setStatusLogs] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
   const [canceledPrice, setCanceledPrice] = useState(0);
   const actualPayment = totalPrice - canceledPrice;
@@ -56,6 +56,8 @@ function Admin() {
   const [todayStorageCount, setTodayStorageCount] = useState(0);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [locationCache, setLocationCache] = useState({});
+  const [deliveryList, setDeliveryList] = useState([]);
+  const [disabledSelects, setDisabledSelects] = useState({});
 
   const navigate = useNavigate();
 
@@ -70,15 +72,39 @@ function Admin() {
   });
 
   const parts = formatter.formatToParts(today);
-  const todayStr = `${parts.find((p) => p.type === "year").value}-${
-    parts.find((p) => p.type === "month").value
-  }-${parts.find((p) => p.type === "day").value}`;
+  const todayStr = `${parts.find((p) => p.type === "year").value}-${parts.find((p) => p.type === "month").value
+    }-${parts.find((p) => p.type === "day").value}`;
 
   const [openRow, setOpenRow] = useState(null);
 
   const handleSearch = (value) => {
     setSearchTerm(value);
   };
+
+  useEffect(() => {
+    // deliveryList를 불러옴
+    const fetchDeliveryList = async () => {
+      const { data, error } = await supabase
+        .from("deliveryList")
+        .select("re_num, status, f_time, driver_name"); // 필요한 컬럼만 지정해도 됨
+
+      if (!error && data) setDeliveryList(data);
+    };
+    fetchDeliveryList();
+  }, []);
+
+  // deliveryList에서 re_num으로 driver_name 찾는 함수
+  function getDriverNameByReNum(re_num) {
+    const row = deliveryList.find(d => d.re_num === re_num);
+    return row ? row.driver_name : "";
+  }
+
+  const completedDeliveryTimes = deliveryList
+    .filter(row => row.status === "배송완료")
+    .reduce((acc, row) => {
+      acc[row.re_num] = row.f_time;
+      return acc;
+    }, {});
 
   const toggleRow = async (index, item) => {
     const newOpenRow = openRow === index ? null : index;
@@ -88,8 +114,6 @@ function Admin() {
       const tableName = item.type === "배송" ? "delivery" : "storage";
       const keyValue =
         item[tableName === "delivery" ? "re_num" : "reservation_number"];
-
-      const userName = sessionStorage.getItem("name") || "알 수 없음";
 
       const { data, error } = await supabase
         .from("status_logs")
@@ -104,7 +128,7 @@ function Admin() {
       if (data.length === 0) {
         const reserveTime = item.reserve_time || item.reservation_time;
 
-        const { error: logError } = await supabase.from("status_logs").insert([
+        await supabase.from("status_logs").insert([
           {
             table_name: tableName,
             key_value: keyValue,
@@ -127,9 +151,9 @@ function Admin() {
           return;
         }
 
-        setStatusLogs((prev) => ({ ...prev, [index]: newData }));
+        setStatusLogs((prev) => ({ ...prev, [keyValue]: newData }));
       } else {
-        setStatusLogs((prev) => ({ ...prev, [index]: data }));
+        setStatusLogs((prev) => ({ ...prev, [keyValue]: data }));
       }
     }
   };
@@ -209,14 +233,14 @@ function Admin() {
       const completeCount = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-            selectedDateStr &&
+          selectedDateStr &&
           (item.situation === "배송완료" || item.situation === "보관완료")
       ).length;
 
       const cancelCount = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-            selectedDateStr && item.situation === "취소"
+          selectedDateStr && item.situation === "취소"
       ).length;
 
       const totalPrice = AllData.filter(
@@ -228,7 +252,7 @@ function Admin() {
       const canceledPrice = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-            selectedDateStr && item.situation === "취소"
+          selectedDateStr && item.situation === "취소"
       ).reduce((sum, item) => sum + (item.price || 0), 0);
 
       setTotalPrice(totalPrice);
@@ -242,15 +266,49 @@ function Admin() {
       setTodayStorageCount(todayStorageCount);
     };
     supaData();
-  }, [selectedDateStr, twoData]);
+  }, [selectedDateStr]);
 
-  const eChange = async (e, item) => {
+  const eChange = async (e, item, index) => {
     const status = e.target.value;
     const tableName = item.type === "배송" ? "delivery" : "storage";
 
     const keyColumn = item.type === "배송" ? "re_num" : "reservation_number";
     const keyValue = item[keyColumn];
     const prevStatus = item.situation || "접수";
+
+    if (status === "보관완료") {
+      const ok = window.confirm("완료처리하시겠습니까?");
+      if (!ok) {
+        settwoData((prevData) =>
+          prevData.map((i, idx) =>
+            idx === index ? { ...i, situation: prevStatus } : i
+          )
+        );
+        return;  // 아니오 눌렀으면 롤백만 하고 함수 종료
+      }
+      // 네가 원하는 "상태 바꾸고, select 비활성화"는 아래 update 반영 후에 할 것임
+    }
+
+
+    // 취소 선택 시 confirm 사용
+    if (status === "취소") {
+      const ok = window.confirm("삭제하시겠습니까?");
+      if (ok) {
+        const { error } = await supabase
+          .from(tableName)
+          .delete()
+          .eq(keyColumn, keyValue);
+
+        if (error) {
+          alert("삭제 실패. 다시 시도해주세요.");
+          return;
+        }
+
+        settwoData((prev) => prev.filter((i) => i[keyColumn] !== keyValue));
+        alert("삭제되었습니다.");
+      }
+      return; // 취소 처리 후 하단 업데이트 코드 실행 안함
+    }
 
     const updates = {
       situation: status,
@@ -330,22 +388,29 @@ function Admin() {
     if (updatedLogsError) {
       console.error("업데이트된 로그 가져오기 실패", updatedLogsError);
     } else {
-      const openIndex = twoData.findIndex((i) => i[keyColumn] === keyValue);
-      setStatusLogs((prev) => ({ ...prev, [openIndex]: updatedLogs }));
+      setStatusLogs((prev) => ({ ...prev, [keyValue]: updatedLogs }));
     }
 
     settwoData((prevData) =>
       prevData.map((i) =>
         i[keyColumn] === keyValue
           ? {
-              ...i,
-              situation: status,
-              status_updated_at: new Date().toISOString(),
-              success_time: status === "완료" ? new Date().toISOString() : null,
-            }
+            ...i,
+            situation: status,
+            status_updated_at: new Date().toISOString(),
+            success_time: (status === "배송완료" || status === "보관완료")
+              ? new Date().toISOString()
+              : null,
+          }
           : i
       )
     );
+
+    if (status === "보관완료") {
+      setTimeout(() => {
+        setDisabledSelects((prev) => ({ ...prev, [index]: true }));
+      }, 0);
+    }
   };
 
   const filteredData = twoData.filter(
@@ -517,23 +582,13 @@ function Admin() {
             </div>
             <div className={AdminStyle.table_over}>
               <table>
-                <colgroup>
-                  <col style={{ width: "4%" }} />
-                  <col style={{ width: "3%" }} />
-                  <col style={{ width: "4%" }} />
-                  <col style={{ width: "6%" }} />
-                  <col style={{ width: "9%" }} />
-                  <col style={{ width: "11%" }} />
-                  <col style={{ width: "4%" }} />
-                  <col style={{ width: "7%" }} />
-                  <col style={{ width: "6%" }} />
-                </colgroup>
                 <thead>
                   <tr className={AdminStyle.noPointer}>
                     <th>신청일</th>
                     <th>구분</th>
                     <th>예약자명</th>
                     <th>연락처</th>
+                    <th>이용구간(장소)</th>
                     <th>예약기간</th>
                     <th>짐갯수</th>
                     <th>결제금액</th>
@@ -563,8 +618,8 @@ function Admin() {
                         sizes.length > 0
                           ? sizes.join(" / ")
                           : inches.length > 0
-                          ? inches.join(" / ")
-                          : "입력된 수량이 없습니다.";
+                            ? inches.join(" / ")
+                            : "입력된 수량이 없습니다.";
 
                       return (
                         <React.Fragment key={index}>
@@ -575,153 +630,143 @@ function Admin() {
                             <td>
                               {item.reservation_time || item.reserve_time
                                 ? (
-                                    item.reservation_time || item.reserve_time
-                                  ).slice(0, 10)
+                                  item.reservation_time || item.reserve_time
+                                ).slice(0, 10)
                                 : "-"}
                             </td>
                             <td>{item.type}</td>
                             <td>{item.name}</td>
                             <td>{item.phone}</td>
                             <td>
+                              {item.type === "배송"
+                                ? `${item.delivery_start} ▶ ${item.delivery_arrive}`
+                                : item.location}
+                            </td>
+                            <td>
                               {item.storage_start_date && item.storage_end_date
                                 ? `${item.storage_start_date} ~ ${item.storage_end_date}`
                                 : item.delivery_date
-                                ? item.delivery_date
-                                : "-"}
+                                  ? item.delivery_date
+                                  : "-"}
                             </td>
                             <td>{luggageInfo}</td>
                             <td>{`${item.price.toLocaleString()}원`}</td>
                             <td>
-                              {(item.situation === "배송완료" ||
-                                item.situation === "보관완료") &&
-                              item.success_time
-                                ? item.success_time
+                              {item.type === "배송" && item.situation === "배송완료"
+                                ? (completedDeliveryTimes[item.re_num]?.slice(0, 16)?.replace("T", " ") || "-")
+                                : (item.situation === "보관완료" && item.success_time
+                                  ? new Date(new Date(item.success_time).getTime() + 9 * 60 * 60 * 1000)
+                                    .toISOString()
                                     .slice(0, 16)
                                     .replace("T", " ")
-                                : "-"}
+                                  : "-")}
                             </td>
                             <td>
                               <select
                                 className={AdminStyle.select}
                                 value={item.situation || "접수"}
-                                onChange={(e) => eChange(e, item)}
+                                onChange={(e) => eChange(e, item, index)}
                                 onClick={(e) => e.stopPropagation()}
+                                disabled={
+                                  disabledSelects[index] ||
+                                  (item.type === "배송" && ["배송대기", "배송중", "배송완료"].includes(item.situation)) ||
+                                  (item.type === "보관" && ["보관완료", "취소"].includes(item.situation))
+                                }
                               >
-                                {selectOptions[item.type].map((status) => {
-                                  // 배송만 선택 불가 옵션 처리
-                                  const disabledStatuses =
-                                    item.type === "배송"
-                                      ? ["배송대기", "배송중", "배송완료"]
-                                      : [];
-                                  const isCurrent = item.situation === status;
-                                  return (
-                                    <option
-                                      key={status}
-                                      value={status}
-                                      disabled={
-                                        disabledStatuses.includes(status) &&
-                                        !isCurrent
-                                      }
-                                    >
-                                      {status}
-                                    </option>
-                                  );
-                                })}
+                                {selectOptions[item.type].map((status) => (
+                                  <option
+                                    key={status}
+                                    value={status}
+                                    disabled={
+                                      item.type === "배송" &&
+                                      ["배송대기", "배송중", "배송완료"].includes(status)
+                                    }
+                                  >
+                                    {status}
+                                  </option>
+                                ))}
                               </select>
+
                             </td>
                           </tr>
 
                           {openRow === index && (
                             <tr>
-                              <td colSpan="9">
+                              <td colSpan="10">
                                 <div className={AdminStyle.status_details}>
                                   <div className={AdminStyle.status_log_list}>
-                                    {statusLogs[index]?.length > 0 ? (
-                                      <table className={AdminStyle.log_table}>
-                                        <colgroup>
-                                          <col style={{ width: "3%" }} />
-                                          <col style={{ width: "3%" }} />
-                                          <col style={{ width: "4%" }} />
-                                          <col style={{ width: "4%" }} />
-                                          <col style={{ width: "4%" }} />
-                                        </colgroup>
-                                        <thead>
-                                          <tr>
-                                            <th>변경시간</th>
-                                            <th>이전상태</th>
-                                            <th>변경상태</th>
-                                            <th>
-                                              {item.type === "배송"
-                                                ? "배송기사"
-                                                : item.type === "보관"
-                                                ? "보관장소"
-                                                : "배송기사/보관장소"}
-                                            </th>
-                                            <th>처리자</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          {statusLogs[index].map(
-                                            (log, logIndex) => (
-                                              <tr key={logIndex}>
-                                                <td>
-                                                  {(() => {
-                                                    const date = new Date(
-                                                      log.updated_at
-                                                    );
-                                                    const year =
-                                                      date.getFullYear();
-                                                    const month =
-                                                      date.getMonth() + 1;
-                                                    const day = date.getDate();
-                                                    const hour =
-                                                      date.getHours();
-                                                    const minute =
-                                                      date.getMinutes();
-                                                    const second =
-                                                      date.getSeconds();
-                                                    const ampm =
-                                                      hour < 12
-                                                        ? "오전"
-                                                        : "오후";
-                                                    const displayHour =
-                                                      hour % 12 === 0
-                                                        ? 12
-                                                        : hour % 12;
-                                                    return `${year}-${month}-${day} ${ampm} ${displayHour}:${minute
-                                                      .toString()
-                                                      .padStart(
-                                                        2,
-                                                        "0"
-                                                      )}:${second
-                                                      .toString()
-                                                      .padStart(2, "0")}`;
-                                                  })()}
-                                                </td>
-                                                <td>{log.prev_status}</td>
-                                                <td>{log.new_status}</td>
-                                                <td>
-                                                  {log.table_name ===
-                                                  "storage" ? (
-                                                    <AsyncLocation
-                                                      reservation_number={
-                                                        log.key_value
-                                                      }
-                                                      fetchLocation={
-                                                        fetchLocation
-                                                      }
-                                                    />
-                                                  ) : null}
-                                                </td>
-                                                <td>{log.operator}</td>
+                                    {(() => {
+                                      const keyColumn = item.type === "배송" ? "re_num" : "reservation_number";
+                                      const keyValue = item[keyColumn];
+                                      if (statusLogs[keyValue]?.length > 0) {
+                                        return (
+                                          <table className={AdminStyle.log_table}>
+                                            <colgroup>
+                                              <col style={{ width: "3%" }} />
+                                              <col style={{ width: "3%" }} />
+                                              <col style={{ width: "4%" }} />
+                                              <col style={{ width: "4%" }} />
+                                              <col style={{ width: "4%" }} />
+                                            </colgroup>
+                                            <thead>
+                                              <tr>
+                                                <th>변경시간</th>
+                                                <th>이전상태</th>
+                                                <th>변경상태</th>
+                                                <th>
+                                                  {item.type === "배송"
+                                                    ? "배송기사"
+                                                    : item.type === "보관"
+                                                      ? "보관장소"
+                                                      : "배송기사/보관장소"}
+                                                </th>
+                                                <th>처리자</th>
                                               </tr>
-                                            )
-                                          )}
-                                        </tbody>
-                                      </table>
-                                    ) : (
-                                      <p>변경 이력이 없습니다.</p>
-                                    )}
+                                            </thead>
+                                            <tbody>
+                                              {statusLogs[keyValue].map(
+                                                (log, logIndex) => (
+                                                  <tr key={logIndex}>
+                                                    <td>
+                                                      {(() => {
+                                                        const date = new Date(log.updated_at);
+                                                        const year = date.getFullYear();
+                                                        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+                                                        const day = date.getDate().toString().padStart(2, "0");
+                                                        const hour = date.getHours();
+                                                        const minute = date.getMinutes();
+                                                        const second = date.getSeconds();
+                                                        const ampm = hour < 12 ? "오전" : "오후";
+                                                        const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+                                                        return `${year}-${month}-${day} ${ampm} ${displayHour}:${minute
+                                                          .toString()
+                                                          .padStart(2, "0")}:${second.toString().padStart(2, "0")}`;
+                                                      })()}
+                                                    </td>
+
+                                                    <td>{log.prev_status}</td>
+                                                    <td>{log.new_status}</td>
+                                                    <td>
+                                                      {log.table_name === "delivery" &&
+                                                        ["배송대기", "배송중", "배송완료"].includes(log.new_status)
+                                                        ? (getDriverNameByReNum(log.key_value) || "미배정")
+                                                        : log.table_name === "delivery"
+                                                          ? "미배정"
+                                                          : log.table_name === "storage"
+                                                            ? <AsyncLocation reservation_number={log.key_value} fetchLocation={fetchLocation} />
+                                                            : "-"}
+                                                    </td>
+                                                    <td>{log.operator}</td>
+                                                  </tr>
+                                                )
+                                              )}
+                                            </tbody>
+                                          </table>
+                                        );
+                                      } else {
+                                        <p>변경 이력이 없습니다.</p>
+                                      }
+                                    })()}
                                   </div>
                                 </div>
                               </td>
@@ -762,9 +807,8 @@ function Admin() {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`${AdminStyle.page_btn} ${
-                    currentPage === page ? AdminStyle.page_btn_active : ""
-                  }`}
+                  className={`${AdminStyle.page_btn} ${currentPage === page ? AdminStyle.page_btn_active : ""
+                    }`}
                 >
                   {page}
                 </button>
