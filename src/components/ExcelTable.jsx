@@ -1,31 +1,31 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Form, Input, InputNumber, Popconfirm, Table, Typography,
     Checkbox, Button, Select, Pagination, message, Modal, DatePicker
 } from 'antd';
-import {DeleteOutlined, EditOutlined} from "@mui/icons-material";
-import {createClient} from '@supabase/supabase-js'; // ✅ Supabase 클라이언트 추가
+import { DeleteOutlined, EditOutlined } from "@mui/icons-material";
+import { createClient } from '@supabase/supabase-js'; // ✅ Supabase 클라이언트 추가
 import dayjs from 'dayjs';
-import {faAnglesLeft, faAnglesRight, faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faAnglesLeft, faAnglesRight, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // import('src/lib/supabase.js')
-const {Option} = Select;
+const { Option } = Select;
 
 // ✅ Supabase 설정
 const supabase =
     createClient('https://zgrjjnifqoactpuqolao.supabase.co',
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpncmpqbmlmcW9hY3RwdXFvbGFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyNDc0NTgsImV4cCI6MjA1NjgyMzQ1OH0._Vl-6CRKdMjeDRyNoxlfect7sgusZ7L0N5OYu0a5hT0');
 
-const EditableCell = ({editing, dataIndex, title, inputType, record, index, children, ...restProps}) => {
-    const inputNode = inputType === 'number' ? <InputNumber/> : <Input/>;
+const EditableCell = ({ editing, dataIndex, title, inputType, record, index, children, ...restProps }) => {
+    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
     return (
         <td {...restProps}>
             {editing ? (
                 <Form.Item
                     name={dataIndex}
-                    style={{margin: 0}}
-                    rules={[{required: true, message: `Please Input ${title}!`}]}
+                    style={{ margin: 0 }}
+                    rules={[{ required: true, message: `Please Input ${title}!` }]}
                 >
                     {inputNode}
                 </Form.Item>
@@ -36,7 +36,7 @@ const EditableCell = ({editing, dataIndex, title, inputType, record, index, chil
     );
 };
 
-const ExcelTable = ({showCheckbox, combinedSearchData}) => {
+const ExcelTable = ({ showCheckbox, combinedSearchData }) => {
     const [form] = Form.useForm();
     const [combinedData, setCombinedData] = useState([]);
     const [checkedRows, setCheckedRows] = useState([]);
@@ -63,6 +63,10 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
     };
 
     useEffect(() => {
+        const sorted = [...(combinedSearchData || [])].sort(
+            (a, b) => new Date(b.reservationTime || b.date) - new Date(a.reservationTime || a.date)
+        );
+        setCombinedData(sorted);
         setCombinedData(combinedSearchData || []);
         setCurrentPage(1);
     }, [combinedSearchData]);
@@ -75,7 +79,7 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
             name: record.reservationName,
             phone: record.reservationPhone,
             // location: record.section,
-            reservation_time: record.reservationTime,
+            // reservation_time: record.reservationTime,
             situation: record.processingStatus
         };
 
@@ -90,7 +94,7 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
             updateFields.delivery_arrive = record.section?.split(' → ')[1] || '';
         }
 
-        const {error} = await supabase
+        const { error } = await supabase
             .from(table)
             .update(updateFields)
             .eq(
@@ -117,7 +121,7 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
             keyField = 're_num';
         }
 
-        const {error} = await supabase
+        const { error } = await supabase
             .from(table)
             .delete()
             .eq(keyField, record.id);
@@ -132,7 +136,7 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
     };
 
     const fetchData = async () => {
-        const {data: storage} = await supabase.from('storage').select('*');
+        const { data: storage } = await supabase.from('storage').select('*');
 
 
         const formattedStorage = (storage || []).map((item, idx) => ({
@@ -140,7 +144,7 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
             id: item.reservation_number,
             division: '보관',
             reservationTime: item.storage_start_date,
-            section: '-',
+            section: item.location || "-",
             luggageNumber: `소 ${item.small} / 중 ${item.medium} / 대 ${item.large}`, // ✅ 보관은 소/중/대
             reservationName: item.name,
             reservationPhone: item.phone,
@@ -151,7 +155,7 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
             number: idx + 1
         }));
 
-        const {data: delivery} = await supabase.from('delivery').select('*');
+        const { data: delivery } = await supabase.from('delivery').select('*');
 
         const formattedDelivery = (delivery || []).map((item, idx) => ({
             ...item,
@@ -227,36 +231,23 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
                 />
             ) : record.number
         },
-        {title: '구분', dataIndex: 'division', align: 'center'},
-        {title: '예약시간', dataIndex: 'reservationTime', align: 'center'},
-        {title: '이용구간', dataIndex: 'section', align: 'center', width: 200},
-        {title: '짐갯수', dataIndex: 'luggageNumber', align: 'center', width: 200, responsive: ['md']},
-        {title: '예약자명', dataIndex: 'reservationName', align: 'center', width: 100},
-        {title: '연락처', dataIndex: 'reservationPhone', align: 'center', width: 140},
-        {title: '신청일자', dataIndex: 'date', align: 'center'},
-        {title: '배정기사', dataIndex: 'driver', align: 'center', width: 100, responsive: ['md']},
+        { title: '구분', dataIndex: 'division', align: 'center' },
+        { title: '예약시간', dataIndex: 'reservationTime', align: 'center' },
+        { title: '이용구간', dataIndex: 'section', align: 'center', width: 200 },
+        { title: '짐갯수', dataIndex: 'luggageNumber', align: 'center', width: 200, responsive: ['md'] },
+        { title: '예약자명', dataIndex: 'reservationName', align: 'center', width: 100 },
+        { title: '연락처', dataIndex: 'reservationPhone', align: 'center', width: 140 },
+        { title: '신청일자', dataIndex: 'date', align: 'center' },
+        { title: '배정기사', dataIndex: 'driver', align: 'center', width: 100, responsive: ['md'] },
         {
             title: '처리현황',
             dataIndex: 'processingStatus',
             align: 'center',
             width: 100,
             render: (text, record) => (
-                <Select
-                    defaultValue={record.processingStatus}
-                    style={{width: 90}}
-                    onChange={(value) => {
-                        const newData = [...combinedData];
-                        const index = newData.findIndex(item => item.key === record.key);
-                        if (index > -1) {
-                            newData[index].processingStatus = value;
-                            setCombinedData(newData);
-                        }
-                    }}
-                >
-                    <Option value="미배정">미배정</Option>
-                    <Option value="취소">취소</Option>
-                    <Option value="처리완료">처리완료</Option>
-                </Select>
+                <span>
+                    {record.processingStatus}
+                </span>
             )
         },
         {
@@ -265,23 +256,23 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
             align: 'center',
             render: (_, record) => (
                 <span>
-      <Typography.Link onClick={() => {
-          setEditingRecord(record);
-          setIsModalOpen(true);
-      }}>
-        <EditOutlined/>
-      </Typography.Link>
+                    <Typography.Link onClick={() => {
+                        setEditingRecord(record);
+                        setIsModalOpen(true);
+                    }}>
+                        <EditOutlined />
+                    </Typography.Link>
 
-      <Popconfirm
-          title="정말 삭제하시겠습니까?"
-          onConfirm={async () => {
-              await deleteFromSupabase(record);
-              handleDelete(record.key);
-          }}
-      >
-        <a style={{marginLeft: 8}}><DeleteOutlined/></a>
-      </Popconfirm>
-    </span>
+                    <Popconfirm
+                        title="정말 삭제하시겠습니까?"
+                        onConfirm={async () => {
+                            await deleteFromSupabase(record);
+                            handleDelete(record.key);
+                        }}
+                    >
+                        <a style={{ marginLeft: 8 }}><DeleteOutlined /></a>
+                    </Popconfirm>
+                </span>
             )
         },
     ];
@@ -297,11 +288,27 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
         <>
             <Modal
                 title="예약 정보 수정"
-                style={{zIndex: 100}}
+                style={{ zIndex: 100 }}
                 open={isModalOpen}
                 onCancel={() => setIsModalOpen(false)}
                 onOk={async () => {
+                    const prevItem = combinedData.find(i => i.key === editingRecord.key);
+                    const prevStatus = prevItem?.processingStatus;
+                    const operator = sessionStorage.getItem("name") || "알 수 없음";
+
                     await updateToSupabase(editingRecord);
+
+                    if (prevStatus !== editingRecord.processingStatus) {
+                        await supabase.from('status_logs').insert({
+                            table_name: editingRecord.division === "보관" ? "storage" : "delivery",
+                            key_value: editingRecord.id,
+                            prev_status: prevStatus,
+                            new_status: editingRecord.processingStatus,
+                            updated_at: new Date().toISOString(),
+                            operator,
+                        });
+                    }
+
                     setCombinedData(prev =>
                         prev.map(item => item.key === editingRecord.key ? editingRecord : item)
                     );
@@ -310,31 +317,31 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
             >
                 <Form layout="vertical">
                     <Form.Item label="구분">
-                        <Input value={editingRecord?.division} disabled/>
+                        <Input value={editingRecord?.division} disabled />
                     </Form.Item>
                     <Form.Item label="예약자명">
                         <Input
                             value={editingRecord?.reservationName}
-                            onChange={(e) => setEditingRecord({...editingRecord, reservationName: e.target.value})}
+                            onChange={(e) => setEditingRecord({ ...editingRecord, reservationName: e.target.value })}
                         />
                     </Form.Item>
                     <Form.Item label="연락처">
                         <Input
                             value={editingRecord?.reservationPhone}
-                            onChange={(e) => setEditingRecord({...editingRecord, reservationPhone: e.target.value})}
+                            onChange={(e) => setEditingRecord({ ...editingRecord, reservationPhone: e.target.value })}
                         />
                     </Form.Item>
                     <Form.Item label="이용구간">
                         <Input
                             value={editingRecord?.section}
-                            onChange={(e) => setEditingRecord({...editingRecord, section: e.target.value})}
+                            onChange={(e) => setEditingRecord({ ...editingRecord, section: e.target.value })}
                         />
                     </Form.Item>
                     <Form.Item label="신청일자">
                         <DatePicker
-                            style={{width: '100%'}}
+                            style={{ width: '100%' }}
                             value={editingRecord?.date ? dayjs(editingRecord.date) : null}
-                            onChange={(date, dateString) => setEditingRecord({...editingRecord, date: dateString})}
+                            onChange={(date, dateString) => setEditingRecord({ ...editingRecord, date: dateString })}
                         />
                     </Form.Item>
                     <Form.Item label="처리현황">
@@ -342,39 +349,53 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
                             defaultValue={editingRecord?.processingStatus}
                             value={editingRecord?.processingStatus}
                             onChange={(val) =>
-                                setEditingRecord({...editingRecord, processingStatus: val})
+                                setEditingRecord({ ...editingRecord, processingStatus: val })
                             }
                         >
-                            <Option value="미배정">미배정</Option>
-                            <Option value="취소">취소</Option>
-                            <Option value="처리완료">처리완료</Option>
+                            {editingRecord?.division === "배송" ? (
+                                <>
+                                    <Option value="접수">접수</Option>
+                                    <Option value="배송대기">배송대기</Option>
+                                    <Option value="배송중">배송중</Option>
+                                    <Option value="배송완료">배송완료</Option>
+                                    <Option value="취소">취소</Option>
+                                </>
+                            ) : editingRecord?.division === "보관" ? (
+                                <>
+                                    <Option value="접수">접수</Option>
+                                    <Option value="보관중">보관중</Option>
+                                    <Option value="보관완료">보관완료</Option>
+                                    <Option value="취소">취소</Option>
+                                </>
+                            ) : null}
                         </Select>
                     </Form.Item>
                 </Form>
             </Modal>
 
             <Form form={form} component={false}>
-                <div style={{overflowX: 'auto'}}>
+                <div style={{ overflowX: 'auto' }}>
                     <Table
-                        components={{body: {cell: EditableCell}}}
+                        components={{ body: { cell: EditableCell } }}
                         bordered
                         dataSource={currentData}
                         columns={columns}
                         pagination={false}
                         rowKey="key"
                         onChange={handleTableChange}
+                        locale={{ emptyText: '검색 결과가 없습니다.' }}
                     />
                 </div>
 
                 {showCheckbox && (
-                    <div style={{display: 'flex', justifyContent: 'flex-start', padding: '8px 16px'}}>
-                        <h3 style={{margin: 0}}>체크한 게시물 {checkedRows.length}개를</h3>
+                    <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '8px 16px' }}>
+                        <h3 style={{ margin: 0 }}>체크한 게시물 {checkedRows.length}개를</h3>
                         <Button
                             type="primary"
                             danger
                             disabled={checkedRows.length === 0}
                             onClick={handleDeleteSelected}
-                            style={{marginLeft: 8}}
+                            style={{ marginLeft: 8 }}
                         >
                             삭제
                         </Button>
@@ -389,13 +410,13 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
                     flexWrap: 'wrap'
                 }}>
                     <button onClick={goToFirstGroup} disabled={currentGroup === 0}>
-                        <FontAwesomeIcon icon={faAnglesLeft}/>
+                        <FontAwesomeIcon icon={faAnglesLeft} />
                     </button>
                     <button onClick={goToPrevPage} disabled={currentPage === 1}>
-                        <FontAwesomeIcon icon={faChevronLeft}/>
+                        <FontAwesomeIcon icon={faChevronLeft} />
                     </button>
 
-                    {Array.from({length: endPage - startPage + 1}).map((_, i) => {
+                    {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
                         const pageNum = startPage + i;
                         return (
                             <button
@@ -418,10 +439,10 @@ const ExcelTable = ({showCheckbox, combinedSearchData}) => {
                     })}
 
                     <button onClick={goToNextPage} disabled={currentPage === totalPages}>
-                        <FontAwesomeIcon icon={faChevronRight}/>
+                        <FontAwesomeIcon icon={faChevronRight} />
                     </button>
                     <button onClick={goToNextGroup} disabled={endPage === totalPages}>
-                        <FontAwesomeIcon icon={faAnglesRight}/>
+                        <FontAwesomeIcon icon={faAnglesRight} />
                     </button>
                 </div>
 

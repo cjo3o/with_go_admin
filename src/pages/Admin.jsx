@@ -660,7 +660,7 @@ function Admin() {
                             <td>{item.phone}</td>
                             <td>
                               {item.type === "배송"
-                                ? `${item.delivery_start} ▶ ${item.delivery_arrive}`
+                                ? `${item.delivery_start} → ${item.delivery_arrive}`
                                 : item.location}
                             </td>
                             <td>
@@ -724,7 +724,6 @@ function Admin() {
                                           <table className={AdminStyle.log_table}>
                                             <colgroup>
                                               <col style={{ width: "3%" }} />
-                                              <col style={{ width: "3%" }} />
                                               <col style={{ width: "4%" }} />
                                               <col style={{ width: "4%" }} />
                                               <col style={{ width: "4%" }} />
@@ -732,8 +731,7 @@ function Admin() {
                                             <thead>
                                               <tr>
                                                 <th>변경시간</th>
-                                                <th>이전상태</th>
-                                                <th>변경상태</th>
+                                                <th>진행상태</th>
                                                 <th>
                                                   {item.type === "배송"
                                                     ? "배송기사"
@@ -764,8 +762,6 @@ function Admin() {
                                                           .padStart(2, "0")}:${second.toString().padStart(2, "0")}`;
                                                       })()}
                                                     </td>
-
-                                                    <td>{log.prev_status}</td>
                                                     <td>{log.new_status}</td>
                                                     <td>
                                                       {log.table_name === "delivery" &&
