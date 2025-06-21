@@ -265,7 +265,7 @@ function Admin() {
       setTodayStorageCount(todayStorageCount);
     };
     supaData();
-  }, [selectedDateStr]);
+  }, [selectedDateStr, todayStr, twoData]);
 
   const eChange = async (e, item, index) => {
     const status = e.target.value;
@@ -691,7 +691,7 @@ function Admin() {
                                 disabled={
                                   disabledSelects[index] ||
                                   (item.type === "배송" && ["배송대기", "배송중", "배송완료"].includes(item.situation)) ||
-                                  (item.type === "보관" && ["보관완료", "취소"].includes(item.situation))
+                                  (item.type === "보관" && ["보관완료"].includes(item.situation))
                                 }
                               >
                                 {selectOptions[item.type].map((status) => (
