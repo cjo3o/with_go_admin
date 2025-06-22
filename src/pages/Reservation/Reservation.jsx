@@ -25,7 +25,7 @@ function Reservation() {
     const [statusCount, setStatusCount] = useState({
         처리완료: 0,
         취소: 0,
-        미배정: 0
+        접수: 0
     });
 
     const [selectedDate, setSelectedDate] = useState(() => {
@@ -89,7 +89,63 @@ function Reservation() {
     }, [selectedDate]);
 
     const handleSearch = async () => {
-        if (!searchKeyword.trim()) return;
+        if (!searchKeyword.trim()) {
+            // 빈값이면 그냥 그날 전체 데이터 다시 뿌림
+            // fetchDataByDate 함수 재사용
+            const { data: storageData } = await supabase
+                .from('storage')
+                .select('*')
+                .eq('storage_start_date', selectedDate);
+
+            const { data: deliveryData } = await supabase
+                .from('delivery')
+                .select('*')
+                .eq('delivery_date', selectedDate);
+
+            const { data: deliveryList } = await supabase
+                .from('deliveryList')
+                .select('re_num,driver_name');
+
+            const storageMapped = (storageData || []).map(item => ({
+                ...item,
+                division: '보관',
+                reservationTime: `${item.storage_start_date} ~ ${item.storage_end_date}`,
+                section: item.location || '-',
+                luggageNumber: `소 ${item.small} / 중 ${item.medium} / 대 ${item.large}`,
+                reservationName: item.name,
+                reservationPhone: item.phone,
+                date: item.reservation_time?.slice(0, 10),
+                driver: '-',
+                processingStatus: item.situation,
+                key: `storage-${item.reservation_number}`,
+                id: item.reservation_number,
+            }));
+
+            const deliveryMapped = (deliveryData || []).map(item => {
+                const found = deliveryList?.find(d => d.re_num === item.re_num);
+                return {
+                    ...item,
+                    division: '배송',
+                    reservationTime: item.delivery_date,
+                    section: `${item.delivery_start} → ${item.delivery_arrive}`,
+                    luggageNumber: `under ${item.small || 0} / over ${item.large || 0}`,
+                    reservationName: item.name,
+                    reservationPhone: item.phone,
+                    date: item.reserve_time?.slice(0, 10),
+                    driver: found ? found.driver_name : '-',
+                    processingStatus: item.situation,
+                    key: `delivery-${item.re_num}`,
+                    id: item.re_num,
+                }
+            });
+
+            let allData = [...storageMapped, ...deliveryMapped];
+            allData.sort((a, b) => new Date(b.date) - new Date(a.date));
+            allData.forEach((v, i) => v.number = i + 1);
+            setFilteredData(allData);
+            setCombinedData(allData);
+            return;
+        }
 
         const filters = [
             supabase.from('storage').select('*').eq('storage_start_date', selectedDate) // 날짜 필터 추가
@@ -137,31 +193,52 @@ function Reservation() {
         }
 
         setFilteredData(result);
+        setSearchKeyword('');
 
         setCombinedData([...storageData, ...deliveryData]);
     };
 
     const fetchStatusCounts = async (targetDate) => {
-        const conditions = ['처리완료', '취소', '미배정'];
-        const newCounts = { 처리완료: 0, 취소: 0, 미배정: 0 };
+        const newCounts = { 처리완료: 0, 취소: 0, 접수: 0 };
 
-        for (let status of conditions) {
-            const [storageRes, deliveryRes] = await Promise.all([
-                supabase.from('storage')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('situation', status)
-                    .eq('storage_start_date', targetDate),
+        // 처리완료: 보관완료 + 배송완료
+        const [storageDone, deliveryDone] = await Promise.all([
+            supabase.from('storage')
+                .select('*', { count: 'exact', head: true })
+                .eq('situation', '보관완료')
+                .eq('storage_start_date', targetDate),
+            supabase.from('delivery')
+                .select('*', { count: 'exact', head: true })
+                .eq('situation', '배송완료')
+                .eq('delivery_date', targetDate)
+        ]);
+        newCounts.처리완료 = (storageDone.count || 0) + (deliveryDone.count || 0);
 
-                supabase.from('delivery')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('situation', status)
-                    .eq('delivery_date', targetDate),
-            ]);
+        // 취소
+        const [storageCancel, deliveryCancel] = await Promise.all([
+            supabase.from('storage')
+                .select('*', { count: 'exact', head: true })
+                .eq('situation', '취소')
+                .eq('storage_start_date', targetDate),
+            supabase.from('delivery')
+                .select('*', { count: 'exact', head: true })
+                .eq('situation', '취소')
+                .eq('delivery_date', targetDate)
+        ]);
+        newCounts.취소 = (storageCancel.count || 0) + (deliveryCancel.count || 0);
 
-            const storageCount = storageRes.count || 0;
-            const deliveryCount = deliveryRes.count || 0;
-            newCounts[status] = storageCount + deliveryCount;
-        }
+        // 접수
+        const [storageRequest, deliveryRequest] = await Promise.all([
+            supabase.from('storage')
+                .select('*', { count: 'exact', head: true })
+                .eq('situation', '접수')
+                .eq('storage_start_date', targetDate),
+            supabase.from('delivery')
+                .select('*', { count: 'exact', head: true })
+                .eq('situation', '접수')
+                .eq('delivery_date', targetDate)
+        ]);
+        newCounts.접수 = (storageRequest.count || 0) + (deliveryRequest.count || 0);
 
         setStatusCount(newCounts);
     };
@@ -292,34 +369,39 @@ function Reservation() {
         fetchAllData();
     }, []);
 
-    useEffect(() => {
-        const fetchDataByDate = async () => {
-            const { data: storageData } = await supabase
-                .from('storage')
-                .select('*')
-                .eq('storage_start_date', selectedDate);
+    const fetchDataByDate = async () => {
+        const { data: storageData } = await supabase
+            .from('storage')
+            .select('*')
+            .eq('storage_start_date', selectedDate);
 
-            const { data: deliveryData } = await supabase
-                .from('delivery')
-                .select('*')
-                .eq('delivery_date', selectedDate);
+        const { data: deliveryData } = await supabase
+            .from('delivery')
+            .select('*')
+            .eq('delivery_date', selectedDate);
 
-            const storageMapped = (storageData || []).map(item => ({
-                ...item,
-                division: '보관',
-                reservationTime: item.storage_start_date,
-                section: item.location || '-',
-                luggageNumber: `소 ${item.small} / 중 ${item.medium} / 대 ${item.large}`,
-                reservationName: item.name,
-                reservationPhone: item.phone,
-                date: item.reservation_time?.slice(0, 10),
-                driver: '-',
-                processingStatus: item.situation,
-                key: `storage-${item.reservation_number}`,
-                id: item.reservation_number,
-            }));
+        const { data: deliveryList } = await supabase
+            .from('deliveryList')
+            .select('re_num,driver_name');
 
-            const deliveryMapped = (deliveryData || []).map(item => ({
+        const storageMapped = (storageData || []).map(item => ({
+            ...item,
+            division: '보관',
+            reservationTime: `${item.storage_start_date} ~ ${item.storage_end_date}`,
+            section: item.location || '-',
+            luggageNumber: `소 ${item.small} / 중 ${item.medium} / 대 ${item.large}`,
+            reservationName: item.name,
+            reservationPhone: item.phone,
+            date: item.reservation_time?.slice(0, 10),
+            driver: '-',
+            processingStatus: item.situation,
+            key: `storage-${item.reservation_number}`,
+            id: item.reservation_number,
+        }));
+
+        const deliveryMapped = (deliveryData || []).map(item => {
+            const found = deliveryList?.find(d => d.re_num === item.re_num);
+            return {
                 ...item,
                 division: '배송',
                 reservationTime: item.delivery_date,
@@ -328,19 +410,28 @@ function Reservation() {
                 reservationName: item.name,
                 reservationPhone: item.phone,
                 date: item.reserve_time?.slice(0, 10),
-                driver: item.driver || '-',
+                driver: found ? found.driver_name : '-',
                 processingStatus: item.situation,
                 key: `delivery-${item.re_num}`,
                 id: item.re_num,
-            }));
+            }
+        });
 
-            let allData = [...storageMapped, ...deliveryMapped];
-            allData.sort((a, b) => new Date(b.date) - new Date(a.date));
-            allData.forEach((v, i) => v.number = i + 1);
-            setFilteredData(allData);
 
-        };
+        let allData = [...storageMapped, ...deliveryMapped];
+        allData.sort((a, b) => new Date(b.date) - new Date(a.date));
+        allData.forEach((v, i) => v.number = i + 1);
+        setFilteredData(allData);
+        setCombinedData(allData);
+    };
 
+    const refreshAll = async () => {
+        await fetchReservationCounts(selectedDate);
+        await fetchStatusCounts(selectedDate);
+        await fetchDataByDate();
+    };
+
+    useEffect(() => {
         fetchDataByDate();
     }, [selectedDate]);
 
@@ -428,8 +519,8 @@ function Reservation() {
                                 <h1>{statusCount.취소}건</h1>
                             </div>
                             <div>
-                                <h3 className="not-yet" style={{ color: '#f60707' }}>미배정</h3>
-                                <h1>{statusCount.미배정}건</h1>
+                                <h3 className="not-yet" style={{ color: '#f60707' }}>접수</h3>
+                                <h1>{statusCount.접수}건</h1>
                             </div>
                         </div>
                     </div>
@@ -476,7 +567,13 @@ function Reservation() {
                         </div>
                     </div>
                     <div className="content_middle_two">
-                        <ExcelTable showCheckbox={showCheckbox} combinedSearchData={filteredData} />
+                        <ExcelTable
+                            showCheckbox={showCheckbox}
+                            combinedSearchData={filteredData}
+                            fetchDataByDate={fetchDataByDate}
+                            selectedDate={selectedDate}
+                            refreshAll={refreshAll}
+                        />
                     </div>
                 </div>
             </div>

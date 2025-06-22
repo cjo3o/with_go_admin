@@ -36,7 +36,7 @@ const EditableCell = ({ editing, dataIndex, title, inputType, record, index, chi
     );
 };
 
-const ExcelTable = ({ showCheckbox, combinedSearchData }) => {
+const ExcelTable = ({ showCheckbox, combinedSearchData, fetchDataByDate, selectedDate, refreshAll }) => {
     const [form] = Form.useForm();
     const [combinedData, setCombinedData] = useState([]);
     const [checkedRows, setCheckedRows] = useState([]);
@@ -85,11 +85,18 @@ const ExcelTable = ({ showCheckbox, combinedSearchData }) => {
 
         // ✅ 구분에 따라 필드 다르게 설정
         if (table === 'storage') {
-            updateFields.storage_start_date = record.date;// 🔁 실제 컬럼명 반영
-            updateFields.situation = record.processingStatus;
+            // 보관: 날짜 범위(예: '2024-06-28 ~ 2024-07-01')
+            if (record.reservationTime && record.reservationTime.includes('~')) {
+                const [start, end] = record.reservationTime.split('~').map(s => s.trim());
+                updateFields.storage_start_date = start;
+                updateFields.storage_end_date = end;
+            } else {
+                updateFields.storage_start_date = record.reservationTime;
+                updateFields.storage_end_date = record.reservationTime;
+            }
         } else {
-            updateFields.delivery_date = record.date;
-            updateFields.situation = record.processingStatus;
+            // 배송: 단일 날짜
+            updateFields.delivery_date = record.reservationTime;
             updateFields.delivery_start = record.section?.split(' → ')[0] || '';
             updateFields.delivery_arrive = record.section?.split(' → ')[1] || '';
         }
@@ -232,7 +239,7 @@ const ExcelTable = ({ showCheckbox, combinedSearchData }) => {
             ) : record.number
         },
         { title: '구분', dataIndex: 'division', align: 'center' },
-        { title: '예약시간', dataIndex: 'reservationTime', align: 'center' },
+        { title: '예약일자', dataIndex: 'reservationTime', align: 'center' },
         { title: '이용구간', dataIndex: 'section', align: 'center', width: 200 },
         { title: '짐갯수', dataIndex: 'luggageNumber', align: 'center', width: 200, responsive: ['md'] },
         { title: '예약자명', dataIndex: 'reservationName', align: 'center', width: 100 },
@@ -309,9 +316,11 @@ const ExcelTable = ({ showCheckbox, combinedSearchData }) => {
                         });
                     }
 
-                    setCombinedData(prev =>
-                        prev.map(item => item.key === editingRecord.key ? editingRecord : item)
-                    );
+                    // 👇 수정된 부분: 부모의 새로고침 함수 호출
+                    if (typeof refreshAll === 'function') {
+                        await refreshAll();
+                    }
+
                     setIsModalOpen(false);
                 }}
             >
@@ -337,13 +346,50 @@ const ExcelTable = ({ showCheckbox, combinedSearchData }) => {
                             onChange={(e) => setEditingRecord({ ...editingRecord, section: e.target.value })}
                         />
                     </Form.Item>
-                    <Form.Item label="신청일자">
-                        <DatePicker
-                            style={{ width: '100%' }}
-                            value={editingRecord?.date ? dayjs(editingRecord.date) : null}
-                            onChange={(date, dateString) => setEditingRecord({ ...editingRecord, date: dateString })}
-                        />
+                    <Form.Item label="예약일자">
+                        {editingRecord?.division === "보관" ? (
+                            <DatePicker.RangePicker
+                                style={{ width: '100%' }}
+                                value={
+                                    editingRecord && editingRecord.reservationTime
+                                        ? editingRecord.reservationTime.includes('~')
+                                            ? [
+                                                dayjs(editingRecord.reservationTime.split('~')[0].trim()),
+                                                dayjs(editingRecord.reservationTime.split('~')[1].trim())
+                                            ]
+                                            : [
+                                                dayjs(editingRecord.reservationTime),
+                                                dayjs(editingRecord.reservationTime)
+                                            ]
+                                        : null
+                                }
+                                onChange={(dates, dateStrings) => setEditingRecord({
+                                    ...editingRecord,
+                                    reservationTime: `${dateStrings[0]} ~ ${dateStrings[1]}`
+                                })}
+                                disabledDate={current => current && current < dayjs().startOf('day')}
+                            />
+                        ) : (
+                            <DatePicker
+                                style={{ width: '100%' }}
+                                value={
+                                    editingRecord && editingRecord.reservationTime
+                                        ? dayjs(
+                                            editingRecord.reservationTime.includes('~')
+                                                ? editingRecord.reservationTime.split('~')[0].trim()
+                                                : editingRecord.reservationTime
+                                        )
+                                        : null
+                                }
+                                onChange={(date, dateString) => setEditingRecord({
+                                    ...editingRecord,
+                                    reservationTime: dateString // 단일 날짜로 저장
+                                })}
+                                disabledDate={current => current && current < dayjs().startOf('day')}
+                            />
+                        )}
                     </Form.Item>
+
                     <Form.Item label="처리현황">
                         <Select
                             defaultValue={editingRecord?.processingStatus}
