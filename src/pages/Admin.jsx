@@ -557,7 +557,7 @@ function Admin() {
                 <div className={AdminStyle.excel}>
                   <ExcelDownBtn data={currentItems} />
                 </div>
-                <div>
+                <div className={AdminStyle.radio}>
                   <Radio.Group
                     value={filterType}
                     buttonStyle="solid"
@@ -583,7 +583,7 @@ function Admin() {
                     </Radio.Button>
                   </Radio.Group>
                 </div>
-                <div>
+                <div className={AdminStyle.search}>
                   <Input.Search
                     placeholder="검색"
                     allowClear

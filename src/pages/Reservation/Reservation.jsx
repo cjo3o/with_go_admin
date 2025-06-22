@@ -440,7 +440,7 @@ function Reservation() {
             <div className="header">
                 예약관리
             </div>
-            <div className="card">
+            <div className="card reservation-card">
                 <div className="title">금일배송 / 보관 관리</div>
                 <div className="content_R">
                     <div
