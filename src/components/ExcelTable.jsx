@@ -24,6 +24,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import swap from "../assets/Images/swap.svg";
 
 // import('src/lib/supabase.js')
 const { Option } = Select;
@@ -78,6 +79,56 @@ const ExcelTable = ({
   const [currentData, setCurrentData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
+  const [storageLocation, setStorageLocation] = useState("");   // 보관 장소 or 출발지
+  const [arriveLocation, setArriveLocation] = useState("");     // 도착지(배송)
+  const [serviceType, setServiceType] = useState("");           // division 저장용
+
+  const [partnerOptions, setPartnerOptions] = useState([]);
+  const [storageOptions, setStorageOptions] = useState([]);
+  const [allLocationOptions, setAllLocationOptions] = useState([]);
+  const [startOptions, setStartOptions] = useState([]);
+  const [endOptions, setEndOptions] = useState([]);
+
+  // 컴포넌트 마운트 시 옵션 불러오기
+  useEffect(() => {
+    const fetchOptions = async () => {
+      // 출발지 (partner_place)
+      const { data: partnerData } = await supabase
+        .from("partner_place")
+        .select("name");
+      // 도착지 (storage_place)
+      const { data: storageData } = await supabase
+        .from("storage_place")
+        .select("name");
+
+      // 출발지 옵션
+      const partnerOpts = (partnerData || [])
+        .map((v) => ({ value: v.name, label: v.name }))
+        .sort((a, b) => a.label.localeCompare(b.label, "ko-KR"));
+
+      // 도착지 옵션
+      const storageOpts = (storageData || [])
+        .map((v) => ({ value: v.name, label: v.name }))
+        .sort((a, b) => a.label.localeCompare(b.label, "ko-KR"));
+
+      setPartnerOptions(partnerOpts);
+      setStorageOptions(storageOpts);
+
+      // 합친 옵션(중복 제거)
+      const merged = [
+        ...partnerOpts.map((o) => o.label),
+        ...storageOpts.map((o) => o.label),
+      ];
+      const unique = Array.from(new Set(merged)).sort((a, b) =>
+        a.localeCompare(b, "ko-KR")
+      );
+      setAllLocationOptions(
+        unique.map((name) => ({ value: name, label: name }))
+      );
+    };
+    fetchOptions();
+  }, []);
+
 
   const totalPages = Math.ceil(combinedData.length / pageSize);
 
@@ -209,9 +260,8 @@ const ExcelTable = ({
       division: "배송",
       reservationTime: item.delivery_date,
       section: `${item.delivery_start} → ${item.delivery_arrive}`,
-      luggageNumber: `under ${item.under ?? item.small ?? 0} / over ${
-        item.over ?? item.large ?? 0
-      }`, // ✅ 배송은 under/over (중간 없음)
+      luggageNumber: `under ${item.under ?? item.small ?? 0} / over ${item.over ?? item.large ?? 0
+        }`, // ✅ 배송은 under/over (중간 없음)
       reservationName: item.name,
       reservationPhone: item.phone,
       date: item.delivery_date,
@@ -344,6 +394,20 @@ const ExcelTable = ({
             onClick={() => {
               setEditingRecord(record);
               setIsModalOpen(true);
+              setServiceType(record.division === "배송" ? "delivery" : "storage");
+
+              if (record.division === "배송") {
+                const [start, arrive] = record.section?.split("→").map(s => s.trim()) || ["", ""];
+                setStorageLocation(start);
+                setArriveLocation(arrive);
+                setStartOptions(partnerOptions);    // 이때 최신 partnerOptions 할당
+                setEndOptions(storageOptions);      // 이때 최신 storageOptions 할당
+              } else {
+                setStorageLocation(record.section || "");
+                setArriveLocation("");
+                setStartOptions(allLocationOptions); // 보관일 땐 allLocationOptions
+                setEndOptions([]);
+              }
             }}
           >
             <EditOutlined />
@@ -370,6 +434,42 @@ const ExcelTable = ({
     setPageSize(pagination.pageSize);
     // setSortOrder(sorter.order);
     // setSortField(sorter.field);
+  };
+
+  const handleLocationChange = (value) => {
+    setStorageLocation(value);
+    if (serviceType === "delivery") {
+      setEditingRecord({
+        ...editingRecord,
+        section: `${value} → ${arriveLocation}`
+      });
+    } else {
+      setEditingRecord({
+        ...editingRecord,
+        section: value
+      });
+    }
+  };
+  const handleArriveLocationChange = (value) => {
+    setArriveLocation(value);
+    setEditingRecord({
+      ...editingRecord,
+      section: `${storageLocation} → ${value}`
+    });
+  };
+  const handleSwap = () => {
+    setStorageLocation(arriveLocation);
+    setArriveLocation(storageLocation);
+
+    // 옵션도 같이 swap
+    setStartOptions((prev) => endOptions);
+    setEndOptions((prev) => startOptions);
+
+    // editingRecord.section도 같이 변경
+    setEditingRecord((prev) => ({
+      ...prev,
+      section: `${arriveLocation} → ${storageLocation}`
+    }));
   };
 
   return (
@@ -435,12 +535,41 @@ const ExcelTable = ({
             />
           </Form.Item>
           <Form.Item label="이용구간">
-            <Input
-              value={editingRecord?.section}
-              onChange={(e) =>
-                setEditingRecord({ ...editingRecord, section: e.target.value })
-              }
-            />
+            {serviceType === "delivery" ? (
+              <>
+                {/* 출발지 */}
+                <Select
+                  className="select"
+                  value={storageLocation || undefined}
+                  style={{ width: 170, margin: 0 }}
+                  onChange={handleLocationChange}
+                  options={startOptions}
+                  placeholder="출발지"
+                />
+                <button className="mbtn_swap" type="button" onClick={handleSwap}>
+                  <img src={swap} alt="mswap" className="swap" />
+                </button>
+                {/* 도착지 */}
+                <Select
+                  className="select"
+                  value={arriveLocation || undefined}
+                  style={{ width: 170, margin: 0 }}
+                  onChange={handleArriveLocationChange}
+                  options={endOptions}
+                  placeholder="도착지"
+                />
+              </>
+            ) : (
+              <Select
+                className="select"
+                value={storageLocation || undefined}
+                style={{ width: 180 }}
+                onChange={handleLocationChange}
+                options={allLocationOptions}
+                placeholder="보관장소 선택"
+                showSearch
+              />
+            )}
           </Form.Item>
           <Form.Item label="예약일자">
             {editingRecord?.division === "보관" ? (
@@ -450,17 +579,17 @@ const ExcelTable = ({
                   editingRecord && editingRecord.reservationPeriod
                     ? editingRecord.reservationPeriod.includes("~")
                       ? [
-                          dayjs(
-                            editingRecord.reservationPeriod.split("~")[0].trim()
-                          ),
-                          dayjs(
-                            editingRecord.reservationPeriod.split("~")[1].trim()
-                          ),
-                        ]
+                        dayjs(
+                          editingRecord.reservationPeriod.split("~")[0].trim()
+                        ),
+                        dayjs(
+                          editingRecord.reservationPeriod.split("~")[1].trim()
+                        ),
+                      ]
                       : [
-                          dayjs(editingRecord.reservationPeriod),
-                          dayjs(editingRecord.reservationPeriod),
-                        ]
+                        dayjs(editingRecord.reservationPeriod),
+                        dayjs(editingRecord.reservationPeriod),
+                      ]
                     : null
                 }
                 onChange={(dates, dateStrings) =>
@@ -481,10 +610,10 @@ const ExcelTable = ({
                 value={
                   editingRecord && editingRecord.reservationTime
                     ? dayjs(
-                        editingRecord.reservationTime.includes("~")
-                          ? editingRecord.reservationTime.split("~")[0].trim()
-                          : editingRecord.reservationTime
-                      )
+                      editingRecord.reservationTime.includes("~")
+                        ? editingRecord.reservationTime.split("~")[0].trim()
+                        : editingRecord.reservationTime
+                    )
                     : null
                 }
                 onChange={(date, dateString) =>
@@ -588,9 +717,8 @@ const ExcelTable = ({
             return (
               <button
                 key={pageNum}
-                className={`page-btn ${
-                  pageNum === currentPage ? "active" : ""
-                }`}
+                className={`page-btn ${pageNum === currentPage ? "active" : ""
+                  }`}
                 onClick={() => setCurrentPage(pageNum)}
                 style={{
                   margin: "0 4px",

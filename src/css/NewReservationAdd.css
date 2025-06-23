@@ -77,3 +77,14 @@
 .Allselect {
     display: flex;
 }
+
+.mbtn_swap {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+.mswap {
+    width: 30px;
+}

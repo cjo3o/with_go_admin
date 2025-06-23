@@ -125,7 +125,6 @@ function Admin() {
         return;
       }
       if (data.length === 0) {
-        const reserveTime = item.reserve_time || item.reservation_time;
 
         await supabase.from("status_logs").insert([
           {
@@ -133,8 +132,8 @@ function Admin() {
             key_value: keyValue,
             prev_status: "접수",
             new_status: "접수",
-            updated_at: reserveTime,
-            received_at: reserveTime,
+            updated_at: new Date().toISOString(),
+            received_at: new Date().toISOString(),
             operator: "",
           },
         ]);
