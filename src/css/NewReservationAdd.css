@@ -62,3 +62,18 @@
     align-items: center;
 }
 
+.btn_swap {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    
+}
+
+.swap {
+    width: 30px;
+    vertical-align: -7px;
+}
+
+.Allselect {
+    display: flex;
+}
