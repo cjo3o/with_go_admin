@@ -319,7 +319,7 @@ function Admin() {
       .order("updated_at", { ascending: false });
 
     if (existingLogs.length === 0) {
-      const reserveTime = item.reserve_time || item.reservation_time;
+      
 
       const { error: logInsertError } = await supabase
         .from("status_logs")
@@ -329,7 +329,7 @@ function Admin() {
             key_value: keyValue,
             prev_status: "접수",
             new_status: "접수",
-            updated_at: reserveTime,
+            updated_at: new Date().toISOString(),
             received_at: reserveTime,
             operator: userName,
           },
