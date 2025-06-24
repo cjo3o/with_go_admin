@@ -563,7 +563,7 @@ const ExcelTable = ({
               <Select
                 className="select"
                 value={storageLocation || undefined}
-                style={{ width: 180 }}
+                style={{ width: 170, margin: 0  }}
                 onChange={handleLocationChange}
                 options={allLocationOptions}
                 placeholder="보관장소 선택"
