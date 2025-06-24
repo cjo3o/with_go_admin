@@ -15,6 +15,7 @@ import {
   Select,
   Radio,
   Divider,
+  Checkbox,
 } from "antd";
 import dayjs from "dayjs";
 
@@ -25,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import "../../css/NewReservationAdd.css";
 
 import swap from "../../assets/Images/swap.svg";
+import PaymentSuccessPage from "../../components/PaymentSuccessPage.jsx";
 
 const { Content } = Layout;
 
@@ -302,79 +304,71 @@ function NewReservationAddPage() {
     storagePlaceList,
   ]);
 
-  const onFinish = async (values) => {
-    const { name, email, phone } = values;
-    setLoading(true);
+  const handleTossPayment = (values) => {
+    if (!window.TossPayments) {
+      message.error("결제 모듈이 로드되지 않았습니다.");
+      return;
+    }
 
-    try {
-      const commonData = {
-        name,
-        mail: email || null,
-        phone,
+    const orderName =
+      serviceType === "delivery" ? "배송 예약 결제" : "보관 예약 결제";
+    const amount = totalPayment;
+    const orderId = "order_" + new Date().getTime();
+
+    window
+      .TossPayments("test_ck_24xLea5zVAEGe4ONABL7VQAMYNwW")
+      .requestPayment("카드", {
+        amount,
+        orderId,
+        orderName,
+        customerName: values.name,
+        successUrl: `${window.location.origin}/payment-success?type=${serviceType}&orderId=${orderId}`,
+        failUrl: `${window.location.origin}/payment-fail`,
+      });
+  };
+
+  const onFinish = async (values) => {
+    if (serviceType === "storage") {
+      if (!storageDates || !storageDates[0] || !storageDates[1]) {
+        message.warning("보관 시작/종료 날짜를 선택해주세요");
+        return;
+      }
+    } else if (serviceType === "delivery") {
+      if (!storageDates || !storageDates[0]) {
+        message.warning("배송 날짜를 선택해주세요");
+        return;
+      }
+    }
+
+    let reservationData = {};
+    if (serviceType === "storage") {
+      reservationData = {
+        ...values,
         small: smallCount,
         medium: middleCount,
         large: largeCount,
         price: totalPayment,
         situation: "접수",
+        location: storageLocation,
+        storage_start_date: storageDates[0].format("YYYY-MM-DD"),
+        storage_end_date: storageDates[1].format("YYYY-MM-DD"),
       };
-
-      if (serviceType === "storage") {
-        if (!storageDates || !storageDates[0] || !storageDates[1]) {
-          message.warning("보관 시작/종료 날짜를 선택해주세요");
-          setLoading(false);
-          return;
-        }
-        const storageData = {
-          name,
-          phone,
-          small: smallCount,
-          medium: middleCount,
-          large: largeCount,
-          price: totalPayment,
-          situation: "접수",
-          location: storageLocation,
-          storage_start_date: storageDates[0].format("YYYY-MM-DD"),
-          storage_end_date: storageDates[1].format("YYYY-MM-DD"),
-        };
-        const { error } = await supabase.from("storage").insert([storageData]);
-        if (error) throw error;
-      } else if (serviceType === "delivery") {
-        if (!storageDates || !storageDates[0]) {
-          message.warning("배송 날짜를 선택해주세요");
-          setLoading(false);
-          return;
-        }
-        const deliveryArriveAddress =
-          arriveLocation + (detailAddress ? " " + detailAddress : "");
-
-        const deliveryData = {
-          name,
-          phone,
-          price: totalPayment,
-          delivery_date: storageDates[0].format("YYYY-MM-DD"),
-          delivery_start: storageLocation,
-          delivery_arrive:
-            arriveLocation + (detailAddress ? " " + detailAddress : ""),
-          under: underCount,
-          over: overCount,
-        };
-        const { error } = await supabase
-          .from("delivery")
-          .insert([deliveryData]);
-        if (error) throw error;
-      }
-
-      notification.success({
-        message: "예약 등록 완료",
-        description: "성공적으로 등록되었습니다.",
-      });
-      navigate("/ApplicationList");
-    } catch (err) {
-      message.error(`오류 발생: ${err.message}`);
-      console.error("예약 등록 중 오류:", err);
-    } finally {
-      setLoading(false);
+    } else {
+      reservationData = {
+        ...values,
+        price: totalPayment,
+        delivery_date: storageDates[0].format("YYYY-MM-DD"),
+        delivery_start: storageLocation,
+        delivery_arrive:
+          arriveLocation + (detailAddress ? " " + detailAddress : ""),
+        under: underCount,
+        over: overCount,
+      };
     }
+    // 결제 성공 후 DB 저장용
+    localStorage.setItem("reservation_data", JSON.stringify(reservationData));
+
+    handleTossPayment(values);
   };
 
   const resetAllInputs = () => {
@@ -714,6 +708,27 @@ function NewReservationAddPage() {
                       style={{ width: "100%" }}
                     />
                   </Form.Item>
+                  <Form.Item
+                    label="필수안내"
+                    name="essential"
+                    valuePropName="checked"
+                    rules={[
+                      {
+                        required: true,
+                        validator: (_, value) =>
+                          value
+                            ? Promise.resolve()
+                            : Promise.reject("필수 안내에 동의하셔야 합니다."),
+                      },
+                    ]}
+                    className="separated-form-item"
+                  >
+                    <Checkbox>
+                      {serviceType === "delivery"
+                        ? "배송이 시작되면 취소/환불 불가함을 안내하셨습니까?"
+                        : "물건을 보관장소에 맡긴 후에는 취소/환불 불가함을 안내하셨습니까?"}
+                    </Checkbox>
+                  </Form.Item>
                 </Form>
               </Card>
               <div
@@ -731,7 +746,7 @@ function NewReservationAddPage() {
                     height: "40px",
                   }}
                 >
-                  등록
+                  결제진행
                 </Button>
               </div>
             </Col>
