@@ -326,7 +326,6 @@ function NewReservationAddPage() {
         }
         const storageData = {
           name,
-          mail: email || null,
           phone,
           small: smallCount,
           medium: middleCount,
@@ -687,33 +686,6 @@ function NewReservationAddPage() {
                   >
                     <Input placeholder="ex) 홍길동" style={{ width: "100%" }} />
                   </Form.Item>
-                  {serviceType === "storage" && (
-                    <>
-                      <Divider
-                        style={{
-                          margin: "16px 0",
-                          borderColor: "rgba(217,217,217,0.5)",
-                        }}
-                      />
-                      <Form.Item
-                        label="이메일"
-                        name="email"
-                        rules={[
-                          {
-                            required: true, // 보관에서도 필수 아니면 false
-                            type: "email",
-                            message: "올바른 이메일을 입력해주세요",
-                          },
-                        ]}
-                        className="separated-form-item"
-                      >
-                        <Input
-                          placeholder="ex) test123@example.com"
-                          style={{ width: "100%" }}
-                        />
-                      </Form.Item>
-                    </>
-                  )}
                   <Divider
                     style={{
                       margin: "16px 0",
