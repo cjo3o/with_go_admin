@@ -195,7 +195,7 @@ function StorageList() {
                                     <div className='card-top-left'>
                                         <Checkbox
                                             checked={selectedStorages.includes(storage.storage_id)}
-                                            onChange={() => handleStorageCheck(storage.storage_id)}
+                                            onChange={(e) => handleStorageCheck(e, storage.storage_id)}
                                         />
                                         <span>ID : {storage.storage_id}</span>
                                     </div>

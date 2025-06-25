@@ -11,6 +11,7 @@ dayjs.extend(isSameOrBefore);
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { Content } = Layout;
+const res = supabase.get
 
 function ApplicationList() {
   const [currentTab, setCurrentTab] = useState("all");
