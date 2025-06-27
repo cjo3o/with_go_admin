@@ -343,7 +343,8 @@ function NewReservationAddPage() {
     let reservationData = {};
     if (serviceType === "storage") {
       reservationData = {
-        ...values,
+        name: values.name,
+        phone: values.phone,
         small: smallCount,
         medium: middleCount,
         large: largeCount,
@@ -355,7 +356,8 @@ function NewReservationAddPage() {
       };
     } else {
       reservationData = {
-        ...values,
+        name: values.name,
+        phone: values.phone,
         price: totalPayment,
         delivery_date: storageDates[0].format("YYYY-MM-DD"),
         delivery_start: storageLocation,
