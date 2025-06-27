@@ -24,11 +24,12 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
 
     const fetchFAQs = async () => {
         let query = supabase.from('withgo_faqs').select('*');
-
         if (filterType) query = query.eq('type', filterType);
         if (searchKeyword) query = query.ilike('question', `%${searchKeyword}%`);
-
-        const { data, error } = await query.order('created_at', { ascending: false });
+        // 여러 필드 복합 정렬: status 먼저, 그다음 created_at
+        const { data, error } = await query
+            .order('status', { ascending: true })
+            .order('created_at', { ascending: false });
         if (!error) setFaqs(data);
     };
 
