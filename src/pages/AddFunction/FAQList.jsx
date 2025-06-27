@@ -29,7 +29,7 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
         // 여러 필드 복합 정렬: status 먼저, 그다음 created_at
         const { data, error } = await query
             // .order('status', { ascending: true })
-            .order('created_at', { ascending: false });
+            .order('id', { ascending: false });
         if (!error) setFaqs(data);
     };
 
