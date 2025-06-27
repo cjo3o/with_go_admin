@@ -31,7 +31,7 @@ const FAQList = ({filterType = '', searchKeyword = ''}) => {
 
     const fetchFAQs = async () => {
         let query = supabase.from('withgo_faqs').select('*');
-        if (filterType) query = query.eq('type', filterType);
+        if (filterType) query = query.eq('category', filterType);
         if (searchKeyword) query = query.ilike('question', `%${searchKeyword}%`);
         // 여러 필드 복합 정렬: status 먼저, 그다음 created_at
         const {data, error} = await query

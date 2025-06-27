@@ -7,6 +7,7 @@ import '../../css/FAQ.css';
 import '../../css/layout.css';
 import '../../css/ui.css';
 import '../../css/FAQ.css';
+import {message, notification} from "antd";
 
 function FAQEdit() {
     const navigate = useNavigate();
@@ -61,11 +62,11 @@ function FAQEdit() {
             .eq('id', id);
 
         if (error) {
-            alert('FAQ 수정에 실패했습니다');
+            notification.error({message: "수정에 실패했습니다!"});
             console.error(error);
         } else {
-            alert('FAQ가 성공적으로 수정되었습니다');
-            navigate('/faq');
+            notification.success({message: "성공적으로 수정되었습니다!"});
+            navigate('/faq/list');
         }
     };
 
@@ -139,7 +140,7 @@ function FAQEdit() {
                         <button
                             type="submit"
                             className="btn btn-add-confirm"
-                            onClick={() => navigate('/faq/list')}
+                            // onClick={() => navigate('/faq/list')}
                         >
                             수정 완료
                         </button>

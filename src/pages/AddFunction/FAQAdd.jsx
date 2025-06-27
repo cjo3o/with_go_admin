@@ -7,6 +7,7 @@ import '../../css/FAQ.css';
 import '../../css/layout.css';
 import '../../css/ui.css';
 import '../../css/FAQ.css';
+import {notification} from "antd";
 
 function FAQAdd() {
     const navigate = useNavigate();
@@ -31,10 +32,10 @@ function FAQAdd() {
             .insert([{ ...formData }]);
 
         if (error) {
-            alert('등록에 실패했습니다');
+            notification.error({message: "등록에 실패했습니다!"})
             console.error(error);
         } else {
-            alert('FAQ가 성공적으로 등록되었습니다');
+            notification.success({message: "성공적으로 등록되었습니다!"})
             navigate('/faq');
         }
     };
