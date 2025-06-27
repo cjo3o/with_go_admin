@@ -708,6 +708,19 @@ function NewReservationAddPage() {
                     <Input
                       placeholder="010-1234-5678"
                       style={{ width: "100%" }}
+                      onChange={e => {
+                        let num = e.target.value.replace(/[^0-9]/g, "");
+                        if (num.length < 4) {
+                          form.setFieldsValue({ phone: num });
+                        } else if (num.length < 8) {
+                          form.setFieldsValue({ phone: `${num.slice(0, 3)}-${num.slice(3)}` });
+                        } else {
+                          form.setFieldsValue({
+                            phone: `${num.slice(0, 3)}-${num.slice(3, 7)}-${num.slice(7, 11)}`
+                          });
+                        }
+                      }}
+                      maxLength={13}
                     />
                   </Form.Item>
                   <Form.Item
