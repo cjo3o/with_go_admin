@@ -1,8 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Checkbox, Switch } from 'antd';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronUp, faChevronDown, faAnglesLeft, faAnglesRight, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import React, {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {Checkbox, Switch} from 'antd';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {
+    faChevronUp,
+    faChevronDown,
+    faAnglesLeft,
+    faAnglesRight,
+    faChevronLeft,
+    faChevronRight
+} from '@fortawesome/free-solid-svg-icons';
 
 import supabase from '../../lib/supabase.js';
 
@@ -10,7 +17,7 @@ import '../../css/ui.css';
 import '../../css/layout.css';
 import '../../css/FAQ.css';
 
-const FAQList = ({ filterType = '', searchKeyword = '' }) => {
+const FAQList = ({filterType = '', searchKeyword = ''}) => {
     const [faqs, setFaqs] = useState([]);
     const [expanded, setExpanded] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -27,10 +34,13 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
         if (filterType) query = query.eq('type', filterType);
         if (searchKeyword) query = query.ilike('question', `%${searchKeyword}%`);
         // 여러 필드 복합 정렬: status 먼저, 그다음 created_at
-        const { data, error } = await query
+        const {data, error} = await query
             // .order('status', { ascending: true })
-            .order('id', { ascending: false });
-        if (!error) setFaqs(data);
+            .order('id', {ascending: true});
+        if (!error) {
+            console.log("FAQ id순 결과", data.map(f => [f.id, f.status, f.created_at]));
+            setFaqs(data);
+        }
     };
 
     const toggleExpand = (id) => {
@@ -39,9 +49,9 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
 
     const toggleStatus = async (id, checked) => {
         const newStatus = checked ? '공개' : '숨김';
-        const { error } = await supabase
+        const {error} = await supabase
             .from('withgo_faqs')
-            .update({ status: newStatus })
+            .update({status: newStatus})
             .eq('id', id);
 
         if (!error) fetchFAQs();
@@ -63,7 +73,7 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
 
     const handleDeleteSelected = async () => {
         if (!window.confirm('선택한 FAQ를 삭제하시겠습니까?')) return;
-        const { error } = await supabase
+        const {error} = await supabase
             .from('withgo_faqs')
             .delete()
             .in('id', pageSelectedIds);
@@ -86,37 +96,37 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
             <div className="table-wrapper">
                 <table className="faq-table common-table">
                     <thead>
-                        <tr>
-                            <th className="faq-col-select">
-                                <Checkbox
-                                    onChange={(e) => {
-                                        const checked = e.target.checked;
-                                        const ids = paginatedFaqs.map((item) => item.id);
-                                        setPageSelectedIds(checked ? ids : []);
-                                    }}
-                                    checked={pageSelectedIds.length === paginatedFaqs.length && paginatedFaqs.length > 0}
-                                />
-                            </th>
-                            <th className="faq-col-type">구분</th>
-                            <th className="faq-col-title">질문</th>
-                            <th className="faq-col-content">답변</th>
-                            <th className="faq-col-status">공개여부</th>
-                            <th className="faq-col-date">작성일</th>
-                            <th className="faq-col-actions">관리</th>
-                        </tr>
+                    <tr>
+                        <th className="faq-col-select">
+                            <Checkbox
+                                onChange={(e) => {
+                                    const checked = e.target.checked;
+                                    const ids = paginatedFaqs.map((item) => item.id);
+                                    setPageSelectedIds(checked ? ids : []);
+                                }}
+                                checked={pageSelectedIds.length === paginatedFaqs.length && paginatedFaqs.length > 0}
+                            />
+                        </th>
+                        <th className="faq-col-type">구분</th>
+                        <th className="faq-col-title">질문</th>
+                        <th className="faq-col-content">답변</th>
+                        <th className="faq-col-status">공개여부</th>
+                        <th className="faq-col-date">작성일</th>
+                        <th className="faq-col-actions">관리</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        {paginatedFaqs.map((item) => (
-                            <tr key={item.id}>
-                                <td>
-                                    <Checkbox
-                                        onChange={(e) => handleSelect(e.target.checked, item.id)}
-                                        checked={pageSelectedIds.includes(item.id)}
-                                    />
-                                </td>
-                                <td>{item.category}</td>
-                                <td className="faq-col-title">{item.question}</td>
-                                <td className="faq-col-content">
+                    {paginatedFaqs.map((item) => (
+                        <tr key={item.id}>
+                            <td>
+                                <Checkbox
+                                    onChange={(e) => handleSelect(e.target.checked, item.id)}
+                                    checked={pageSelectedIds.includes(item.id)}
+                                />
+                            </td>
+                            <td>{item.category}</td>
+                            <td className="faq-col-title">{item.question}</td>
+                            <td className="faq-col-content">
                                     <span
                                         className={`answer-toggle ${expanded === item.id ? 'open' : ''}`}
                                         onClick={() => toggleExpand(item.id)}
@@ -126,24 +136,24 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
                                             : (item.answer?.replace(/<br\s*\/?>/gi, ' ') || '').substring(0, 50) + (item.answer?.replace(/<br\s*\/?>/gi, ' ').length > 50 ? '...' : '')
                                         }
                                     </span>
-                                </td>
-                                <td>
-                                    <Switch
-                                        checked={item.status === '공개'}
-                                        onChange={(checked) => toggleStatus(item.id, checked)}
-                                    />
-                                </td>
-                                <td>{item.created_at?.slice(0, 10)}</td>
-                                <td>
-                                    <button
-                                        className="btn btn-edit"
-                                        onClick={() => navigate(`/faq-edit/${item.id}`)}
-                                    >
-                                        수정
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                            </td>
+                            <td>
+                                <Switch
+                                    checked={item.status === '공개'}
+                                    onChange={(checked) => toggleStatus(item.id, checked)}
+                                />
+                            </td>
+                            <td>{item.created_at?.slice(0, 10)}</td>
+                            <td>
+                                <button
+                                    className="btn btn-edit"
+                                    onClick={() => navigate(`/faq-edit/${item.id}`)}
+                                >
+                                    수정
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
                     </tbody>
                 </table>
             </div>
@@ -165,12 +175,13 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
             <div className="pagination-wrapper">
                 <div className="pagination">
                     <button className="group-btn" onClick={() => setCurrentPage(1)} disabled={currentGroup === 0}>
-                        <FontAwesomeIcon icon={faAnglesLeft} />
+                        <FontAwesomeIcon icon={faAnglesLeft}/>
                     </button>
-                    <button className="arrow-btn" onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
-                        <FontAwesomeIcon icon={faChevronLeft} />
+                    <button className="arrow-btn" onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}>
+                        <FontAwesomeIcon icon={faChevronLeft}/>
                     </button>
-                    {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
+                    {Array.from({length: endPage - startPage + 1}).map((_, i) => {
                         const pageNum = startPage + i;
                         return (
                             <button
@@ -182,11 +193,14 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
                             </button>
                         );
                     })}
-                    <button className="arrow-btn" onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
-                        <FontAwesomeIcon icon={faChevronRight} />
+                    <button className="arrow-btn"
+                            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage === totalPages}>
+                        <FontAwesomeIcon icon={faChevronRight}/>
                     </button>
-                    <button className="group-btn" onClick={() => setCurrentPage(endPage + 1)} disabled={endPage === totalPages}>
-                        <FontAwesomeIcon icon={faAnglesRight} />
+                    <button className="group-btn" onClick={() => setCurrentPage(endPage + 1)}
+                            disabled={endPage === totalPages}>
+                        <FontAwesomeIcon icon={faAnglesRight}/>
                     </button>
                 </div>
             </div>
