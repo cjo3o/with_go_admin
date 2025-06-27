@@ -19,7 +19,21 @@ const ExcelDownBtn = ({ data, filename = "제목없음.xlsx" }) => {
       예약기간: item.storage_start_date
         ? `${item.storage_start_date} ~ ${item.storage_end_date}`
         : item.delivery_date || "-",
-      짐갯수: `S:${item.small} / M:${item.medium} / L:${item.large}`,
+      짐갯수:
+        item.type === "배송"
+          ? [
+              Number(item.under) > 0 ? `26인치이하 : ${item.under}개` : null,
+              Number(item.over) > 0 ? `26인치이상 : ${item.over}개` : null,
+            ]
+              .filter(Boolean)
+              .join(" / ") || "-"
+          : [
+              Number(item.small) > 0 ? `소 ${item.small}` : null,
+              Number(item.medium) > 0 ? `중 ${item.medium}` : null,
+              Number(item.large) > 0 ? `대 ${item.large}` : null,
+            ]
+              .filter(Boolean)
+              .join(" / ") || "-",
       결제금액: item.price,
       완료일:
         item.situation === "완료" && item.success_time
