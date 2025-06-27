@@ -28,7 +28,7 @@ const FAQList = ({ filterType = '', searchKeyword = '' }) => {
         if (searchKeyword) query = query.ilike('question', `%${searchKeyword}%`);
         // 여러 필드 복합 정렬: status 먼저, 그다음 created_at
         const { data, error } = await query
-            .order('status', { ascending: true })
+            // .order('status', { ascending: true })
             .order('created_at', { ascending: false });
         if (!error) setFaqs(data);
     };
