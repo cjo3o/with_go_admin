@@ -139,6 +139,7 @@ function FAQEdit() {
                         <button
                             type="submit"
                             className="btn btn-add-confirm"
+                            onClick={() => navigate('/faq/list')}
                         >
                             수정 완료
                         </button>
