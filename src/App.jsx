@@ -51,6 +51,7 @@ import InquiryEdit from './pages/AddFunction/InquiryEdit.jsx';
 import ApplicationList from "./pages/Reservation/ApplicationList.jsx";
 import NewReservationAddPage from "./pages/Reservation/NewReservationAddPage.jsx";
 import Reservation from "./pages/Reservation/Reservation.jsx";
+import PaymentSuccessPage from "./components/PaymentSuccessPage.jsx" 
 
 function App() {
     const [count, setCount] = useState(0);
@@ -74,6 +75,7 @@ function App() {
                     <Route path="/storage/create/:storage_id" element={<StorageCreate />} />
                     <Route path="/ApplicationList" element={<ApplicationList />} />
                     <Route path="/NewReservationAddPage" element={<NewReservationAddPage />} />
+                    <Route path="/payment-success" element={<PaymentSuccessPage />} />
                     <Route path="/Reservation" element={<Reservation />} />
 
                     <Route path="/event/list" element={<EventList />} />

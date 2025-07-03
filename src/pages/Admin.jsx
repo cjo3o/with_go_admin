@@ -6,7 +6,6 @@ import supabase from "../lib/supabase.js";
 import { SearchOutlined } from "@ant-design/icons";
 import ExcelDownBtn from "../components/ExcelDownBtn.jsx";
 
-import Lookup from "../../src/layouts/Lookup.jsx";
 import { Radio, Input, Button } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -17,10 +16,26 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
+
+function AsyncLocation({ reservation_number, fetchLocation }) {
+  const [location, setLocation] = useState("");
+  useEffect(() => {
+    let isMounted = true;
+    fetchLocation(reservation_number).then((loc) => {
+      if (isMounted) setLocation(loc || "-");
+    });
+    return () => { isMounted = false; };
+  }, [reservation_number, fetchLocation]);
+  return <span>{location}</span>;
+}
+
+
 function Admin() {
   const selectOptions = {
-    배송: ["접수", "배송중", "완료", "취소"],
-    보관: ["접수", "보관중", "완료", "취소"],
+    배송: ["접수", "배송대기", "배송중", "배송완료", "취소"],
+    보관: ["접수", "보관중", "보관완료", "취소"],
   };
 
   const [deliveryt, setdelivery] = useState([]);
@@ -28,7 +43,7 @@ function Admin() {
   const [twoData, settwoData] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusLogs, setStatusLogs] = useState(0);
+  const [statusLogs, setStatusLogs] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
   const [canceledPrice, setCanceledPrice] = useState(0);
   const actualPayment = totalPrice - canceledPrice;
@@ -38,7 +53,15 @@ function Admin() {
   const [todayCount, setTodayCount] = useState(0);
   const [todayDeliveryCount, setTodayDeliveryCount] = useState(0);
   const [todayStorageCount, setTodayStorageCount] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [locationCache, setLocationCache] = useState({});
+  const [deliveryList, setDeliveryList] = useState([]);
+  const [disabledSelects, setDisabledSelects] = useState({});
+
   const navigate = useNavigate();
+
+  const selectedDateStr = selectedDate.format("YYYY-MM-DD");
+
   const today = new Date();
   const formatter = new Intl.DateTimeFormat("ko-KR", {
     timeZone: "Asia/Seoul",
@@ -48,15 +71,39 @@ function Admin() {
   });
 
   const parts = formatter.formatToParts(today);
-  const todayStr = `${parts.find((p) => p.type === "year").value}-${
-    parts.find((p) => p.type === "month").value
-  }-${parts.find((p) => p.type === "day").value}`;
+  const todayStr = `${parts.find((p) => p.type === "year").value}-${parts.find((p) => p.type === "month").value
+    }-${parts.find((p) => p.type === "day").value}`;
 
   const [openRow, setOpenRow] = useState(null);
 
   const handleSearch = (value) => {
     setSearchTerm(value);
   };
+
+  useEffect(() => {
+    // deliveryList를 불러옴
+    const fetchDeliveryList = async () => {
+      const { data, error } = await supabase
+        .from("deliveryList")
+        .select("re_num, status, f_time, driver_name"); // 필요한 컬럼만 지정해도 됨
+
+      if (!error && data) setDeliveryList(data);
+    };
+    fetchDeliveryList();
+  }, []);
+
+  // deliveryList에서 re_num으로 driver_name 찾는 함수
+  function getDriverNameByReNum(re_num) {
+    const row = deliveryList.find(d => d.re_num === re_num);
+    return row ? row.driver_name : "";
+  }
+
+  const completedDeliveryTimes = deliveryList
+    .filter(row => row.status === "배송완료")
+    .reduce((acc, row) => {
+      acc[row.re_num] = row.f_time;
+      return acc;
+    }, {});
 
   const toggleRow = async (index, item) => {
     const newOpenRow = openRow === index ? null : index;
@@ -66,8 +113,6 @@ function Admin() {
       const tableName = item.type === "배송" ? "delivery" : "storage";
       const keyValue =
         item[tableName === "delivery" ? "re_num" : "reservation_number"];
-
-      const userName = sessionStorage.getItem("name") || "알 수 없음";
 
       const { data, error } = await supabase
         .from("status_logs")
@@ -80,16 +125,15 @@ function Admin() {
         return;
       }
       if (data.length === 0) {
-        const reserveTime = item.reserve_time || item.reservation_time;
 
-        const { error: logError } = await supabase.from("status_logs").insert([
+        await supabase.from("status_logs").insert([
           {
             table_name: tableName,
             key_value: keyValue,
             prev_status: "접수",
             new_status: "접수",
-            updated_at: reserveTime,
-            received_at: reserveTime,
+            updated_at: new Date().toISOString(),
+            received_at: new Date().toISOString(),
             operator: "",
           },
         ]);
@@ -105,11 +149,28 @@ function Admin() {
           return;
         }
 
-        setStatusLogs((prev) => ({ ...prev, [index]: newData }));
+        setStatusLogs((prev) => ({ ...prev, [keyValue]: newData }));
       } else {
-        setStatusLogs((prev) => ({ ...prev, [index]: data }));
+        setStatusLogs((prev) => ({ ...prev, [keyValue]: data }));
       }
     }
+  };
+
+  const fetchLocation = async (reservation_number) => {
+    if (locationCache[reservation_number])
+      return locationCache[reservation_number];
+
+    const { data, error } = await supabase
+      .from("storage")
+      .select("location")
+      .eq("reservation_number", reservation_number)
+      .single();
+    if (error) return "";
+    setLocationCache((prev) => ({
+      ...prev,
+      [reservation_number]: data.location,
+    }));
+    return data.location;
   };
 
   useEffect(() => {
@@ -160,35 +221,36 @@ function Admin() {
       settwoData(AllData);
 
       const todayDeliveryCount = deliveryData.filter(
-        (item) => item.reserve_time?.slice(0, 10) === todayStr
+        (item) => item.reserve_time?.slice(0, 10) === selectedDateStr
       ).length;
 
       const todayStorageCount = storageData.filter(
-        (item) => item.reservation_time?.slice(0, 10) === todayStr
+        (item) => item.reservation_time?.slice(0, 10) === selectedDateStr
       ).length;
 
       const completeCount = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-            todayStr && item.situation === "완료"
+          selectedDateStr &&
+          (item.situation === "배송완료" || item.situation === "보관완료")
       ).length;
 
       const cancelCount = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-            todayStr && item.situation === "취소"
+          selectedDateStr && item.situation === "취소"
       ).length;
 
       const totalPrice = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-          todayStr
+          selectedDateStr
       ).reduce((sum, item) => sum + (item.price || 0), 0);
 
       const canceledPrice = AllData.filter(
         (item) =>
           (item.reservation_time || item.reserve_time)?.slice(0, 10) ===
-            todayStr && item.situation === "취소"
+          selectedDateStr && item.situation === "취소"
       ).reduce((sum, item) => sum + (item.price || 0), 0);
 
       setTotalPrice(totalPrice);
@@ -202,9 +264,9 @@ function Admin() {
       setTodayStorageCount(todayStorageCount);
     };
     supaData();
-  }, [todayStr, twoData]);
+  }, [selectedDateStr, todayStr, twoData]);
 
-  const eChange = async (e, item) => {
+  const eChange = async (e, item, index) => {
     const status = e.target.value;
     const tableName = item.type === "배송" ? "delivery" : "storage";
 
@@ -212,12 +274,25 @@ function Admin() {
     const keyValue = item[keyColumn];
     const prevStatus = item.situation || "접수";
 
+    if (status === "보관완료") {
+      const ok = window.confirm("완료처리하시겠습니까?");
+      if (!ok) {
+        settwoData((prevData) =>
+          prevData.map((i, idx) =>
+            idx === index ? { ...i, situation: prevStatus } : i
+          )
+        );
+        return;  // 아니오 눌렀으면 롤백만 하고 함수 종료
+      }
+      // 네가 원하는 "상태 바꾸고, select 비활성화"는 아래 update 반영 후에 할 것임
+    }
+
     const updates = {
       situation: status,
       status_updated_at: new Date().toISOString(),
     };
 
-    if (status === "완료") {
+    if (status === "배송완료" || status === "보관완료") {
       updates.success_time = new Date().toISOString();
     } else {
       updates.success_time = null;
@@ -243,7 +318,7 @@ function Admin() {
       .order("updated_at", { ascending: false });
 
     if (existingLogs.length === 0) {
-      const reserveTime = item.reserve_time || item.reservation_time;
+      
 
       const { error: logInsertError } = await supabase
         .from("status_logs")
@@ -253,7 +328,7 @@ function Admin() {
             key_value: keyValue,
             prev_status: "접수",
             new_status: "접수",
-            updated_at: reserveTime,
+            updated_at: new Date().toISOString(),
             received_at: reserveTime,
             operator: userName,
           },
@@ -290,22 +365,31 @@ function Admin() {
     if (updatedLogsError) {
       console.error("업데이트된 로그 가져오기 실패", updatedLogsError);
     } else {
-      const openIndex = twoData.findIndex((i) => i[keyColumn] === keyValue);
-      setStatusLogs((prev) => ({ ...prev, [openIndex]: updatedLogs }));
+      setStatusLogs((prev) => ({ ...prev, [keyValue]: updatedLogs }));
     }
 
-    settwoData((prevData) =>
-      prevData.map((i) =>
+    settwoData((prevData) => {
+      const newData = prevData.map((i) =>
         i[keyColumn] === keyValue
           ? {
-              ...i,
-              situation: status,
-              status_updated_at: new Date().toISOString(),
-              success_time: status === "완료" ? new Date().toISOString() : null,
-            }
+            ...i,
+            situation: status,
+            status_updated_at: new Date().toISOString(),
+            success_time: (status === "배송완료" || status === "보관완료")
+              ? new Date().toISOString()
+              : null,
+          }
           : i
-      )
-    );
+      );
+      recalcTodayStats(newData);
+      return newData;
+    });
+
+    if (status === "보관완료") {
+      setTimeout(() => {
+        setDisabledSelects((prev) => ({ ...prev, [index]: true }));
+      }, 0);
+    }
   };
 
   const filteredData = twoData.filter(
@@ -314,15 +398,19 @@ function Admin() {
         0,
         10
       );
-      const isToday = dateStr === todayStr;
+      const isSelectedDate = dateStr === selectedDateStr;
 
-      const phoneClean = item.phone.replace(/-/g, "");
+      const phoneClean = item.phone?.replace(/-/g, "");
       const isTypeMatch = filterType === "" || item.type === filterType;
       const searchLower = searchTerm.toLowerCase();
-      const nameMatch = item.name.toLowerCase().includes(searchLower);
-      const phoneMatch = phoneClean.includes(searchLower);
+      const nameMatch = item.name?.toLowerCase().includes(searchLower);
+      const phoneMatch = phoneClean?.includes(searchLower);
 
-      return isToday && isTypeMatch && (nameMatch || phoneMatch);
+      if (!searchTerm) {
+        return isSelectedDate && isTypeMatch;
+      } else {
+        return isSelectedDate && isTypeMatch && (nameMatch || phoneMatch);
+      }
     },
     [twoData, searchTerm, filterType, todayStr]
   );
@@ -338,21 +426,55 @@ function Admin() {
   const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const goToNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  const pagesPerGroup = 10;
 
   const goToLastGroup = () => {
-    const nextGroupFirstPage =
-      Math.floor(currentPage / pagesPerGroup) * pagesPerGroup + 1;
-
-    if (nextGroupFirstPage < totalPages) {
-      setCurrentPage(nextGroupFirstPage);
-    } else {
-      setCurrentPage(totalPages);
-    }
+    setCurrentPage(totalPages);
   };
 
   const pageNumbers =
     totalPages > 0 ? Array.from({ length: totalPages }, (_, i) => i + 1) : [1];
+
+  function recalcTodayStats(data) {
+    const selectedDateStr = selectedDate.format("YYYY-MM-DD");
+    const todayDeliveryCount = data.filter(
+      (item) => item.type === "배송" && item.reserve_time?.slice(0, 10) === selectedDateStr
+    ).length;
+    const todayStorageCount = data.filter(
+      (item) => item.type === "보관" && item.reservation_time?.slice(0, 10) === selectedDateStr
+    ).length;
+
+    const completeCount = data.filter(
+      (item) =>
+        (item.reservation_time || item.reserve_time)?.slice(0, 10) === selectedDateStr &&
+        (item.situation === "배송완료" || item.situation === "보관완료")
+    ).length;
+
+    const cancelCount = data.filter(
+      (item) =>
+        (item.reservation_time || item.reserve_time)?.slice(0, 10) === selectedDateStr &&
+        item.situation === "취소"
+    ).length;
+
+    const totalPrice = data.filter(
+      (item) =>
+        (item.reservation_time || item.reserve_time)?.slice(0, 10) === selectedDateStr
+    ).reduce((sum, item) => sum + (item.price || 0), 0);
+
+    const canceledPrice = data.filter(
+      (item) =>
+        (item.reservation_time || item.reserve_time)?.slice(0, 10) === selectedDateStr &&
+        item.situation === "취소"
+    ).reduce((sum, item) => sum + (item.price || 0), 0);
+
+    setTotalPrice(totalPrice);
+    setCanceledPrice(canceledPrice);
+    setCompleteCount(completeCount);
+    setCancelCount(cancelCount);
+    setTodayCount(todayDeliveryCount + todayStorageCount);
+    setTodayDeliveryCount(todayDeliveryCount);
+    setTodayStorageCount(todayStorageCount);
+  }
+
 
   return (
     <>
@@ -363,7 +485,17 @@ function Admin() {
             <div className={AdminStyle.left}>
               <div className={AdminStyle.left1}>
                 <h3>금일 신규예약</h3>
-                <p>{today.toLocaleDateString()}</p>
+                <DatePicker
+                  value={selectedDate}
+                  onChange={setSelectedDate}
+                  format="YYYY-MM-DD"
+                  allowClear={false}
+                  getPopupContainer={(trigger) => document.body}
+                  className={AdminStyle.picker}
+                  disabledDate={(current) =>
+                    current && current > dayjs().endOf("day")
+                  }
+                />
               </div>
               <div className={AdminStyle.left2}>
                 <span className={AdminStyle.left2_1}>{todayCount}</span>
@@ -424,7 +556,7 @@ function Admin() {
                 <div className={AdminStyle.excel}>
                   <ExcelDownBtn data={currentItems} />
                 </div>
-                <div>
+                <div className={AdminStyle.radio}>
                   <Radio.Group
                     value={filterType}
                     buttonStyle="solid"
@@ -450,7 +582,7 @@ function Admin() {
                     </Radio.Button>
                   </Radio.Group>
                 </div>
-                <div>
+                <div className={AdminStyle.search}>
                   <Input.Search
                     placeholder="검색"
                     allowClear
@@ -470,23 +602,13 @@ function Admin() {
             </div>
             <div className={AdminStyle.table_over}>
               <table>
-                <colgroup>
-                  <col style={{ width: "4%" }} />
-                  <col style={{ width: "3%" }} />
-                  <col style={{ width: "4%" }} />
-                  <col style={{ width: "6%" }} />
-                  <col style={{ width: "9%" }} />
-                  <col style={{ width: "11%" }} />
-                  <col style={{ width: "4%" }} />
-                  <col style={{ width: "7%" }} />
-                  <col style={{ width: "6%" }} />
-                </colgroup>
                 <thead>
                   <tr className={AdminStyle.noPointer}>
                     <th>신청일</th>
                     <th>구분</th>
                     <th>예약자명</th>
                     <th>연락처</th>
+                    <th>이용구간(장소)</th>
                     <th>예약기간</th>
                     <th>짐갯수</th>
                     <th>결제금액</th>
@@ -496,179 +618,182 @@ function Admin() {
                 </thead>
                 <tbody>
                   {currentItems.length > 0 ? (
-                    currentItems
-                      .filter((item) => {
-                        const dateStr = (
-                          item.reservation_time || item.reserve_time
-                        )?.slice(0, 10);
-                        const isToday = dateStr === todayStr;
-                        const isTypeMatch =
-                          filterType === "" || item.type === filterType;
-                        return isToday && isTypeMatch;
-                      })
-                      .map((item, index) => {
-                        const sizes = [
-                          Number(item.small) > 0 ? `소 ${item.small}` : null,
-                          Number(item.medium) > 0 ? `중 ${item.medium}` : null,
-                          Number(item.large) > 0 ? `대 ${item.large}` : null,
-                        ].filter(Boolean);
+                    currentItems.map((item, index) => {
+                      const sizes = [
+                        Number(item.small) > 0 ? `소 ${item.small}` : null,
+                        Number(item.medium) > 0 ? `중 ${item.medium}` : null,
+                        Number(item.large) > 0 ? `대 ${item.large}` : null,
+                      ].filter(Boolean);
 
-                        const inches = [
-                          Number(item.under) > 0
-                            ? `26"이하 : ${item.under}개`
-                            : null,
-                          Number(item.over) > 0
-                            ? `26"이상 : ${item.over}개`
-                            : null,
-                        ].filter(Boolean);
+                      const inches = [
+                        Number(item.under) > 0
+                          ? `26"이하 : ${item.under}개`
+                          : null,
+                        Number(item.over) > 0
+                          ? `26"이상 : ${item.over}개`
+                          : null,
+                      ].filter(Boolean);
 
-                        const luggageInfo =
-                          sizes.length > 0
-                            ? sizes.join(" / ")
-                            : inches.length > 0
+                      const luggageInfo =
+                        sizes.length > 0
+                          ? sizes.join(" / ")
+                          : inches.length > 0
                             ? inches.join(" / ")
                             : "입력된 수량이 없습니다.";
 
-                        return (
-                          <React.Fragment key={index}>
-                            <tr
-                              className={AdminStyle.trpointer}
-                              onClick={() => toggleRow(index, item)}
-                            >
-                              <td>
-                                {item.reservation_time || item.reserve_time
-                                  ? (
-                                      item.reservation_time || item.reserve_time
-                                    ).slice(0, 10)
-                                  : "-"}
-                              </td>
-                              <td>{item.type}</td>
-                              <td>{item.name}</td>
-                              <td>{item.phone}</td>
-                              <td>
-                                {item.storage_start_date &&
-                                item.storage_end_date
-                                  ? `${item.storage_start_date} ~ ${item.storage_end_date}`
-                                  : item.delivery_date
+                      return (
+                        <React.Fragment key={index}>
+                          <tr
+                            className={AdminStyle.trpointer}
+                            onClick={() => toggleRow(index, item)}
+                          >
+                            <td>
+                              {item.reservation_time || item.reserve_time
+                                ? (
+                                  item.reservation_time || item.reserve_time
+                                ).slice(0, 10)
+                                : "-"}
+                            </td>
+                            <td>{item.type}</td>
+                            <td>{item.name}</td>
+                            <td>{item.phone}</td>
+                            <td>
+                              {item.type === "배송"
+                                ? `${item.delivery_start} → ${item.delivery_arrive}`
+                                : item.location}
+                            </td>
+                            <td>
+                              {item.storage_start_date && item.storage_end_date
+                                ? `${item.storage_start_date} ~ ${item.storage_end_date}`
+                                : item.delivery_date
                                   ? item.delivery_date
                                   : "-"}
-                              </td>
-                              <td>{luggageInfo}</td>
-                              <td>{`${item.price.toLocaleString()}원`}</td>
-                              <td>
-                                {item.situation === "완료" && item.success_time
-                                  ? item.success_time
-                                      .slice(0, 16)
-                                      .replace("T", " ")
-                                  : "-"}
-                              </td>
-                              <td>
-                                <select
-                                  className={AdminStyle.select}
-                                  value={item.situation || "접수"}
-                                  onChange={(e) => eChange(e, item)}
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  {selectOptions[item.type].map((status) => (
-                                    <option key={status} value={status}>
-                                      {status}
-                                    </option>
-                                  ))}
-                                </select>
+                            </td>
+                            <td>{luggageInfo}</td>
+                            <td>{`${item.price.toLocaleString()}원`}</td>
+                            <td>
+                              {item.type === "배송" && item.situation === "배송완료"
+                                ? (completedDeliveryTimes[item.re_num]?.slice(0, 16)?.replace("T", " ") || "-")
+                                : (item.situation === "보관완료" && item.success_time
+                                  ? new Date(new Date(item.success_time).getTime() + 9 * 60 * 60 * 1000)
+                                    .toISOString()
+                                    .slice(0, 16)
+                                    .replace("T", " ")
+                                  : "-")}
+                            </td>
+                            <td>
+                              <select
+                                className={AdminStyle.select}
+                                value={item.situation || "접수"}
+                                onChange={(e) => eChange(e, item, index)}
+                                onClick={(e) => e.stopPropagation()}
+                                disabled={
+                                  disabledSelects[index] ||
+                                  (item.type === "배송" && ["배송대기", "배송중", "배송완료"].includes(item.situation)) ||
+                                  (item.type === "보관" && ["보관완료"].includes(item.situation))
+                                }
+                              >
+                                {selectOptions[item.type].map((status) => (
+                                  <option
+                                    key={status}
+                                    value={status}
+                                    disabled={
+                                      item.type === "배송" &&
+                                      ["배송대기", "배송중", "배송완료"].includes(status)
+                                    }
+                                  >
+                                    {status}
+                                  </option>
+                                ))}
+                              </select>
+
+                            </td>
+                          </tr>
+
+                          {openRow === index && (
+                            <tr>
+                              <td colSpan="10">
+                                <div className={AdminStyle.status_details}>
+                                  <div className={AdminStyle.status_log_list}>
+                                    {(() => {
+                                      const keyColumn = item.type === "배송" ? "re_num" : "reservation_number";
+                                      const keyValue = item[keyColumn];
+                                      if (statusLogs[keyValue]?.length > 0) {
+                                        return (
+                                          <table className={AdminStyle.log_table}>
+                                            <colgroup>
+                                              <col style={{ width: "3%" }} />
+                                              <col style={{ width: "4%" }} />
+                                              <col style={{ width: "4%" }} />
+                                              <col style={{ width: "4%" }} />
+                                            </colgroup>
+                                            <thead>
+                                              <tr>
+                                                <th>변경시간</th>
+                                                <th>진행상태</th>
+                                                <th>
+                                                  {item.type === "배송"
+                                                    ? "배송기사"
+                                                    : item.type === "보관"
+                                                      ? "보관장소"
+                                                      : "배송기사/보관장소"}
+                                                </th>
+                                                <th>처리자</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              {statusLogs[keyValue].map(
+                                                (log, logIndex) => (
+                                                  <tr key={logIndex}>
+                                                    <td>
+                                                      {(() => {
+                                                        const date = new Date(log.updated_at);
+                                                        const year = date.getFullYear();
+                                                        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+                                                        const day = date.getDate().toString().padStart(2, "0");
+                                                        const hour = date.getHours();
+                                                        const minute = date.getMinutes();
+                                                        const second = date.getSeconds();
+                                                        const ampm = hour < 12 ? "오전" : "오후";
+                                                        const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+                                                        return `${year}-${month}-${day} ${ampm} ${displayHour}:${minute
+                                                          .toString()
+                                                          .padStart(2, "0")}:${second.toString().padStart(2, "0")}`;
+                                                      })()}
+                                                    </td>
+                                                    <td>{log.new_status}</td>
+                                                    <td>
+                                                      {log.table_name === "delivery" &&
+                                                        ["배송대기", "배송중", "배송완료"].includes(log.new_status)
+                                                        ? (getDriverNameByReNum(log.key_value) || "미배정")
+                                                        : log.table_name === "delivery"
+                                                          ? "미배정"
+                                                          : log.table_name === "storage"
+                                                            ? <AsyncLocation reservation_number={log.key_value} fetchLocation={fetchLocation} />
+                                                            : "-"}
+                                                    </td>
+                                                    <td>{log.operator}</td>
+                                                  </tr>
+                                                )
+                                              )}
+                                            </tbody>
+                                          </table>
+                                        );
+                                      } else {
+                                        <p>변경 이력이 없습니다.</p>
+                                      }
+                                    })()}
+                                  </div>
+                                </div>
                               </td>
                             </tr>
-
-                            {openRow === index && (
-                              <tr>
-                                <td colSpan="9">
-                                  <div className={AdminStyle.status_details}>
-                                    <div className={AdminStyle.status_log_list}>
-                                      {statusLogs[index]?.length > 0 ? (
-                                        <table className={AdminStyle.log_table}>
-                                          <colgroup>
-                                            <col style={{ width: "3%" }} />
-                                            <col style={{ width: "3%" }} />
-                                            <col style={{ width: "4%" }} />
-                                            <col style={{ width: "4%" }} />
-                                            <col style={{ width: "4%" }} />
-                                          </colgroup>
-                                          <thead>
-                                            <tr>
-                                              <th>변경시간</th>
-                                              <th>이전상태</th>
-                                              <th>변경상태</th>
-                                              <th>
-                                                {item.type === "배송"
-                                                  ? "배송기사"
-                                                  : item.type === "보관"
-                                                  ? "보관장소"
-                                                  : "배송기사/보관장소"}
-                                              </th>
-                                              <th>처리자</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            {statusLogs[index].map(
-                                              (log, logIndex) => (
-                                                <tr key={logIndex}>
-                                                  <td>
-                                                    {(() => {
-                                                      const date = new Date(
-                                                        log.updated_at
-                                                      );
-                                                      const year =
-                                                        date.getFullYear();
-                                                      const month =
-                                                        date.getMonth() + 1;
-                                                      const day =
-                                                        date.getDate();
-                                                      const hour =
-                                                        date.getHours();
-                                                      const minute =
-                                                        date.getMinutes();
-                                                      const second =
-                                                        date.getSeconds();
-                                                      const ampm =
-                                                        hour < 12
-                                                          ? "오전"
-                                                          : "오후";
-                                                      const displayHour =
-                                                        hour % 12 === 0
-                                                          ? 12
-                                                          : hour % 12;
-                                                      return `${year}-${month}-${day} ${ampm} ${displayHour}:${minute
-                                                        .toString()
-                                                        .padStart(
-                                                          2,
-                                                          "0"
-                                                        )}:${second
-                                                        .toString()
-                                                        .padStart(2, "0")}`;
-                                                    })()}
-                                                  </td>
-                                                  <td>{log.prev_status}</td>
-                                                  <td>{log.new_status}</td>
-                                                  <td></td>
-                                                  <td>{log.operator}</td>
-                                                </tr>
-                                              )
-                                            )}
-                                          </tbody>
-                                        </table>
-                                      ) : (
-                                        <p>변경 이력이 없습니다.</p>
-                                      )}
-                                    </div>
-                                  </div>
-                                </td>
-                              </tr>
-                            )}
-                          </React.Fragment>
-                        );
-                      })
+                          )}
+                        </React.Fragment>
+                      );
+                    })
                   ) : (
                     <tr>
-                      <td className={AdminStyle.falsetext} colSpan="9">
+                      <td className={AdminStyle.falsetext} colSpan="10">
                         {searchTerm
                           ? "일치하는 접수건이 없습니다."
                           : "접수된 이력이 없습니다."}
@@ -698,9 +823,8 @@ function Admin() {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`${AdminStyle.page_btn} ${
-                    currentPage === page ? AdminStyle.page_btn_active : ""
-                  }`}
+                  className={`${AdminStyle.page_btn} ${currentPage === page ? AdminStyle.page_btn_active : ""
+                    }`}
                 >
                   {page}
                 </button>
@@ -716,7 +840,7 @@ function Admin() {
               <button
                 className={AdminStyle.arrow_btn}
                 onClick={goToLastGroup}
-                disabled={currentPage === totalPages}
+                disabled={totalPages === 0 || currentPage === totalPages}
               >
                 <FontAwesomeIcon icon={faAnglesRight} />
               </button>

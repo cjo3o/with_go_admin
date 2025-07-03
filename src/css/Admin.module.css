@@ -256,8 +256,8 @@
   margin-bottom: 10px;
 }
 
-.excelbtn{
-  width: 32px ;
+.excelbtn {
+  width: 32px;
   margin-top: 3px;
 }
 
@@ -355,8 +355,17 @@
 
 .Admin_content,
 .list {
-  min-width: 1350px;
+  min-width: 1490px;
 }
+
+.picker {
+  text-align: center;
+  width: 120px;
+}
+
+
+
+
 
 @media (max-width: 767px) {
   .Admin_top {
@@ -372,6 +381,7 @@
   }
 
   .list {
+    padding: 29px !important;
     min-width: 100%;
   }
 
@@ -388,8 +398,12 @@
     padding-top: 20px;
   }
 
+  .picker {
+    margin-top: 5px;
+  }
+
   .left {
-    height: 200px;
+    height: auto;
   }
 
   .left1 {
@@ -420,8 +434,12 @@
 
   .left3 {
     display: flex;
+<<<<<<< HEAD
     /* margin: 10px 15px 0 15px; */
     margin: 0 auto;
+=======
+    margin: 10px auto;
+>>>>>>> main
     width: 95%;
     height: 65px;
     position: static;
@@ -535,6 +553,7 @@
     justify-content: space-between;
     flex-wrap: wrap;
     margin-bottom: 10px;
+    margin-left: 10px;
   }
 
   .list_up h3 {
@@ -561,6 +580,7 @@
     flex-wrap: wrap;
     gap: 5px;
   }
+
   .searchin {
     width: 177px !important;
   }
@@ -568,13 +588,13 @@
   .searchin button {
     width: 60px;
     font-size: 10px;
-    width: 160px !important;
+    width: 200px !important;
   }
 
   .custom-search-input input::placeholder {
     font-size: 15px;
   }
-  
+
 
   .page_btn,
   .arrow_btn {
@@ -591,5 +611,25 @@
   td {
     font-size: 14px;
     padding: 8px;
+  }
+}
+
+@media (max-width: 571px) {
+  .radio {
+    order: 0
+  }
+
+  .excel {
+    order: 2
+  }
+
+  .search {
+    order: 1;
+  }
+}
+
+@media (max-width: 561px) {
+  .admin_search {
+    margin-left: 0;
   }
 }

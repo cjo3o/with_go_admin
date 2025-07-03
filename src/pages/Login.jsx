@@ -1,15 +1,15 @@
 import React from 'react';
-import {Form, Input, Button, Modal, Layout, message, Flex} from "antd";
+import { Form, Input, Button, Modal, Layout, message, Flex } from "antd";
 import supabase from "../lib/supabase.js";
 import bcrypt from "bcryptjs";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Login(props) {
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [loginModal, setLoginModal] = React.useState(true);
-    const onFinish = async ({email, password}) => {
-        const {data, error} = await supabase
+    const onFinish = async ({ email, password }) => {
+        const { data, error } = await supabase
             .from("employees")
             .select("*")
             .eq("email", email)
@@ -27,8 +27,8 @@ function Login(props) {
         }
 
         message.success('로그인 성공');
-        sessionStorage.setItem("name",data.name);
-        sessionStorage.setItem("role",data.role);
+        sessionStorage.setItem("name", data.name);
+        sessionStorage.setItem("role", data.role);
         const checkRole = sessionStorage.getItem("role");
         setTimeout(() => {
             if (checkRole === "관리자") {
@@ -46,7 +46,7 @@ function Login(props) {
             {/*    closable={false}*/}
             {/*    footer={null}*/}
             {/*    >*/}
-            <div className="main" style={{fontWeight:"bold", marginLeft:"auto", padding:"0"}}>
+            <div className="main" style={{ fontWeight: "bold", marginLeft: "auto", padding: "0" }}>
                 <Flex
                     style={{
                         justifyContent: 'center',
@@ -55,11 +55,15 @@ function Login(props) {
                     }}
                     vertical
                 >
-                    <h1 style={{marginBottom: "1.5rem", fontWeight:"bold"}}>로그인</h1>
+                    <h1 style={{ marginBottom: "1.5rem", fontWeight: "bold" }}>로그인</h1>
                     <Form
                         layout="vertical"
                         form={form}
                         onFinish={onFinish}
+                        initialValues={{
+                            email: 'admin2@example.com',
+                            password: '1234',
+                        }}
                     >
                         <Form.Item
                             label="이메일"
@@ -70,7 +74,7 @@ function Login(props) {
                                 message: ('이메일을 확인해주세요.')
                             }]}
                         >
-                            <Input/>
+                            <Input />
                         </Form.Item>
                         <Form.Item
                             label="패스워드"
@@ -80,10 +84,10 @@ function Login(props) {
                                 message: ('패스워드를 확인해주세요.')
                             }]}
                         >
-                            <Input.Password/>
+                            <Input.Password />
                         </Form.Item>
                         <Button
-                            style={{fontWeight:"bold"}}
+                            style={{ fontWeight: "bold" }}
                             type="primary" htmlType="submit" block>
                             로그인
                         </Button>
