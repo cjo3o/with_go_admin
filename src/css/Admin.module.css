@@ -434,12 +434,7 @@
 
   .left3 {
     display: flex;
-<<<<<<< HEAD
-    /* margin: 10px 15px 0 15px; */
-    margin: 0 auto;
-=======
     margin: 10px auto;
->>>>>>> main
     width: 95%;
     height: 65px;
     position: static;
